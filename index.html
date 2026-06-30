@@ -12,9 +12,9 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --verde: #5cb835;
-    --verde-escuro: #4a9a2a;
-    --verde-dim: #3a7a20;
+    --verde: #3dcc3d;
+    --verde-escuro: #2ea82e;
+    --verde-dim: #228822;
     --preto: #050505;
     --preto-card: #111111;
     --preto-borda: #1a1a1a;
@@ -48,7 +48,7 @@
     text-decoration: none;
   }
 
-  .logo-svg { width: 44px; height: 44px; flex-shrink: 0; }
+  .logo-svg { width: 48px; height: 48px; flex-shrink: 0; object-fit: contain; }
 
   .logo-text {
     font-size: 1.25rem; font-weight: 700;
@@ -104,8 +104,8 @@
   .hero-grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(92,184,53,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(92,184,53,.04) 1px, transparent 1px);
+      linear-gradient(rgba(61,204,61,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,204,61,.04) 1px, transparent 1px);
     background-size: 60px 60px;
   }
 
@@ -116,8 +116,8 @@
 
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(92,184,53,.08);
-    border: 1px solid rgba(92,184,53,.2);
+    background: rgba(61,204,61,.08);
+    border: 1px solid rgba(61,204,61,.2);
     padding: 6px 14px; border-radius: 20px;
     font-size: .8rem; color: var(--verde);
     letter-spacing: 1px; text-transform: uppercase;
@@ -156,23 +156,23 @@
     padding: 14px 28px; border-radius: 6px;
     font-weight: 700; text-decoration: none; font-size: 1rem;
     transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 0 20px rgba(92,184,53,.3);
+    box-shadow: 0 0 20px rgba(61,204,61,.3);
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(92,184,53,.5);
+    box-shadow: 0 0 30px rgba(61,204,61,.5);
   }
 
   .btn-secondary {
     display: inline-flex; align-items: center; gap: 10px;
-    border: 1px solid rgba(92,184,53,.4); color: var(--verde);
+    border: 1px solid rgba(61,204,61,.4); color: var(--verde);
     padding: 14px 28px; border-radius: 6px;
     font-weight: 600; text-decoration: none; font-size: 1rem;
     transition: background .2s;
   }
 
-  .btn-secondary:hover { background: rgba(92,184,53,.08); }
+  .btn-secondary:hover { background: rgba(61,204,61,.08); }
 
   .hero-stats {
     display: flex; gap: 40px; margin-top: 56px;
@@ -223,13 +223,13 @@
   }
 
   .service-card:hover {
-    border-color: rgba(92,184,53,.3);
+    border-color: rgba(61,204,61,.3);
     transform: translateY(-4px);
   }
 
   .service-icon {
     width: 48px; height: 48px;
-    background: rgba(92,184,53,.08);
+    background: rgba(61,204,61,.08);
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 16px;
@@ -256,7 +256,7 @@
   .tab-btn.active, .tab-btn:hover {
     border-color: var(--verde);
     color: var(--verde);
-    background: rgba(92,184,53,.06);
+    background: rgba(61,204,61,.06);
   }
 
   .portfolio-panel { display: none; }
@@ -287,8 +287,8 @@
   }
 
   .tag {
-    background: rgba(92,184,53,.08);
-    border: 1px solid rgba(92,184,53,.2);
+    background: rgba(61,204,61,.08);
+    border: 1px solid rgba(61,204,61,.2);
     color: var(--verde);
     padding: 4px 12px; border-radius: 20px;
     font-size: .78rem;
@@ -334,7 +334,7 @@
     transition: border-color .2s;
   }
 
-  .diff-item:hover { border-color: rgba(92,184,53,.2); }
+  .diff-item:hover { border-color: rgba(61,204,61,.2); }
 
   .diff-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
 
@@ -395,7 +395,7 @@
 
   .contact-icon {
     width: 40px; height: 40px;
-    background: rgba(92,184,53,.08);
+    background: rgba(61,204,61,.08);
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.1rem; flex-shrink: 0;
@@ -511,12 +511,12 @@
     font-weight: 700; text-decoration: none; font-size: 1rem;
     margin-top: 28px;
     transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 0 20px rgba(92,184,53,.3);
+    box-shadow: 0 0 20px rgba(61,204,61,.3);
   }
 
   .btn-contato:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(92,184,53,.5);
+    box-shadow: 0 0 30px rgba(61,204,61,.5);
   }
 
   /* MOBILE */
@@ -549,22 +549,7 @@
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
-    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="shieldGrad" cx="50%" cy="40%">
-          <stop offset="0%" stop-color="#39ff14" stop-opacity=".15"/>
-          <stop offset="100%" stop-color="#39ff14" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
-        fill="#111" stroke="#39ff14" stroke-width="2.5"/>
-      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
-        fill="url(#shieldGrad)"/>
-      <ellipse cx="50" cy="50" rx="22" ry="14" fill="none" stroke="#39ff14" stroke-width="2"/>
-      <circle cx="50" cy="50" r="7" fill="#39ff14" opacity=".9"/>
-      <circle cx="50" cy="50" r="3.5" fill="#050505"/>
-      <circle cx="53" cy="47" r="1.5" fill="white" opacity=".6"/>
-    </svg>
+    <img class="logo-svg" src="fotos/logo.png" alt="B&A Vision">
     <span class="logo-text">B<span>&A</span> VISION</span>
   </a>
 
@@ -874,13 +859,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
-    <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
-        fill="#111" stroke="#39ff14" stroke-width="2.5"/>
-      <ellipse cx="50" cy="50" rx="22" ry="14" fill="none" stroke="#39ff14" stroke-width="2"/>
-      <circle cx="50" cy="50" r="7" fill="#39ff14" opacity=".9"/>
-      <circle cx="50" cy="50" r="3.5" fill="#050505"/>
-    </svg>
+    <img src="fotos/logo.png" alt="B&A Vision" style="width:56px;height:56px;object-fit:contain">
   </div>
   <p class="footer-nome">B&A VISION — Segurança Digital</p>
   <p>📍 Rio de Janeiro &nbsp;|&nbsp; 📱 <a href="https://wa.me/5521996646927" target="_blank" rel="noopener noreferrer">(21) 99664-6927</a> &nbsp;|&nbsp; 📸 <a href="https://instagram.com/b.a.vision" target="_blank" rel="noopener noreferrer">@b.a.vision</a></p>
