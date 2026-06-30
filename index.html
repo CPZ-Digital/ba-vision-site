@@ -306,10 +306,9 @@
     font-size: .78rem;
   }
 
-  /* Grade de fotos robusta — sem regras especiais no first-child */
   .portfolio-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
 
@@ -553,7 +552,7 @@
     .hero-stats { flex-direction: column; gap: 24px; }
 
     .portfolio-gallery { grid-template-columns: 1fr 1fr; }
-    .portfolio-gallery img.wide { grid-column: span 2; }
+    .portfolio-gallery img.wide { grid-column: span 2; aspect-ratio: 4/3; }
 
     .diff-grid { grid-template-columns: 1fr; }
     .contact-grid { grid-template-columns: 1fr; }
