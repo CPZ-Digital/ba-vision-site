@@ -6,7 +6,7 @@
 <meta name="description" content="B&A Vision — Instalação de CFTV e Segurança Digital. Projetos residenciais, comerciais e industriais no Rio de Janeiro.">
 <meta property="og:title" content="B&A Vision — Segurança Digital">
 <meta property="og:description" content="Instalação de CFTV profissional. Tecnologia que protege.">
-<meta property="og:image" content="fotos/og-image.jpg">
+<meta property="og:image" content="fotos/logo.PNG">
 <title>B&A Vision — Segurança Digital</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,54 +99,127 @@
 
   .hero-bg {
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, #050505 0%, #0a1a0a 50%, #050505 100%);
+    background: radial-gradient(ellipse at 20% 50%, #0a1f0a 0%, #050505 60%);
   }
 
+  /* grade de vigilância */
   .hero-grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(61,204,61,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(61,204,61,.04) 1px, transparent 1px);
-    background-size: 60px 60px;
+      linear-gradient(rgba(61,204,61,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,204,61,.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* scanlines estilo câmera */
+  .hero-scanlines {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,.18) 3px,
+      rgba(0,0,0,.18) 4px
+    );
+  }
+
+  /* HUD corners */
+  .hud-corner {
+    position: absolute; width: 28px; height: 28px;
+    z-index: 2; pointer-events: none;
+  }
+  .hud-corner.tl { top: 80px; left: 5%; border-top: 2px solid var(--verde); border-left: 2px solid var(--verde); }
+  .hud-corner.tr { top: 80px; right: 5%; border-top: 2px solid var(--verde); border-right: 2px solid var(--verde); }
+  .hud-corner.bl { bottom: 40px; left: 5%; border-bottom: 2px solid var(--verde); border-left: 2px solid var(--verde); }
+  .hud-corner.br { bottom: 40px; right: 5%; border-bottom: 2px solid var(--verde); border-right: 2px solid var(--verde); }
+
+  /* REC badge */
+  .rec-badge {
+    position: absolute; top: 88px; right: calc(5% + 36px);
+    z-index: 3; pointer-events: none;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: .7rem; color: rgba(255,255,255,.5);
+    letter-spacing: 2px;
+  }
+  .rec-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ff3333;
+    box-shadow: 0 0 6px #ff3333;
+    animation: rec-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes rec-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .1; }
+  }
+
+  /* timestamp HUD */
+  .hud-timestamp {
+    position: absolute; bottom: 48px; right: calc(5% + 36px);
+    z-index: 3; pointer-events: none;
+    font-family: 'Courier New', monospace;
+    font-size: .65rem; color: rgba(61,204,61,.4);
+    letter-spacing: 1px;
   }
 
   .hero-content {
-    position: relative; z-index: 1;
-    max-width: 640px;
+    position: relative; z-index: 4;
+    max-width: 680px;
   }
 
+  /* metadata label estilo HUD */
   .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(61,204,61,.08);
-    border: 1px solid rgba(61,204,61,.2);
-    padding: 6px 14px; border-radius: 20px;
-    font-size: .8rem; color: var(--verde);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; color: var(--verde);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: .85;
   }
 
   .hero-badge::before {
     content: ''; width: 6px; height: 6px;
     background: var(--verde); border-radius: 50%;
+    box-shadow: 0 0 8px var(--verde);
     animation: pulse 2s infinite;
+    flex-shrink: 0;
   }
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: .3; }
+    50% { opacity: .2; }
   }
 
   .hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 800; line-height: 1.1;
-    margin-bottom: 20px;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 900; line-height: 1.05;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
   }
 
-  .hero-title .destaque { color: var(--verde); }
+  .hero-title .destaque {
+    color: var(--verde);
+    text-shadow: 0 0 30px rgba(61,204,61,.5), 0 0 60px rgba(61,204,61,.2);
+    display: inline-block;
+    animation: glitch 6s infinite;
+  }
+
+  @keyframes glitch {
+    0%, 92%, 100% { transform: none; text-shadow: 0 0 30px rgba(61,204,61,.5); }
+    93% { transform: translateX(-3px); text-shadow: 3px 0 #ff0044, -3px 0 var(--verde); }
+    94% { transform: translateX(3px); text-shadow: -3px 0 #00ffff, 3px 0 var(--verde); }
+    95% { transform: none; text-shadow: 0 0 30px rgba(61,204,61,.5); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-title .destaque { animation: none; }
+    .rec-dot { animation: none; }
+  }
 
   .hero-subtitle {
-    font-size: 1.1rem; color: var(--cinza);
-    margin-bottom: 36px; max-width: 520px;
+    font-size: 1.05rem; color: var(--cinza);
+    margin-bottom: 40px; max-width: 520px;
+    line-height: 1.7;
   }
 
   .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -154,47 +227,54 @@
   .btn-primary {
     display: inline-flex; align-items: center; gap: 10px;
     background: var(--verde); color: var(--preto);
-    padding: 14px 28px; border-radius: 6px;
+    padding: 14px 28px; border-radius: 4px;
     font-weight: 700; text-decoration: none; font-size: 1rem;
     transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 0 20px rgba(61,204,61,.3);
+    box-shadow: 0 0 24px rgba(61,204,61,.35);
+    letter-spacing: .5px;
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(61,204,61,.5);
+    box-shadow: 0 0 40px rgba(61,204,61,.6);
   }
 
   .btn-secondary {
     display: inline-flex; align-items: center; gap: 10px;
     border: 1px solid rgba(61,204,61,.4); color: var(--verde);
-    padding: 14px 28px; border-radius: 6px;
+    padding: 14px 28px; border-radius: 4px;
     font-weight: 600; text-decoration: none; font-size: 1rem;
-    transition: background .2s;
+    transition: background .2s, border-color .2s;
+    letter-spacing: .5px;
   }
 
-  .btn-secondary:hover { background: rgba(61,204,61,.08); }
+  .btn-secondary:hover {
+    background: rgba(61,204,61,.08);
+    border-color: var(--verde);
+  }
 
   .hero-stats {
-    display: flex; gap: 40px; margin-top: 56px;
+    display: flex; gap: 48px; margin-top: 60px;
     padding-top: 40px;
-    border-top: 1px solid var(--preto-borda);
+    border-top: 1px solid rgba(61,204,61,.12);
   }
 
   .stat-num {
-    font-size: 2rem; font-weight: 800; color: var(--verde);
+    font-size: 2.2rem; font-weight: 900; color: var(--verde);
     display: block;
+    text-shadow: 0 0 20px rgba(61,204,61,.4);
   }
 
-  .stat-label { font-size: .8rem; color: var(--cinza); text-transform: uppercase; letter-spacing: 1px; }
+  .stat-label { font-size: .75rem; color: var(--cinza); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
 
   /* SECOES */
   section { padding: 80px 5%; }
 
   .section-label {
-    font-size: .75rem; color: var(--verde);
-    text-transform: uppercase; letter-spacing: 2px;
-    margin-bottom: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; color: var(--verde);
+    text-transform: uppercase; letter-spacing: 3px;
+    margin-bottom: 12px; opacity: .75;
   }
 
   .section-title {
@@ -209,36 +289,38 @@
   /* SERVICOS */
   #servicos { background: var(--preto-card); }
 
-  .services-grid {
+  .services-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-  }
-
-  .service-card {
-    background: var(--preto);
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
     border: 1px solid var(--preto-borda);
     border-radius: 8px;
-    padding: 28px;
-    transition: border-color .2s, transform .2s;
+    overflow: hidden;
   }
 
-  .service-card:hover {
-    border-color: rgba(61,204,61,.3);
-    transform: translateY(-4px);
+  .service-item {
+    display: flex; align-items: flex-start; gap: 24px;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--preto-borda);
+    border-right: 1px solid var(--preto-borda);
+    transition: background .2s;
   }
 
-  .service-icon {
-    width: 48px; height: 48px;
-    background: rgba(61,204,61,.08);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
-    font-size: 1.4rem;
-  }
+  .service-item:hover { background: rgba(61,204,61,.04); }
+  .service-item:nth-child(even) { border-right: none; }
+  .service-item:nth-last-child(-n+2) { border-bottom: none; }
 
-  .service-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
-  .service-card p { font-size: .9rem; color: var(--cinza); line-height: 1.6; }
+  .service-num {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--verde); opacity: .3;
+    line-height: 1; flex-shrink: 0; min-width: 38px;
+    transition: opacity .2s;
+  }
+  .service-item:hover .service-num { opacity: .9; }
+
+  .service-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .service-body p { font-size: .875rem; color: var(--cinza); line-height: 1.6; }
 
   /* PORTFOLIO */
   .portfolio-tabs {
@@ -554,6 +636,11 @@
     .portfolio-gallery { grid-template-columns: 1fr 1fr; }
     .portfolio-gallery img.wide { grid-column: span 2; aspect-ratio: 4/3; }
 
+    .services-list { grid-template-columns: 1fr; }
+    .service-item { border-right: none !important; }
+    .service-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--preto-borda); }
+    .service-item:last-child { border-bottom: none; }
+
     .diff-grid { grid-template-columns: 1fr; }
     .contact-grid { grid-template-columns: 1fr; }
     .numbers-grid { grid-template-columns: 1fr 1fr; }
@@ -585,8 +672,15 @@
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+  <div class="hero-scanlines"></div>
+  <div class="hud-corner tl"></div>
+  <div class="hud-corner tr"></div>
+  <div class="hud-corner bl"></div>
+  <div class="hud-corner br"></div>
+  <div class="rec-badge"><span class="rec-dot"></span>REC</div>
+  <div class="hud-timestamp" id="hud-ts">00:00:00 — CAM_01</div>
   <div class="hero-content">
-    <div class="hero-badge">Segurança Digital</div>
+    <div class="hero-badge">[ B&amp;A VISION ] — Segurança Digital</div>
     <h1 class="hero-title">
       Tecnologia que<br>
       <span class="destaque">protege</span> o que<br>
@@ -623,49 +717,75 @@
 
 <!-- SERVICOS -->
 <section id="servicos">
-  <p class="section-label">O que fazemos</p>
+  <p class="section-label">[ SERVIÇOS ]</p>
   <h2 class="section-title">Soluções completas em segurança</h2>
-  <p class="section-sub">Da vistoria inicial à entrega com câmeras funcionando. Você não precisa entender de tecnologia — nós cuidamos de tudo.</p>
+  <p class="section-sub">Da vistoria inicial à entrega funcionando. Câmeras, cabeamento, alarme e automação — tudo em uma equipe.</p>
 
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon">📷</div>
-      <h3>CFTV IP</h3>
-      <p>Câmeras IP de alta resolução, visão noturna e acesso remoto pelo celular. Hikvision e Intelbras.</p>
+  <div class="services-list">
+    <div class="service-item">
+      <span class="service-num">01</span>
+      <div class="service-body">
+        <h3>Câmeras IP</h3>
+        <p>Alta resolução, visão noturna e acesso remoto pelo celular. Intelbras e Hikvision.</p>
+      </div>
     </div>
-    <div class="service-card">
-      <div class="service-icon">🔌</div>
-      <h3>Cabeamento Estruturado</h3>
-      <p>Passagem profissional de cabos Cat5e e Cat6, organização de rack e patch panel. Do pequeno ao industrial.</p>
+    <div class="service-item">
+      <span class="service-num">02</span>
+      <div class="service-body">
+        <h3>Câmeras Analógicas</h3>
+        <p>Sistemas AHD/HDCVI para quem precisa de robustez e custo acessível. DVR com acesso remoto 24h.</p>
+      </div>
     </div>
-    <div class="service-card">
-      <div class="service-icon">🖥️</div>
-      <h3>DVR / NVR</h3>
-      <p>Instalação e configuração de gravadores digitais com armazenamento local e acesso remoto 24h.</p>
+    <div class="service-item">
+      <span class="service-num">03</span>
+      <div class="service-body">
+        <h3>Câmeras Wi-Fi</h3>
+        <p>Solução sem fio para residências e comércios. Instalação rápida, sem quebra de parede.</p>
+      </div>
     </div>
-    <div class="service-card">
-      <div class="service-icon">📡</div>
-      <h3>Câmeras Wi-Fi</h3>
-      <p>Solução sem fio para residências e pequenos comércios. Instalação rápida, imagem nítida.</p>
+    <div class="service-item">
+      <span class="service-num">04</span>
+      <div class="service-body">
+        <h3>CFTV Local e Remoto</h3>
+        <p>Gravação local com DVR/NVR e acesso via app no celular ou computador de qualquer lugar.</p>
+      </div>
     </div>
-    <div class="service-card">
-      <div class="service-icon">🔧</div>
-      <h3>Manutenção e Suporte</h3>
-      <p>Revisão preventiva, troca de equipamentos defeituosos e suporte remoto para sistemas instalados.</p>
+    <div class="service-item">
+      <span class="service-num">05</span>
+      <div class="service-body">
+        <h3>Fechaduras e Sensores de Alarme</h3>
+        <p>Controle de acesso, fechaduras digitais, sensores de presença e alarme integrado ao CFTV.</p>
+      </div>
     </div>
-    <div class="service-card">
-      <div class="service-icon">🏗️</div>
-      <h3>Projetos Industriais</h3>
-      <p>Atendemos galpões, condomínios e obras de grande porte. Equipe com equipamentos para altura e escala.</p>
+    <div class="service-item">
+      <span class="service-num">06</span>
+      <div class="service-body">
+        <h3>Automação Simples</h3>
+        <p>Iluminação automática, acionamentos e integrações básicas para tornar o ambiente mais inteligente.</p>
+      </div>
+    </div>
+    <div class="service-item">
+      <span class="service-num">07</span>
+      <div class="service-body">
+        <h3>Manutenção</h3>
+        <p>Revisão preventiva, troca de equipamentos defeituosos e suporte remoto para sistemas já instalados.</p>
+      </div>
+    </div>
+    <div class="service-item">
+      <span class="service-num">08</span>
+      <div class="service-body">
+        <h3>Projetos de Grande Porte</h3>
+        <p>Galpões industriais, condomínios e obras complexas. Equipe com equipamentos para trabalho em altura.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- PORTFOLIO -->
 <section id="portfolio">
-  <p class="section-label">Projetos realizados</p>
+  <p class="section-label">[ PORTFÓLIO ]</p>
   <h2 class="section-title">Obras concluídas</h2>
-  <p class="section-sub">Cada projeto entregue com qualidade e dentro do prazo. Veja o que já fizemos.</p>
+  <p class="section-sub">Cada projeto entregue com qualidade. Veja o que já fizemos.</p>
 
   <div class="portfolio-tabs">
     <button type="button" class="tab-btn active" onclick="showTab('vitale', this)">Condomínio Vitale ON</button>
@@ -943,6 +1063,18 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeLightbox();
   });
+
+  // HUD timestamp
+  (function() {
+    var el = document.getElementById('hud-ts');
+    if (!el) return;
+    function tick() {
+      var n = new Date();
+      var pad = function(v) { return String(v).padStart(2,'0'); };
+      el.textContent = pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds())+' — CAM_01';
+    }
+    tick(); setInterval(tick, 1000);
+  })();
 </script>
 </body>
 </html>
