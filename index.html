@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="B&A Vision — Instalação de CFTV e Segurança Digital. Projetos residenciais, comerciais e industriais no Rio de Janeiro e Minas Gerais.">
+<meta property="og:title" content="B&A Vision — Segurança Digital">
+<meta property="og:description" content="Instalação de CFTV profissional. Tecnologia que protege.">
+<meta property="og:image" content="fotos/og-image.jpg">
+<title>B&A Vision — Segurança Digital</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --verde: #39ff14;
+    --verde-escuro: #22c55e;
+    --verde-dim: #16a34a;
+    --preto: #050505;
+    --preto-card: #111111;
+    --preto-borda: #1a1a1a;
+    --cinza: #888888;
+    --branco: #f5f5f5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--preto);
+    color: var(--branco);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 70px;
+    background: rgba(5,5,5,0.95);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--preto-borda);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-svg { width: 44px; height: 44px; flex-shrink: 0; }
+
+  .logo-text {
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--branco); letter-spacing: 1px;
+  }
+
+  .logo-text span { color: var(--verde); }
+
+  nav ul {
+    list-style: none;
+    display: flex; gap: 2rem;
+  }
+
+  nav ul a {
+    color: var(--cinza); text-decoration: none;
+    font-size: .9rem; letter-spacing: .5px;
+    transition: color .2s;
+  }
+
+  nav ul a:hover { color: var(--verde); }
+
+  .nav-cta {
+    background: var(--verde);
+    color: var(--preto) !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 700 !important;
+    transition: opacity .2s !important;
+  }
+
+  .nav-cta:hover { opacity: .85; }
+
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; }
+  .nav-toggle span {
+    display: block; width: 24px; height: 2px;
+    background: var(--branco); margin: 5px 0;
+    transition: .3s;
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 100px 5% 60px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #050505 0%, #0a1a0a 50%, #050505 100%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(57,255,20,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57,255,20,.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 640px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(57,255,20,.08);
+    border: 1px solid rgba(57,255,20,.2);
+    padding: 6px 14px; border-radius: 20px;
+    font-size: .8rem; color: var(--verde);
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--verde); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800; line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .hero-title .destaque { color: var(--verde); }
+
+  .hero-subtitle {
+    font-size: 1.1rem; color: var(--cinza);
+    margin-bottom: 36px; max-width: 520px;
+  }
+
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--verde); color: var(--preto);
+    padding: 14px 28px; border-radius: 6px;
+    font-weight: 700; text-decoration: none; font-size: 1rem;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 20px rgba(57,255,20,.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(57,255,20,.5);
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(57,255,20,.4); color: var(--verde);
+    padding: 14px 28px; border-radius: 6px;
+    font-weight: 600; text-decoration: none; font-size: 1rem;
+    transition: background .2s;
+  }
+
+  .btn-secondary:hover { background: rgba(57,255,20,.08); }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--preto-borda);
+  }
+
+  .stat-num {
+    font-size: 2rem; font-weight: 800; color: var(--verde);
+    display: block;
+  }
+
+  .stat-label { font-size: .8rem; color: var(--cinza); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* SECOES */
+  section { padding: 80px 5%; }
+
+  .section-label {
+    font-size: .75rem; color: var(--verde);
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 800; margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--cinza); max-width: 560px; margin-bottom: 56px;
+  }
+
+  /* SERVICOS */
+  #servicos { background: var(--preto-card); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .service-card {
+    background: var(--preto);
+    border: 1px solid var(--preto-borda);
+    border-radius: 8px;
+    padding: 28px;
+    transition: border-color .2s, transform .2s;
+  }
+
+  .service-card:hover {
+    border-color: rgba(57,255,20,.3);
+    transform: translateY(-4px);
+  }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    background: rgba(57,255,20,.08);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+  }
+
+  .service-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .service-card p { font-size: .9rem; color: var(--cinza); line-height: 1.6; }
+
+  /* PORTFOLIO */
+  .portfolio-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+
+  .tab-btn {
+    padding: 8px 20px; border-radius: 4px;
+    border: 1px solid var(--preto-borda);
+    background: none; color: var(--cinza);
+    cursor: pointer; font-size: .9rem;
+    transition: all .2s;
+  }
+
+  .tab-btn.active, .tab-btn:hover {
+    border-color: var(--verde);
+    color: var(--verde);
+    background: rgba(57,255,20,.06);
+  }
+
+  .portfolio-panel { display: none; }
+  .portfolio-panel.active { display: block; }
+
+  .portfolio-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 24px;
+  }
+
+  .portfolio-location {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--verde); font-size: .85rem;
+    margin-bottom: 12px;
+  }
+
+  .portfolio-info h3 {
+    font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;
+  }
+
+  .portfolio-info p { color: var(--cinza); font-size: .95rem; }
+
+  .portfolio-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+  }
+
+  .tag {
+    background: rgba(57,255,20,.08);
+    border: 1px solid rgba(57,255,20,.2);
+    color: var(--verde);
+    padding: 4px 12px; border-radius: 20px;
+    font-size: .78rem;
+  }
+
+  .portfolio-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .portfolio-gallery img {
+    width: 100%; aspect-ratio: 1;
+    object-fit: cover; border-radius: 6px;
+    border: 1px solid var(--preto-borda);
+    transition: transform .3s;
+    cursor: pointer;
+  }
+
+  .portfolio-gallery img:hover { transform: scale(1.03); }
+  .portfolio-gallery img:first-child {
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+  }
+
+  /* DIFERENCIAIS */
+  #diferenciais { background: var(--preto-card); }
+
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .diff-list { display: flex; flex-direction: column; gap: 20px; }
+
+  .diff-item {
+    display: flex; gap: 16px;
+    padding: 20px; border-radius: 8px;
+    border: 1px solid var(--preto-borda);
+    background: var(--preto);
+    transition: border-color .2s;
+  }
+
+  .diff-item:hover { border-color: rgba(57,255,20,.2); }
+
+  .diff-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+
+  .diff-item h4 { font-size: .95rem; margin-bottom: 4px; }
+  .diff-item p { font-size: .85rem; color: var(--cinza); }
+
+  .brand-logos {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    margin-top: 12px;
+  }
+
+  .brand-chip {
+    background: var(--preto);
+    border: 1px solid var(--preto-borda);
+    padding: 10px 20px; border-radius: 6px;
+    font-weight: 700; font-size: .9rem; color: var(--branco);
+    letter-spacing: 1px;
+  }
+
+  .numbers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 32px;
+  }
+
+  .number-card {
+    background: var(--preto);
+    border: 1px solid var(--preto-borda);
+    border-radius: 8px; padding: 24px;
+    text-align: center;
+  }
+
+  .big-number {
+    font-size: 4rem; font-weight: 900; color: var(--verde);
+    line-height: 1;
+  }
+
+  .big-label { color: var(--cinza); font-size: .9rem; margin-top: 4px; }
+  .brands-title { color: var(--cinza); font-size: 1.1rem; margin-bottom: 8px; }
+
+  /* CONTATO */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .contact-info h3 { font-size: 1.3rem; margin-bottom: 8px; }
+  .contact-info p { color: var(--cinza); margin-bottom: 32px; }
+
+  .contact-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--preto-borda);
+  }
+
+  .contact-item:last-of-type { border-bottom: none; }
+
+  .contact-icon {
+    width: 40px; height: 40px;
+    background: rgba(57,255,20,.08);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+
+  .contact-item a {
+    color: var(--branco); text-decoration: none;
+    transition: color .2s;
+  }
+
+  .contact-item a:hover { color: var(--verde); }
+  .contact-item small { display: block; color: var(--cinza); font-size: .8rem; }
+
+  form {
+    background: var(--preto-card);
+    border: 1px solid var(--preto-borda);
+    border-radius: 8px; padding: 32px;
+  }
+
+  .form-group { margin-bottom: 20px; }
+
+  label {
+    display: block; font-size: .85rem;
+    color: var(--cinza); margin-bottom: 6px;
+  }
+
+  input, textarea, select {
+    width: 100%; padding: 12px 16px;
+    background: var(--preto);
+    border: 1px solid var(--preto-borda);
+    border-radius: 6px; color: var(--branco);
+    font-size: .95rem; font-family: inherit;
+    transition: border-color .2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--verde);
+  }
+
+  textarea { resize: vertical; min-height: 120px; }
+  select option { background: var(--preto-card); }
+
+  .btn-form {
+    width: 100%; padding: 14px;
+    background: var(--verde); color: var(--preto);
+    border: none; border-radius: 6px;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s, transform .2s;
+  }
+
+  .btn-form:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--preto-card);
+    border-top: 1px solid var(--preto-borda);
+    padding: 40px 5%;
+    text-align: center;
+  }
+
+  .footer-logo { margin-bottom: 16px; }
+  footer p { color: var(--cinza); font-size: .85rem; }
+  footer a { color: var(--verde); text-decoration: none; }
+  .footer-nome { color: var(--branco); font-weight: 700; margin-bottom: 8px; }
+  .footer-copy { margin-top: 16px; font-size: .8rem; }
+
+  /* WHATSAPP FLOAT */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    width: 58px; height: 58px;
+    background: #25d366; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,.4);
+    transition: transform .2s, box-shadow .2s;
+    text-decoration: none;
+  }
+
+  .wa-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(37,211,102,.6);
+  }
+
+  .wa-float svg { width: 30px; height: 30px; fill: white; }
+
+  /* LIGHTBOX */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,.92);
+    align-items: center; justify-content: center;
+  }
+
+  #lightbox.open { display: flex; }
+
+  #lightbox img {
+    max-width: 90vw; max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,.8);
+  }
+
+  #lightbox-close {
+    position: absolute; top: 20px; right: 24px;
+    background: none; border: none; color: white;
+    font-size: 2rem; cursor: pointer; line-height: 1;
+  }
+
+  /* BTN CONTATO INLINE */
+  .btn-contato {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--verde); color: var(--preto);
+    padding: 14px 28px; border-radius: 6px;
+    font-weight: 700; text-decoration: none; font-size: 1rem;
+    margin-top: 28px;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 20px rgba(57,255,20,.3);
+  }
+
+  .btn-contato:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(57,255,20,.5);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav ul { display: none; }
+    nav ul.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 70px; left: 0; right: 0;
+      background: rgba(5,5,5,.98);
+      padding: 20px 5%;
+      border-bottom: 1px solid var(--preto-borda);
+      gap: 1rem;
+    }
+    .nav-toggle { display: block; }
+
+    .hero-stats { flex-direction: column; gap: 24px; }
+
+    .portfolio-header { grid-template-columns: 1fr; }
+    .portfolio-gallery { grid-template-columns: 1fr 1fr; }
+    .portfolio-gallery img:first-child { grid-column: span 2; }
+
+    .diff-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .numbers-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="shieldGrad" cx="50%" cy="40%">
+          <stop offset="0%" stop-color="#39ff14" stop-opacity=".15"/>
+          <stop offset="100%" stop-color="#39ff14" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
+        fill="#111" stroke="#39ff14" stroke-width="2.5"/>
+      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
+        fill="url(#shieldGrad)"/>
+      <ellipse cx="50" cy="50" rx="22" ry="14" fill="none" stroke="#39ff14" stroke-width="2"/>
+      <circle cx="50" cy="50" r="7" fill="#39ff14" opacity=".9"/>
+      <circle cx="50" cy="50" r="3.5" fill="#050505"/>
+      <circle cx="53" cy="47" r="1.5" fill="white" opacity=".6"/>
+    </svg>
+    <span class="logo-text">B<span>&A</span> VISION</span>
+  </a>
+
+  <ul id="nav-menu">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#portfolio">Portfólio</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#contato" class="nav-cta">Orçamento</a></li>
+  </ul>
+
+  <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Segurança Digital</div>
+    <h1 class="hero-title">
+      Tecnologia que<br>
+      <span class="destaque">protege</span> o que<br>
+      importa pra você
+    </h1>
+    <p class="hero-subtitle">
+      Instalação profissional de CFTV em projetos residenciais, comerciais e industriais.
+      Do cabeamento estruturado à configuração remota — do Rio a Minas.
+    </p>
+    <div class="hero-btns">
+      <a href="https://wa.me/5521996646927?text=Olá!%20Gostaria%20de%20solicitar%20um%20orçamento%20de%20CFTV." class="btn-primary" target="_blank" rel="noopener noreferrer">
+        💬 Solicitar Orçamento
+      </a>
+      <a href="#portfolio" class="btn-secondary">
+        Ver Projetos →
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num">3+</span>
+        <span class="stat-label">Estados atendidos</span>
+      </div>
+      <div>
+        <span class="stat-num">1.327m</span>
+        <span class="stat-label">Cabo em um único projeto</span>
+      </div>
+      <div>
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Projetos entregues</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICOS -->
+<section id="servicos">
+  <p class="section-label">O que fazemos</p>
+  <h2 class="section-title">Soluções completas em segurança</h2>
+  <p class="section-sub">Da vistoria inicial à entrega com câmeras funcionando. Você não precisa entender de tecnologia — nós cuidamos de tudo.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">📷</div>
+      <h3>CFTV IP</h3>
+      <p>Câmeras IP de alta resolução, visão noturna e acesso remoto pelo celular. Hikvision e Intelbras.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔌</div>
+      <h3>Cabeamento Estruturado</h3>
+      <p>Passagem profissional de cabos Cat5e e Cat6, organização de rack e patch panel. Do pequeno ao industrial.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🖥️</div>
+      <h3>DVR / NVR</h3>
+      <p>Instalação e configuração de gravadores digitais com armazenamento local e acesso remoto 24h.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📡</div>
+      <h3>Câmeras Wi-Fi</h3>
+      <p>Solução sem fio para residências e pequenos comércios. Instalação rápida, imagem nítida.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Manutenção e Suporte</h3>
+      <p>Revisão preventiva, troca de equipamentos defeituosos e suporte remoto para sistemas instalados.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏗️</div>
+      <h3>Projetos Industriais</h3>
+      <p>Atendemos galpões, condomínios e obras de grande porte. Equipe com equipamentos para altura e escala.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <p class="section-label">Projetos realizados</p>
+  <h2 class="section-title">Obras concluídas</h2>
+  <p class="section-sub">Cada projeto entregue com qualidade e dentro do prazo. Veja o que já fizemos.</p>
+
+  <div class="portfolio-tabs">
+    <button type="button" class="tab-btn active" onclick="showTab('vitale', this)">Vitale ON — Rio de Janeiro</button>
+    <button type="button" class="tab-btn" onclick="showTab('bh', this)">Industrial — Belo Horizonte</button>
+    <button type="button" class="tab-btn" onclick="showTab('contagem', this)">Galpão — Contagem</button>
+  </div>
+
+  <!-- VITALE ON / RIO -->
+  <div class="portfolio-panel active" id="tab-vitale">
+    <div class="portfolio-header">
+      <div class="portfolio-info">
+        <div class="portfolio-location">📍 Recreio dos Bandeirantes, Rio de Janeiro</div>
+        <h3>Condomínio Vitale ON</h3>
+        <p>Instalação completa de CFTV em condomínio residencial. Passagem de cabos nos corredores, configuração de câmeras IP e entrega com acesso remoto para síndico e moradores.</p>
+        <div class="portfolio-tags">
+          <span class="tag">CFTV IP</span>
+          <span class="tag">Câmeras Wi-Fi</span>
+          <span class="tag">Cabeamento</span>
+          <span class="tag">Condomínio</span>
+          <span class="tag">Intelbras</span>
+        </div>
+      </div>
+      <div class="portfolio-gallery">
+        <img src="fotos/rio/VitaleOn%20001.jpg" alt="Instalação Vitale ON" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20002.jpg" alt="Cabeamento corredor" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20003.jpg" alt="Câmeras instaladas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20004.jpg" alt="Equipe instalação" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20005.jpg" alt="Sistema funcionando" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20006.jpg" alt="Câmeras configuradas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/VitaleOn%20007.jpg" alt="Entrega finalizada" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/Recreio%20001.png" alt="Câmeras Recreio" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/rio/Recreio%20002.jpg" alt="Instalação Recreio" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- BH -->
+  <div class="portfolio-panel" id="tab-bh">
+    <div class="portfolio-header">
+      <div class="portfolio-info">
+        <div class="portfolio-location">📍 Belo Horizonte, Minas Gerais</div>
+        <h3>Obra Industrial — BH</h3>
+        <p>Instalação de sistema de vigilância em obra industrial de grande porte. Mais de 20 câmeras dome Hikvision configuradas em batch, com plataforma elevatória e equipe especializada em altura.</p>
+        <div class="portfolio-tags">
+          <span class="tag">Hikvision</span>
+          <span class="tag">Câmeras Dome</span>
+          <span class="tag">Industrial</span>
+          <span class="tag">Batch Config</span>
+          <span class="tag">Plataforma Elevatória</span>
+        </div>
+      </div>
+      <div class="portfolio-gallery">
+        <img src="fotos/bh/Obramax%20002.jpg" alt="Obra BH" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/bh/Obramax%20003.png" alt="Plataforma elevatória" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/bh/Obramax%20003.png" alt="Câmeras Hikvision" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/bh/Obramax%20004.png" alt="Configuração NVR" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/bh/Obramax%20005.jpg" alt="Instalação câmeras" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+        <img src="fotos/bh/Obramax%20006.jpg" alt="Sistema configurado" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTAGEM -->
+  <div class="portfolio-panel" id="tab-contagem">
+    <div class="portfolio-header">
+      <div class="portfolio-info">
+        <div class="portfolio-location">📍 Contagem, Minas Gerais</div>
+        <h3>Galpão Industrial — Contagem</h3>
+        <p>Projeto de grande escala em galpão industrial. Mais de 1.327 metros de cabo MultiLAN Cat5e passados pela estrutura metálica. Instalação com plataformas elevatórias, múltiplos NVRs e cobertura total do perímetro.</p>
+        <div class="portfolio-tags">
+          <span class="tag">1.327m de cabo</span>
+          <span class="tag">MultiLAN Cat5e</span>
+          <span class="tag">Galpão</span>
+          <span class="tag">Industrial</span>
+          <span class="tag">Grande Escala</span>
+        </div>
+      </div>
+      <div class="portfolio-gallery">
+        <img src="fotos/contagem/Obramax%20001.jpg" alt="Galpão Contagem" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section id="diferenciais">
+  <p class="section-label">Por que a B&A Vision</p>
+  <h2 class="section-title">Diferenciais que fazem diferença</h2>
+  <p class="section-sub">Não somos revenda. Somos instaladores especializados com equipe própria e equipamentos de ponta.</p>
+
+  <div class="diff-grid">
+    <div class="diff-list">
+      <div class="diff-item">
+        <div class="diff-icon">🏆</div>
+        <div>
+          <h4>Equipe própria e uniformizada</h4>
+          <p>Profissionais treinados, identificados e com equipamentos de segurança. Você sabe quem entra na sua obra.</p>
+        </div>
+      </div>
+      <div class="diff-item">
+        <div class="diff-icon">📱</div>
+        <div>
+          <h4>Acesso remoto configurado</h4>
+          <p>Entregamos com o aplicativo funcionando no seu celular. Você acompanha tudo de onde estiver.</p>
+        </div>
+      </div>
+      <div class="diff-item">
+        <div class="diff-icon">🔍</div>
+        <div>
+          <h4>Testamos tudo antes de sair</h4>
+          <p>Usamos testador PoE Intelbras em campo para validar cada câmera antes da entrega. Nada de "vê depois".</p>
+        </div>
+      </div>
+      <div class="diff-item">
+        <div class="diff-icon">📐</div>
+        <div>
+          <h4>Do residencial ao industrial</h4>
+          <p>Instalamos do apartamento ao galpão com 1.300m de cabo. Mesma qualidade, qualquer escala.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="brands-title">Marcas que utilizamos</h3>
+      <div class="brand-logos">
+        <span class="brand-chip">HIKVISION</span>
+        <span class="brand-chip">INTELBRAS</span>
+        <span class="brand-chip">IMILAB</span>
+        <span class="brand-chip">MULTILAN</span>
+      </div>
+
+      <div class="numbers-grid">
+        <div class="number-card">
+          <div class="big-number">20+</div>
+          <div class="big-label">Câmeras em um único projeto</div>
+        </div>
+        <div class="number-card">
+          <div class="big-number">3</div>
+          <div class="big-label">Estados atendidos</div>
+        </div>
+        <div class="number-card">
+          <div class="big-number">24h</div>
+          <div class="big-label">Acesso remoto</div>
+        </div>
+        <div class="number-card">
+          <div class="big-number">★ 5</div>
+          <div class="big-label">Qualidade de entrega</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <p class="section-label">Fale conosco</p>
+  <h2 class="section-title">Solicite seu orçamento</h2>
+  <p class="section-sub">Atendemos Rio de Janeiro e Minas Gerais. Resposta em até 1 hora no horário comercial.</p>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>Prefere falar direto?</h3>
+      <p>Mande uma mensagem pelo WhatsApp. É mais rápido.</p>
+
+      <div class="contact-item">
+        <div class="contact-icon">📱</div>
+        <div>
+          <a href="https://wa.me/5521996646927" target="_blank" rel="noopener noreferrer">(21) 99664-6927</a>
+          <small>WhatsApp — resposta em minutos</small>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📸</div>
+        <div>
+          <a href="https://instagram.com/b.a.vision" target="_blank" rel="noopener noreferrer">@b.a.vision</a>
+          <small>Instagram</small>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <span>Rio de Janeiro & Minas Gerais</span>
+          <small>Atendimento em todo o estado</small>
+        </div>
+      </div>
+
+      <a href="https://wa.me/5521996646927?text=Olá!%20Gostaria%20de%20um%20orçamento%20de%20CFTV." class="btn-contato" target="_blank" rel="noopener noreferrer">
+        💬 Abrir WhatsApp
+      </a>
+    </div>
+
+    <form action="https://formspree.io/f/mrewabpz" method="POST">
+      <div class="form-group">
+        <label for="nome">Seu nome</label>
+        <input type="text" id="nome" name="nome" placeholder="João Silva" required>
+      </div>
+      <div class="form-group">
+        <label for="telefone">WhatsApp</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="(21) 99999-9999" required>
+      </div>
+      <div class="form-group">
+        <label for="tipo">Tipo de projeto</label>
+        <select id="tipo" name="tipo">
+          <option value="">Selecione...</option>
+          <option>Residencial</option>
+          <option>Comercial</option>
+          <option>Condomínio</option>
+          <option>Industrial / Galpão</option>
+          <option>Manutenção</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="msg">Descreva o projeto</label>
+        <textarea id="msg" name="message" placeholder="Ex: Preciso de câmeras em 3 pontos de uma loja em Barra da Tijuca..."></textarea>
+      </div>
+      <button type="submit" class="btn-form">Enviar Mensagem</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 96 C30 88 12 72 12 52 L12 24 Z"
+        fill="#111" stroke="#39ff14" stroke-width="2.5"/>
+      <ellipse cx="50" cy="50" rx="22" ry="14" fill="none" stroke="#39ff14" stroke-width="2"/>
+      <circle cx="50" cy="50" r="7" fill="#39ff14" opacity=".9"/>
+      <circle cx="50" cy="50" r="3.5" fill="#050505"/>
+    </svg>
+  </div>
+  <p class="footer-nome">B&A VISION — Segurança Digital</p>
+  <p>📍 Rio de Janeiro & Minas Gerais &nbsp;|&nbsp; 📱 <a href="https://wa.me/5521996646927" target="_blank" rel="noopener noreferrer">(21) 99664-6927</a> &nbsp;|&nbsp; 📸 <a href="https://instagram.com/b.a.vision" target="_blank" rel="noopener noreferrer">@b.a.vision</a></p>
+  <p class="footer-copy">© 2025 B&A Vision. Todos os direitos reservados.</p>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/5521996646927?text=Olá!%20Gostaria%20de%20um%20orçamento." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button type="button" id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="Foto do projeto">
+</div>
+
+<script>
+  document.getElementById('nav-toggle').addEventListener('click', function() {
+    document.getElementById('nav-menu').classList.toggle('open');
+  });
+
+  document.querySelectorAll('#nav-menu a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.remove('open');
+    });
+  });
+
+  function showTab(name, btn) {
+    document.querySelectorAll('.portfolio-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
