@@ -135,11 +135,11 @@ nav a:hover{color:var(--b)}
 .port-top h2 em{font-style:normal;color:var(--g)}
 .port-top p{color:var(--c);font-size:.8rem;max-width:260px;text-align:right;line-height:1.7}
 
-/* bento — ajuste manual de células */
+/* bento grid */
 .bento{
   display:grid;
-  grid-template-columns:repeat(12,1fr);
-  grid-auto-rows:180px;
+  grid-template-columns:2fr 1.2fr 1.2fr;
+  grid-template-rows:280px 220px 220px 220px;
   gap:6px;
 }
 
@@ -155,25 +155,25 @@ nav a:hover{color:var(--b)}
   position:absolute;inset:0;
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:16px;
-  background:linear-gradient(to top,rgba(5,5,5,.8) 0%,transparent 60%);
+  background:linear-gradient(to top,rgba(5,5,5,.82) 0%,transparent 55%);
   opacity:0;transition:opacity .3s;
 }
 .b:hover .b-cap{opacity:1}
-.b-cap span{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--g)}
-.b-cap strong{font-size:.82rem;font-weight:700}
+.b-cap span{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--g)}
+.b-cap strong{font-size:.8rem;font-weight:700}
 
-/* tamanhos das células */
-.b1{grid-column:span 5;grid-row:span 2}
-.b2{grid-column:span 4;grid-row:span 1}
-.b3{grid-column:span 3;grid-row:span 1}
-.b4{grid-column:span 4;grid-row:span 1}
-.b5{grid-column:span 3;grid-row:span 2}
-.b6{grid-column:span 5;grid-row:span 1}
-.b7{grid-column:span 4;grid-row:span 1}
-.b8{grid-column:span 5;grid-row:span 1}
-.b9{grid-column:span 4;grid-row:span 1}
-.b10{grid-column:span 3;grid-row:span 1}
-.b11{grid-column:span 8;grid-row:span 1}
+/* posicionamento explícito — grade limpa */
+.b1 {grid-column:1;grid-row:1/3}   /* foto grande esquerda, 2 linhas */
+.b2 {grid-column:2;grid-row:1}
+.b3 {grid-column:3;grid-row:1}
+.b4 {grid-column:2;grid-row:2}
+.b5 {grid-column:3;grid-row:2}
+.b6 {grid-column:1;grid-row:3}
+.b7 {grid-column:2;grid-row:3}
+.b8 {grid-column:3;grid-row:3}
+.b9 {grid-column:1;grid-row:4}
+.b10{grid-column:2;grid-row:4}
+.b11{grid-column:3;grid-row:4}
 
 /* ─ SERVIÇOS ─────────────────────── */
 #servicos{padding:0 40px;border-top:1px solid var(--l);border-bottom:1px solid var(--l)}
@@ -196,7 +196,7 @@ nav a:hover{color:var(--b)}
 .svc-row{
   display:flex;align-items:center;
   justify-content:space-between;
-  padding:28px 0;
+  padding:20px 0;
   border-top:1px solid var(--l);
   cursor:default;transition:padding-left .2s;
   position:relative;overflow:hidden;
@@ -211,8 +211,8 @@ nav a:hover{color:var(--b)}
 .svc-row:last-child{border-bottom:1px solid var(--l);margin-bottom:64px}
 
 .svc-name{
-  font-size:clamp(1.4rem,3vw,2.8rem);
-  font-weight:900;letter-spacing:-1px;text-transform:uppercase;
+  font-size:clamp(1rem,2vw,1.8rem);
+  font-weight:900;letter-spacing:-.5px;text-transform:uppercase;
   position:relative;z-index:1;transition:color .2s;
 }
 .svc-num{
@@ -457,59 +457,49 @@ footer a{color:var(--g);text-decoration:none}
   </div>
 
   <div class="bento">
-    <!-- Vitale ON -->
     <div class="b b1" onclick="openLb('fotos/rio/VitaleOn%20001.jpg')">
       <img src="fotos/rio/VitaleOn%20001.jpg" alt="Vitale ON" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Condomínio</span><strong>Vitale ON — Rio de Janeiro</strong></div>
     </div>
-    <div class="b b2" onclick="openLb('fotos/rio/VitaleOn%20002.jpg')">
-      <img src="fotos/rio/VitaleOn%20002.jpg" alt="Cabeamento" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Cabeamento</span><strong>Vitale ON</strong></div>
-    </div>
-    <div class="b b3" onclick="openLb('fotos/rio/VitaleOn%20003.jpg')">
+    <div class="b b2" onclick="openLb('fotos/rio/VitaleOn%20003.jpg')">
       <img src="fotos/rio/VitaleOn%20003.jpg" alt="Instalação" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Instalação</span><strong>Vitale ON</strong></div>
     </div>
-    <div class="b b4" onclick="openLb('fotos/rio/VitaleOn%20004.jpg')">
+    <div class="b b3" onclick="openLb('fotos/rio/VitaleOn%20004.jpg')">
       <img src="fotos/rio/VitaleOn%20004.jpg" alt="Equipe" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Equipe</span><strong>B&amp;A Vision</strong></div>
     </div>
-    <div class="b b5" onclick="openLb('fotos/rio/VitaleOn%20005.jpg')">
-      <img src="fotos/rio/VitaleOn%20005.jpg" alt="Sistema" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Sistema</span><strong>Vitale ON</strong></div>
+    <div class="b b4" onclick="openLb('fotos/rio/VitaleOn%20002.jpg')">
+      <img src="fotos/rio/VitaleOn%20002.jpg" alt="Cabeamento" loading="lazy" onerror="this.closest('.b').remove()">
+      <div class="b-cap"><span>Cabeamento</span><strong>Vitale ON</strong></div>
     </div>
-    <div class="b b6" onclick="openLb('fotos/rio/VitaleOn%20006.jpg')">
+    <div class="b b5" onclick="openLb('fotos/rio/VitaleOn%20006.jpg')">
       <img src="fotos/rio/VitaleOn%20006.jpg" alt="Configuração" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Configuração</span><strong>Vitale ON</strong></div>
     </div>
-    <div class="b b7" onclick="openLb('fotos/rio/VitaleOn%20007.jpg')">
-      <img src="fotos/rio/VitaleOn%20007.jpg" alt="Entrega" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Entrega</span><strong>Vitale ON</strong></div>
+    <div class="b b6" onclick="openLb('fotos/rio/VitaleOn%20005.jpg')">
+      <img src="fotos/rio/VitaleOn%20005.jpg" alt="Sistema" loading="lazy" onerror="this.closest('.b').remove()">
+      <div class="b-cap"><span>Sistema IP</span><strong>Vitale ON</strong></div>
     </div>
-    <!-- Galpão -->
+    <div class="b b7" onclick="openLb('fotos/rio/VitaleOn%20007.jpg')">
+      <img src="fotos/rio/VitaleOn%20007.jpg" alt="Rack" loading="lazy" onerror="this.closest('.b').remove()">
+      <div class="b-cap"><span>Rack</span><strong>Vitale ON</strong></div>
+    </div>
     <div class="b b8" onclick="openLb('fotos/contagem/Obramax%20001.jpg')">
       <img src="fotos/contagem/Obramax%20001.jpg" alt="Galpão" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Apoio Técnico</span><strong>Galpão Industrial — BH</strong></div>
     </div>
     <div class="b b9" onclick="openLb('fotos/bh/Obramax%20002.jpg')">
       <img src="fotos/bh/Obramax%20002.jpg" alt="Cabeamento industrial" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Cabeamento</span><strong>Galpão — Contagem</strong></div>
+      <div class="b-cap"><span>Cabeamento</span><strong>Galpão</strong></div>
     </div>
-    <div class="b b10" onclick="openLb('fotos/bh/Obramax%20003.png')">
-      <img src="fotos/bh/Obramax%20003.png" alt="Plataforma" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Plataforma</span><strong>Trabalho em altura</strong></div>
-    </div>
-    <div class="b b11" onclick="openLb('fotos/bh/Obramax%20004.png')">
-      <img src="fotos/bh/Obramax%20004.png" alt="Câmeras" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Câmeras</span><strong>Galpão Industrial</strong></div>
-    </div>
-    <div class="b b2" onclick="openLb('fotos/bh/Obramax%20005.jpg')">
+    <div class="b b10" onclick="openLb('fotos/bh/Obramax%20005.jpg')">
       <img src="fotos/bh/Obramax%20005.jpg" alt="Instalação" loading="lazy" onerror="this.closest('.b').remove()">
       <div class="b-cap"><span>Instalação</span><strong>Galpão</strong></div>
     </div>
-    <div class="b b3" onclick="openLb('fotos/bh/Obramax%20006.jpg')">
-      <img src="fotos/bh/Obramax%20006.jpg" alt="NVR" loading="lazy" onerror="this.closest('.b').remove()">
-      <div class="b-cap"><span>Configuração</span><strong>NVR</strong></div>
+    <div class="b b11" onclick="openLb('fotos/rio/Recreio%20001.png')">
+      <img src="fotos/rio/Recreio%20001.png" alt="Residencial RJ" loading="lazy" onerror="this.closest('.b').remove()">
+      <div class="b-cap"><span>Residencial</span><strong>Rio de Janeiro</strong></div>
     </div>
     <!-- Recreio -->
     <div class="b b5" onclick="openLb('fotos/rio/Recreio%20001.png')">
