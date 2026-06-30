@@ -193,17 +193,23 @@ nav a:hover{color:var(--b)}
   padding-bottom:2px;
 }
 
+.svc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 40px;
+}
+.svc-col{ border-top:1px solid var(--l); }
+
 .svc-row{
   display:flex;align-items:center;
   justify-content:space-between;
   padding:18px 0;
-  border-top:1px solid var(--l);
+  border-bottom:1px solid var(--l);
   cursor:default;
   transition:padding-left .2s;
 }
 .svc-row:hover{ padding-left:12px; }
 .svc-row:hover .svc-name{ color:var(--g); }
-.svc-row:last-child{border-bottom:1px solid var(--l);margin-bottom:64px}
 
 .svc-name{
   font-size:clamp(1rem,2vw,1.6rem);
@@ -355,6 +361,7 @@ footer a{color:var(--g);text-decoration:none}
   #contato{grid-template-columns:1fr;gap:56px;padding:60px 24px}
   footer{padding:24px}
   nav{padding:0 24px}
+  .svc-grid{grid-template-columns:1fr}
   .bento{grid-auto-rows:140px}
   .b1,.b5,.b11{grid-column:span 12;grid-row:span 1}
   .b2,.b3,.b4,.b6,.b7,.b8,.b9,.b10{grid-column:span 6;grid-row:span 1}
@@ -514,14 +521,20 @@ footer a{color:var(--g);text-decoration:none}
     <h2>O que instalamos</h2>
     <a href="https://wa.me/5521996646927?text=Olá!%20Gostaria%20de%20um%20orçamento." target="_blank" rel="noopener noreferrer">Pedir orçamento →</a>
   </div>
-  <div class="svc-row"><span class="svc-name">Câmeras IP</span><span class="svc-num">01</span></div>
-  <div class="svc-row"><span class="svc-name">Câmeras Analógicas</span><span class="svc-num">02</span></div>
-  <div class="svc-row"><span class="svc-name">Câmeras Wi-Fi</span><span class="svc-num">03</span></div>
-  <div class="svc-row"><span class="svc-name">CFTV Local e Remoto</span><span class="svc-num">04</span></div>
-  <div class="svc-row"><span class="svc-name">Fechaduras e Sensores de Alarme</span><span class="svc-num">05</span></div>
-  <div class="svc-row"><span class="svc-name">Automação Simples</span><span class="svc-num">06</span></div>
-  <div class="svc-row"><span class="svc-name">Manutenção e Suporte</span><span class="svc-num">07</span></div>
-  <div class="svc-row"><span class="svc-name">Projetos de Grande Porte</span><span class="svc-num">08</span></div>
+  <div class="svc-grid">
+    <div class="svc-col">
+      <div class="svc-row"><span class="svc-name">Câmeras IP</span><span class="svc-num">01</span></div>
+      <div class="svc-row"><span class="svc-name">Câmeras Analógicas</span><span class="svc-num">02</span></div>
+      <div class="svc-row"><span class="svc-name">Câmeras Wi-Fi</span><span class="svc-num">03</span></div>
+      <div class="svc-row"><span class="svc-name">CFTV Local e Remoto</span><span class="svc-num">04</span></div>
+    </div>
+    <div class="svc-col">
+      <div class="svc-row"><span class="svc-name">Fechaduras e Sensores de Alarme</span><span class="svc-num">05</span></div>
+      <div class="svc-row"><span class="svc-name">Automação Simples</span><span class="svc-num">06</span></div>
+      <div class="svc-row"><span class="svc-name">Manutenção e Suporte</span><span class="svc-num">07</span></div>
+      <div class="svc-row"><span class="svc-name">Projetos de Grande Porte</span><span class="svc-num">08</span></div>
+    </div>
+  </div>
 </section>
 
 <!-- SOBRE -->
