@@ -55,7 +55,8 @@
     color: var(--branco); letter-spacing: 1px;
   }
 
-  .logo-text span { color: var(--verde); }
+  .logo-ba { color: var(--verde); }
+  .logo-vision { color: var(--branco); }
 
   nav ul {
     list-style: none;
@@ -242,48 +243,59 @@
   /* PORTFOLIO */
   .portfolio-tabs {
     display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 36px;
+    margin-bottom: 40px;
   }
 
   .tab-btn {
-    padding: 8px 20px; border-radius: 4px;
+    padding: 10px 24px; border-radius: 4px;
     border: 1px solid var(--preto-borda);
     background: none; color: var(--cinza);
-    cursor: pointer; font-size: .9rem;
+    cursor: pointer; font-size: .9rem; font-weight: 500;
     transition: all .2s;
   }
 
-  .tab-btn.active, .tab-btn:hover {
+  .tab-btn.active {
+    border-color: var(--verde);
+    color: var(--preto);
+    background: var(--verde);
+    font-weight: 700;
+  }
+
+  .tab-btn:hover:not(.active) {
     border-color: var(--verde);
     color: var(--verde);
-    background: rgba(61,204,61,.06);
   }
 
   .portfolio-panel { display: none; }
   .portfolio-panel.active { display: block; }
 
-  .portfolio-header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
+  .portfolio-info-bar {
+    background: var(--preto-card);
+    border: 1px solid var(--preto-borda);
+    border-radius: 10px;
+    padding: 28px 32px;
     margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
   }
 
   .portfolio-location {
     display: inline-flex; align-items: center; gap: 6px;
     color: var(--verde); font-size: .85rem;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
-  .portfolio-info h3 {
-    font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;
+  .portfolio-info-bar h3 {
+    font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;
   }
 
-  .portfolio-info p { color: var(--cinza); font-size: .95rem; }
+  .portfolio-info-bar p { color: var(--cinza); font-size: .9rem; max-width: 520px; }
 
   .portfolio-tags {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
   }
 
   .tag {
@@ -294,24 +306,30 @@
     font-size: .78rem;
   }
 
+  /* Grade de fotos robusta — sem regras especiais no first-child */
   .portfolio-gallery {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
   }
 
   .portfolio-gallery img {
-    width: 100%; aspect-ratio: 1;
-    object-fit: cover; border-radius: 6px;
+    width: 100%; aspect-ratio: 4/3;
+    object-fit: cover; border-radius: 8px;
     border: 1px solid var(--preto-borda);
-    transition: transform .3s;
+    transition: transform .3s, border-color .3s;
     cursor: pointer;
+    display: block;
   }
 
-  .portfolio-gallery img:hover { transform: scale(1.03); }
-  .portfolio-gallery img:first-child {
+  .portfolio-gallery img:hover {
+    transform: scale(1.02);
+    border-color: var(--verde);
+  }
+
+  .portfolio-gallery img.wide {
     grid-column: span 2;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/7;
   }
 
   /* DIFERENCIAIS */
@@ -534,9 +552,8 @@
 
     .hero-stats { flex-direction: column; gap: 24px; }
 
-    .portfolio-header { grid-template-columns: 1fr; }
     .portfolio-gallery { grid-template-columns: 1fr 1fr; }
-    .portfolio-gallery img:first-child { grid-column: span 2; }
+    .portfolio-gallery img.wide { grid-column: span 2; }
 
     .diff-grid { grid-template-columns: 1fr; }
     .contact-grid { grid-template-columns: 1fr; }
@@ -550,7 +567,7 @@
 <nav>
   <a href="#" class="logo">
     <img class="logo-svg" src="fotos/logo.PNG" alt="B&A Vision">
-    <span class="logo-text">B<span>&A</span> VISION</span>
+    <span class="logo-text"><span class="logo-ba">B&amp;A</span> <span class="logo-vision">VISION</span></span>
   </a>
 
   <ul id="nav-menu">
@@ -656,13 +673,13 @@
     <button type="button" class="tab-btn" onclick="showTab('bh', this)">Galpão Industrial — Contagem / BH</button>
   </div>
 
-  <!-- VITALE ON / RIO -->
+  <!-- VITALE ON -->
   <div class="portfolio-panel active" id="tab-vitale">
-    <div class="portfolio-header">
-      <div class="portfolio-info">
+    <div class="portfolio-info-bar">
+      <div>
         <div class="portfolio-location">📍 Recreio dos Bandeirantes, Rio de Janeiro</div>
         <h3>Condomínio Vitale ON</h3>
-        <p>Instalação completa de CFTV em condomínio residencial. Passagem de cabos nos corredores, configuração de câmeras IP e entrega com acesso remoto para síndico e moradores.</p>
+        <p>Instalação completa de CFTV em condomínio residencial. Passagem de cabos nos corredores, câmeras IP e acesso remoto configurado para síndico e moradores.</p>
         <div class="portfolio-tags">
           <span class="tag">CFTV IP</span>
           <span class="tag">Câmeras Wi-Fi</span>
@@ -671,27 +688,27 @@
           <span class="tag">Intelbras</span>
         </div>
       </div>
-      <div class="portfolio-gallery">
-        <img src="fotos/rio/VitaleOn%20001.jpg" alt="Instalação Vitale ON" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20002.jpg" alt="Cabeamento corredor" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20003.jpg" alt="Câmeras instaladas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20004.jpg" alt="Equipe instalação" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20005.jpg" alt="Sistema funcionando" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20006.jpg" alt="Câmeras configuradas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/VitaleOn%20007.jpg" alt="Entrega finalizada" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/Recreio%20001.png" alt="Câmeras Recreio" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/rio/Recreio%20002.jpg" alt="Instalação Recreio" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-      </div>
+    </div>
+    <div class="portfolio-gallery">
+      <img src="fotos/rio/VitaleOn%20001.jpg" alt="Instalação Vitale ON" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)" class="wide">
+      <img src="fotos/rio/VitaleOn%20002.jpg" alt="Cabeamento corredor" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/VitaleOn%20003.jpg" alt="Câmeras instaladas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/VitaleOn%20004.jpg" alt="Equipe em ação" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/VitaleOn%20005.jpg" alt="Sistema funcionando" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/VitaleOn%20006.jpg" alt="Câmeras configuradas" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/VitaleOn%20007.jpg" alt="Entrega finalizada" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/Recreio%20001.png" alt="Câmeras bullet" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/rio/Recreio%20002.jpg" alt="Instalação Recreio" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
     </div>
   </div>
 
-  <!-- GALPÃO INDUSTRIAL (Contagem + BH = mesmo projeto) -->
+  <!-- GALPÃO INDUSTRIAL -->
   <div class="portfolio-panel" id="tab-bh">
-    <div class="portfolio-header">
-      <div class="portfolio-info">
+    <div class="portfolio-info-bar">
+      <div>
         <div class="portfolio-location">📍 Contagem & Belo Horizonte</div>
         <h3>Galpão Industrial — 65 Câmeras</h3>
-        <p>Projeto de grande escala em galpão industrial. Mais de 1.327 metros de cabo MultiLAN Cat5e, 65 câmeras Hikvision configuradas em batch, instalação com plataformas elevatórias e equipe especializada em altura.</p>
+        <p>Mais de 1.327 metros de cabo MultiLAN Cat5e, 65 câmeras Hikvision configuradas em batch, instalação com plataformas elevatórias e equipe especializada em trabalho em altura.</p>
         <div class="portfolio-tags">
           <span class="tag">65 câmeras</span>
           <span class="tag">1.327m de cabo</span>
@@ -701,14 +718,14 @@
           <span class="tag">Batch Config</span>
         </div>
       </div>
-      <div class="portfolio-gallery">
-        <img src="fotos/contagem/Obramax%20001.jpg" alt="Galpão industrial" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/bh/Obramax%20002.jpg" alt="Cabeamento estruturado" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/bh/Obramax%20003.png" alt="Plataforma elevatória" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/bh/Obramax%20004.png" alt="Câmeras Hikvision" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/bh/Obramax%20005.jpg" alt="Instalação câmeras" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-        <img src="fotos/bh/Obramax%20006.jpg" alt="Configuração NVR batch" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
-      </div>
+    </div>
+    <div class="portfolio-gallery">
+      <img src="fotos/contagem/Obramax%20001.jpg" alt="Galpão industrial" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)" class="wide">
+      <img src="fotos/bh/Obramax%20002.jpg" alt="Cabeamento estruturado" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/bh/Obramax%20003.png" alt="Plataforma elevatória" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/bh/Obramax%20004.png" alt="Câmeras Hikvision" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/bh/Obramax%20005.jpg" alt="Instalação câmeras" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
+      <img src="fotos/bh/Obramax%20006.jpg" alt="Configuração NVR batch" loading="lazy" onclick="openLightbox(this.src)" onerror="this.parentElement.removeChild(this)">
     </div>
   </div>
 </section>
