@@ -196,28 +196,23 @@ nav a:hover{color:var(--b)}
 .svc-row{
   display:flex;align-items:center;
   justify-content:space-between;
-  padding:20px 0;
+  padding:18px 0;
   border-top:1px solid var(--l);
-  cursor:default;transition:padding-left .2s;
-  position:relative;overflow:hidden;
+  cursor:default;
+  transition:padding-left .2s;
 }
-.svc-row::before{
-  content:'';position:absolute;inset:0 0 0 -100%;
-  background:var(--g);transition:inset .35s cubic-bezier(.4,0,.2,1);
-  z-index:0;
-}
-.svc-row:hover::before{inset:0}
-.svc-row:hover .svc-name,.svc-row:hover .svc-num{color:#000}
+.svc-row:hover{ padding-left:12px; }
+.svc-row:hover .svc-name{ color:var(--g); }
 .svc-row:last-child{border-bottom:1px solid var(--l);margin-bottom:64px}
 
 .svc-name{
-  font-size:clamp(1rem,2vw,1.8rem);
+  font-size:clamp(1rem,2vw,1.6rem);
   font-weight:900;letter-spacing:-.5px;text-transform:uppercase;
-  position:relative;z-index:1;transition:color .2s;
+  transition:color .2s;
 }
 .svc-num{
   font-size:.65rem;letter-spacing:3px;
-  color:var(--c);position:relative;z-index:1;transition:color .2s;
+  color:var(--c);
 }
 
 /* ─ SOBRE / DIFERENCIAIS ─────────── */
