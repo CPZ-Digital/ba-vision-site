@@ -17,6 +17,7 @@
   --c:#c0c0c0;
   --b:#efefef;
   --l:rgba(255,255,255,.06);
+  --nav-h:60px;
 }
 
 html{scroll-behavior:smooth}
@@ -47,10 +48,9 @@ nav a:hover{color:var(--b)}
 
 /* ─ HERO ─────────────────────────── */
 #hero{
-  min-height:100vh;
   display:grid;grid-template-columns:1fr auto;
-  align-items:end;
-  padding:0 40px 64px;
+  align-items:center;
+  padding:calc(var(--nav-h) + 40px) 40px 80px;
   position:relative;
   border-bottom:1px solid var(--l);
 }
@@ -352,8 +352,10 @@ footer a{color:var(--g);text-decoration:none}
 
 /* ─ MOBILE ───────────────────────── */
 @media(max-width:900px){
-  #hero{grid-template-columns:1fr;padding:0 24px 56px}
-  .hero-right{align-items:flex-start;margin-top:32px}
+  #hero{grid-template-columns:1fr;padding:calc(var(--nav-h) + 24px) 24px 56px}
+  .hero-right{align-items:flex-start;margin-top:24px}
+  .hero-logo-big{display:none}
+  .hero-h .stroke{display:none}
   .hero-desc{text-align:left;max-width:100%}
   #portfolio{padding:60px 24px}
   #servicos{padding:0 24px}
