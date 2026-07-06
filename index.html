@@ -353,9 +353,11 @@ footer a{color:var(--g);text-decoration:none}
 /* ─ MOBILE ───────────────────────── */
 @media(max-width:900px){
   #hero{grid-template-columns:1fr;padding:calc(var(--nav-h) + 24px) 24px 48px}
+  .hero-left{min-width:0}
   .hero-right{align-items:flex-start;margin-top:20px}
   .hero-logo-big{display:none}
-  .hero-h .stroke{display:none}
+  .hero-h{font-size:clamp(2.4rem,13vw,6rem)}
+  .hero-h .stroke{-webkit-text-stroke:1.5px rgba(255,255,255,.45)}
   .hero-mark{font-size:.75rem;letter-spacing:2px}
   .hero-desc{text-align:left;max-width:100%}
   #portfolio{padding:48px 24px}
