@@ -70,13 +70,17 @@ nav a:hover{color:var(--b)}
 .hero-h{
   font-size:clamp(5rem,12vw,11rem);
   font-weight:900;line-height:.88;
-  letter-spacing:-4px;text-transform:uppercase;
+  letter-spacing:-1px;text-transform:uppercase;
   margin-bottom:0;
 }
 .hero-h .stroke{
   display:block;
-  -webkit-text-stroke:1.5px rgba(255,255,255,.2);
   color:transparent;
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255,.35),
+     1px -1px 0 rgba(255,255,255,.35),
+    -1px  1px 0 rgba(255,255,255,.35),
+     1px  1px 0 rgba(255,255,255,.35);
 }
 .hero-h .solid{display:block;color:var(--b)}
 .hero-h .green{display:block;color:var(--g);
@@ -360,7 +364,6 @@ footer a{color:var(--g);text-decoration:none}
   .hero-right{align-items:flex-start;margin-top:20px}
   .hero-logo-big{display:none}
   .hero-h{font-size:clamp(2.4rem,13vw,6rem)}
-  .hero-h .stroke{-webkit-text-stroke:1.5px rgba(255,255,255,.45)}
   .hero-mark{font-size:.75rem;letter-spacing:2px}
   .hero-desc{text-align:left;max-width:100%}
   #portfolio{padding:48px 24px}
@@ -388,7 +391,7 @@ footer a{color:var(--g);text-decoration:none}
     border-bottom:1px solid var(--l);
   }
   .hbg{display:flex}
-  .hero-h{letter-spacing:-3px}
+  .hero-h{letter-spacing:-1px}
   .bento{grid-auto-rows:120px}
   .b,.b1,.b2,.b3,.b4,.b5,.b6,.b7,.b8,.b9,.b10,.b11{grid-column:span 12;grid-row:span 1}
   .port-top{flex-direction:column}
