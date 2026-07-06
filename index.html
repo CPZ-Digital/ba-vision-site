@@ -271,8 +271,9 @@ nav a:hover{color:var(--b)}
 /* ─ CONTATO ──────────────────────── */
 #contato{
   padding:100px 40px;
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:stretch;
 }
+#contato>div{display:flex;flex-direction:column}
 
 .ct-left h2{
   font-size:clamp(2rem,4vw,3.8rem);
@@ -302,7 +303,8 @@ nav a:hover{color:var(--b)}
   background:#25d366;color:#000;
   padding:14px 28px;font-weight:900;font-size:.84rem;
   letter-spacing:2px;text-transform:uppercase;
-  text-decoration:none;margin-top:36px;transition:opacity .2s;
+  text-decoration:none;margin-top:auto;transition:opacity .2s;
+  width:fit-content;
 }
 .btn-wa:hover{opacity:.85}
 
@@ -319,11 +321,12 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--g)}
 textarea{resize:vertical;min-height:100px}
 select option{background:#111}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#contato form{flex:1;display:flex;flex-direction:column}
 .btn-form{
   width:100%;padding:14px;
   background:var(--g);color:#000;border:none;
   font-size:.84rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;
-  cursor:pointer;transition:opacity .2s;margin-top:4px;
+  cursor:pointer;transition:opacity .2s;margin-top:auto;
 }
 .btn-form:hover{opacity:.85}
 
