@@ -1,0 +1,195 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;color:#1a1a2e;table-layout:fixed;max-width:100%;">
+<tr><td style="padding:34px 28px 0 28px;overflow:hidden;word-break:break-word;">
+
+    <!-- CABEÇALHO -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid {{cor_pri}};padding-bottom:10px;margin-bottom:14px;page-break-inside:avoid;">
+        <tr>
+            <td style="vertical-align:middle;height:52px;">
+                <img src="{{logo_src}}" height="{{logo_height}}" style="display:block;height:{{logo_height}}px;width:auto;" crossorigin="anonymous">
+            </td>
+            <td style="text-align:right;vertical-align:middle;">
+                <p style="margin:0;font-size:16px;font-weight:700;color:{{cor_pri}};">CONTRATO DE PRESTAÇÃO DE SERVIÇOS</p>
+                <p style="margin:4px 0 0;font-size:11px;color:#555;">Nº {{numero_contrato}} &nbsp;|&nbsp; {{dataFmt}}</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- PARTES -->
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 10px;">1. DAS PARTES</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;page-break-inside:avoid;table-layout:fixed;">
+        <tr>
+            <!-- CONTRATADA -->
+            <td style="width:48%;padding:10px 12px;background:{{cor_bg}};border-left:4px solid {{cor_pri}};vertical-align:top;word-break:break-word;">
+                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:{{cor_pri}};text-transform:uppercase;letter-spacing:0.6px;">Contratada</p>
+                <p style="margin:0;font-size:12px;font-weight:700;">{{razao_social}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">CNPJ: {{cnpj}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: {{contato_tel}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">E-mail: {{contato_email}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">Resp.: {{responsavel}}</p>
+            </td>
+            <td style="width:4%;"></td>
+            <!-- CONTRATANTE -->
+            <td style="width:48%;padding:10px 12px;background:#f9f9f9;border-left:4px solid #aaa;vertical-align:top;word-break:break-word;">
+                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.6px;">Contratante</p>
+                <p style="margin:0;font-size:12px;font-weight:700;">{{nome}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: {{tel}}</p>
+                {{email_row_ct}}
+                {{endereco_row_ct}}
+            </td>
+        </tr>
+    </table>
+
+    <!-- OBJETO -->
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">2. DO OBJETO</p>
+    <p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 6px;">
+        O presente contrato tem por objeto a <strong>prestação de serviços de instalação de sistema de segurança eletrônica (CFTV)</strong>,
+        compreendendo o fornecimento de materiais, equipamentos, mão de obra especializada, configuração, testes e treinamento básico
+        de operação, conforme especificações descritas na Cláusula 3.
+    </p>
+    {{qtd_cameras_row}}
+    {{endereco_obra_bloco}}
+
+    <!-- ESPECIFICAÇÕES -->
+    {{relacao_materiais}}
+
+    <!-- VALOR E PAGAMENTO -->
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">3. DO VALOR E FORMA DE PAGAMENTO</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:{{cor_pri}};margin-bottom:10px;page-break-inside:avoid;">
+        <tr>
+            <td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">VALOR TOTAL DO CONTRATO</td>
+            <td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">{{total}}</td>
+        </tr>
+    </table>
+    <p style="font-size:12px;color:#444;margin:0 0 8px;"><strong>Forma:</strong> {{modoLabel}} — {{formaLabel}}</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;page-break-inside:avoid;">
+        <tr>
+            <th style="background:{{cor_pri}};color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-align:left;">Parcela</th>
+            <th style="background:{{cor_pri}};color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-align:center;">Vencimento</th>
+            <th style="background:{{cor_pri}};color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-align:right;">Valor</th>
+        </tr>
+        {{rows_parc}}
+    </table>
+    <p style="font-size:11px;color:#555;margin:0 0 14px;line-height:1.7;">
+        O não pagamento nas datas acordadas sujeitará o CONTRATANTE a multa de 2% (dois por cento) sobre o valor em atraso,
+        acrescido de juros de mora de 1% (um por cento) ao mês, além de correção monetária pelo IPCA.
+    </p>
+
+    <!-- PRAZO -->
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">4. DO PRAZO DE EXECUÇÃO</p>
+    <p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 14px;">
+        A CONTRATADA se compromete a executar os serviços em até <strong>{{prazo}}</strong> a contar da
+        aprovação deste contrato e do recebimento do primeiro pagamento, podendo o prazo ser prorrogado mediante
+        acordo entre as partes em caso de impedimento por fatores externos (condições climáticas, acesso ao local, etc.).
+    </p>
+
+    <!-- OBRIGAÇÕES DA CONTRATADA -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">5. OBRIGAÇÕES DA CONTRATADA</p>
+    <p style="font-size:11px;color:#444;line-height:2;margin:0 0 14px;">
+        a) Executar os serviços com profissionalismo, dentro das normas técnicas aplicáveis;<br>
+        b) Fornecer os equipamentos e materiais especificados ou de equivalência técnica superior;<br>
+        c) Manter sigilo sobre informações do CONTRATANTE e do local de instalação;<br>
+        d) Prestar suporte técnico remoto por {{garantia}} após a conclusão dos serviços;<br>
+        e) Corrigir, sem ônus adicional, eventuais defeitos de instalação verificados no período de garantia;<br>
+        f) Apresentar o sistema funcionando ao CONTRATANTE ao término da instalação.
+    </p>
+    </div>
+
+    <!-- OBRIGAÇÕES DO CONTRATANTE -->
+    <div style="page-break-before:always;page-break-inside:avoid;padding-top:40px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">6. OBRIGAÇÕES DO CONTRATANTE</p>
+    <p style="font-size:11px;color:#444;line-height:2;margin:0 0 14px;">
+        a) Efetuar os pagamentos nas datas e formas acordadas;<br>
+        b) Garantir acesso ao local de instalação nos dias e horários combinados;<br>
+        c) Disponibilizar ponto de energia elétrica e internet (quando necessário para o sistema);<br>
+        d) Comunicar à CONTRATADA qualquer problema técnico durante o período de garantia;<br>
+        e) Não realizar modificações no sistema instalado sem prévia autorização técnica da CONTRATADA.
+    </p>
+    </div>
+
+    <!-- GARANTIA -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">7. DA GARANTIA</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">
+        {{garantia_texto}}
+        A garantia não cobre danos causados por mau uso, queda de energia, vandalismo, desastres naturais
+        ou modificações realizadas por terceiros sem autorização da CONTRATADA.
+    </p>
+    </div>
+
+    <!-- RESCISÃO -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">8. DA RESCISÃO</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">
+        O presente contrato poderá ser rescindido por qualquer das partes mediante notificação prévia de 5 (cinco) dias úteis.
+        Em caso de rescisão por iniciativa do CONTRATANTE após o início dos serviços, serão devidos os valores proporcionais
+        aos serviços já executados, acrescidos de multa rescisória de 20% sobre o saldo remanescente.
+        A rescisão por iniciativa da CONTRATADA, sem justa causa, obrigará a devolução dos valores recebidos acima do proporcional executado.
+    </p>
+    </div>
+
+    <!-- CONFIDENCIALIDADE -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">9. DA CONFIDENCIALIDADE</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">
+        As partes comprometem-se a manter sigilo sobre todas as informações técnicas e comerciais trocadas no âmbito deste contrato,
+        não podendo divulgá-las a terceiros sem prévia autorização por escrito da parte interessada.
+    </p>
+    </div>
+
+    <!-- DISPOSIÇÕES GERAIS -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">10. DISPOSIÇÕES GERAIS E FORO</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">
+        Este contrato é regido pelas leis da República Federativa do Brasil. Fica eleito o foro da Comarca do
+        Rio de Janeiro/RJ para dirimir quaisquer controvérsias oriundas deste instrumento, renunciando as partes
+        a qualquer outro, por mais privilegiado que seja. O presente instrumento, lido e achado conforme, é assinado
+        pelas partes em 2 (duas) vias de igual teor e forma, juntamente com as testemunhas abaixo.
+    </p>
+    </div>
+
+    <!-- OBS DO CLIENTE -->
+    {{obs_block}}
+
+    <!-- LOCAL E DATA -->
+    <p style="font-size:11px;color:#555;margin:0 0 20px;text-align:right;">
+        {{cidade_uf}}, {{dataFmt}}.
+    </p>
+
+    <!-- ASSINATURAS -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;page-break-inside:avoid;">
+        <tr>
+            <td style="width:46%;height:36px;vertical-align:bottom;border-bottom:1.5px solid #555;"></td>
+            <td style="width:8%;"></td>
+            <td style="width:46%;height:36px;vertical-align:bottom;border-bottom:1.5px solid #555;"></td>
+        </tr>
+        <tr>
+            <td style="padding-top:5px;text-align:center;">
+                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{razao_social}}</p>
+                <p style="margin:1px 0 0;font-size:10px;color:#666;">CNPJ: {{cnpj}} — Contratada</p>
+            </td>
+            <td></td>
+            <td style="padding-top:5px;text-align:center;">
+                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{nome}}</p>
+                <p style="margin:1px 0 0;font-size:10px;color:#666;">Contratante</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- TESTEMUNHAS -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="page-break-inside:avoid;">
+        <tr>
+            <td style="width:46%;height:36px;vertical-align:bottom;border-bottom:1px solid #aaa;"></td>
+            <td style="width:8%;"></td>
+            <td style="width:46%;height:36px;vertical-align:bottom;border-bottom:1px solid #aaa;"></td>
+        </tr>
+        <tr>
+            <td style="padding-top:4px;text-align:center;font-size:10px;color:#888;">Testemunha 1</td>
+            <td></td>
+            <td style="padding-top:4px;text-align:center;font-size:10px;color:#888;">Testemunha 2</td>
+        </tr>
+    </table>
+
+</td></tr>
+</table>

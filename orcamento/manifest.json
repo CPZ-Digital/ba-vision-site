@@ -1,0 +1,24 @@
+{
+  "name": "B&A Vision — Orçamento",
+  "short_name": "BA Orçamento",
+  "description": "Gerador de propostas para câmeras de segurança",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0055b3",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "ba-icon.png?v=1",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "ba-icon.png?v=1",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
