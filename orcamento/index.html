@@ -1245,6 +1245,7 @@ body {
         </svg>
     </button>
 </div>
+<div id="creditoDev" style="display:none;text-align:center;padding:0 0 14px;font-size:11px;color:var(--text-muted,#999);">App criado por CPZ Digital</div>
 
 </div>
 
@@ -1931,6 +1932,7 @@ function _aplicarBrandLock() {
     document.getElementById("subtituloApp").textContent=cb.checked?"B&A Vision":"CPZ Digital";
     document.getElementById("logoTopo").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
     document.getElementById("logoRodape").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
+    document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
 }
 
 function toggleBAVision() {
