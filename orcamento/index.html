@@ -1933,7 +1933,9 @@ function _aplicarBrandLock() {
     document.getElementById("logoTopo").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
     document.getElementById("logoRodape").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
     document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
+    const pl=document.getElementById("pinLogo"); if (pl) pl.src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
 }
+_aplicarBrandLock(); // roda na hora, nao espera o init() (que depende de fetch de rede)
 
 function toggleBAVision() {
     if (BRAND_LOCK) return;
