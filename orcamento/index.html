@@ -169,13 +169,20 @@ body {
     font-weight: 500;
     letter-spacing: 0.2px;
 }
-.logo-empresa {
+.logo-empresa-wrap {
+    display: inline-block;
     height: 34px;
     width: 177px;
     border-radius: 6px;
+    overflow: hidden;
     background-color: #fff;
     box-sizing: content-box;
     padding: 4px 8px;
+}
+.logo-empresa {
+    display: block;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 .topo-icon-btn {
@@ -1072,7 +1079,7 @@ body {
 <!-- ── TELA DE PIN ── -->
 <div id="pinOverlay">
     <div id="pinBox">
-        <img id="pinLogo" src="ba-vision-assinatura-v2.png" style="height:44px;width:229px;margin:0 auto 24px;display:block;border-radius:12px;object-fit:contain;">
+        <div style="height:44px;width:229px;margin:0 auto 24px;border-radius:12px;overflow:hidden;"><img id="pinLogo" src="ba-vision-assinatura-v2.png" style="display:block;width:100%;height:100%;object-fit:contain;"></div>
         <p id="pinMsg">Digite seu PIN</p>
         <div id="pinDots">
             <span></span><span></span><span></span><span></span>
@@ -1104,7 +1111,7 @@ body {
             <h2 id="tituloApp" style="cursor:default;user-select:none;">Orçamento</h2>
             <p class="subtitulo" id="subtituloApp">B&A Vision</p>
         </div>
-        <img class="logo-empresa" id="logoTopo" src="ba-vision-assinatura-v2.png" alt="B&amp;A Vision">
+        <div class="logo-empresa-wrap"><img class="logo-empresa" id="logoTopo" src="ba-vision-assinatura-v2.png" alt="B&amp;A Vision"></div>
     </div>
 
     <div id="followupBanner" style="display:none;"></div>
@@ -1240,7 +1247,7 @@ body {
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v3.png" style="width:120px;height:23px;background-color:white;border-radius:8px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);box-sizing:content-box;object-fit:contain;">
+    <div style="display:inline-block;width:120px;height:23px;background-color:white;border-radius:8px;overflow:hidden;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);box-sizing:content-box;"><img id="logoRodape" alt="CPZ" src="cpz-assinatura-v3.png" style="display:block;width:100%;height:100%;object-fit:contain;"></div>
     <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -3897,7 +3904,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=34');
+  navigator.serviceWorker.register('./sw.js?v=35');
 }
 
 </script>
