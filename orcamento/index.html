@@ -170,13 +170,13 @@ body {
     letter-spacing: 0.2px;
 }
 .logo-empresa {
-    height: 40px;
-    width: 210px;
+    height: 34px;
+    width: 177px;
     border-radius: 6px;
     background-color: #fff;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: auto 26px;
+    background-size: contain;
     box-sizing: content-box;
     padding: 4px 8px;
 }
@@ -1074,7 +1074,7 @@ body {
 <!-- ── TELA DE PIN ── -->
 <div id="pinOverlay">
     <div id="pinBox">
-        <div id="pinLogo" style="height:44px;width:246px;margin:0 auto 24px;border-radius:12px;background-image:url('ba-vision-assinatura.png');background-size:auto 30px;background-repeat:no-repeat;background-position:center;"></div>
+        <div id="pinLogo" style="height:44px;width:229px;margin:0 auto 24px;border-radius:12px;background-image:url('ba-vision-assinatura-v2.png');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
         <p id="pinMsg">Digite seu PIN</p>
         <div id="pinDots">
             <span></span><span></span><span></span><span></span>
@@ -1106,7 +1106,7 @@ body {
             <h2 id="tituloApp" style="cursor:default;user-select:none;">Orçamento</h2>
             <p class="subtitulo" id="subtituloApp">B&A Vision</p>
         </div>
-        <div class="logo-empresa" id="logoTopo" style="background-image:url('ba-vision-assinatura.png');" role="img" aria-label="B&amp;A Vision"></div>
+        <div class="logo-empresa" id="logoTopo" style="background-image:url('ba-vision-assinatura-v2.png');" role="img" aria-label="B&amp;A Vision"></div>
     </div>
 
     <div id="followupBanner" style="display:none;"></div>
@@ -1242,7 +1242,7 @@ body {
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <div id="logoRodape" role="img" aria-label="CPZ" style="width:140px;height:26px;background-color:white;background-image:url('cpz-assinatura-v2.png');background-repeat:no-repeat;background-position:center;background-size:auto 16px;border-radius:8px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);box-sizing:content-box;"></div>
+    <div id="logoRodape" role="img" aria-label="CPZ" style="width:120px;height:23px;background-color:white;background-image:url('cpz-assinatura-v3.png');background-repeat:no-repeat;background-position:center;background-size:contain;border-radius:8px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);box-sizing:content-box;"></div>
     <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -1936,10 +1936,10 @@ function _aplicarBrandLock() {
     cb.checked = BRAND_LOCK === 'ba';
     document.body.classList.toggle('ba-vision', cb.checked);
     document.getElementById("subtituloApp").textContent=cb.checked?"B&A Vision":"CPZ Digital";
-    _setLogo(document.getElementById("logoTopo"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
-    _setLogo(document.getElementById("logoRodape"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
+    _setLogo(document.getElementById("logoTopo"), cb.checked?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
+    _setLogo(document.getElementById("logoRodape"), cb.checked?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
     document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
-    _setLogo(document.getElementById("pinLogo"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
+    _setLogo(document.getElementById("pinLogo"), cb.checked?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
 }
 _aplicarBrandLock(); // roda na hora, nao espera o init() (que depende de fetch de rede)
 
@@ -1950,8 +1950,8 @@ function toggleBAVision() {
     const ativo=cb.checked;
     document.body.classList.toggle('ba-vision', ativo);
     document.getElementById("subtituloApp").textContent=ativo?"B&A Vision":"CPZ Digital";
-    _setLogo(document.getElementById("logoTopo"), ativo?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
-    _setLogo(document.getElementById("logoRodape"), ativo?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
+    _setLogo(document.getElementById("logoTopo"), ativo?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
+    _setLogo(document.getElementById("logoRodape"), ativo?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
     mostrarToast(ativo?"B&A Vision ativada":"CPZ Digital ativada");
     calcular();
 }
@@ -2013,8 +2013,8 @@ function restaurarEstado() {
         socio.checked=e.socio||false;
         document.body.classList.toggle('ba-vision', socio.checked);
         document.getElementById("subtituloApp").textContent=socio.checked?"B&A Vision":"CPZ Digital";
-        _setLogo(document.getElementById("logoTopo"), socio.checked?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
-        _setLogo(document.getElementById("logoRodape"), socio.checked?"ba-vision-assinatura.png":"cpz-assinatura-v2.png");
+        _setLogo(document.getElementById("logoTopo"), socio.checked?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
+        _setLogo(document.getElementById("logoRodape"), socio.checked?"ba-vision-assinatura-v2.png":"cpz-assinatura-v3.png");
         if (e.diasTrabalho) document.getElementById("diasTrabalho").value=e.diasTrabalho;
         if (e.diasDiarista) document.getElementById("diasDiarista").value=e.diasDiarista;
         if (e.pagModo) {
@@ -2060,8 +2060,8 @@ function limparOrcamento() {
     document.getElementById("usarSocio").checked=true;
     document.body.classList.add('ba-vision');
     document.getElementById("subtituloApp").textContent="B&A Vision";
-    _setLogo(document.getElementById("logoTopo"), "ba-vision-assinatura.png");
-    _setLogo(document.getElementById("logoRodape"), "ba-vision-assinatura.png");
+    _setLogo(document.getElementById("logoTopo"), "ba-vision-assinatura-v2.png");
+    _setLogo(document.getElementById("logoRodape"), "ba-vision-assinatura-v2.png");
     _aplicarBrandLock();
     document.getElementById("diasTrabalho").value=1;
     document.getElementById("diasDiarista").value=1;
@@ -2276,7 +2276,7 @@ function gerarPDF() {
         : '';
 
     const placeholders = {
-        '{{logo_src}}':          socio ? 'ba-vision-assinatura.png' : 'cpz-assinatura-v2.png',
+        '{{logo_src}}':          socio ? 'ba-vision-assinatura-v2.png' : 'cpz-assinatura-v3.png',
         '{{logo_height}}':        socio ? '48' : '40',
         '{{marca}}':             marca,
         '{{dataFmt}}':           dataFmt,
@@ -3694,7 +3694,7 @@ function gerarContrato(id) {
         ? `<p style="font-size:12px;color:#444;margin:0 0 14px;"><strong>Local de instalação:</strong> ${d.endereco.replace(/</g,'&lt;')}</p>` : '';
 
     const placeholders = {
-        '{{logo_src}}':         d.socio ? 'ba-vision-assinatura.png' : 'cpz-assinatura-v2.png',
+        '{{logo_src}}':         d.socio ? 'ba-vision-assinatura-v2.png' : 'cpz-assinatura-v3.png',
         '{{logo_height}}':      d.socio ? '48' : '40',
         '{{cor_pri}}':          cor,
         '{{cor_bg}}':           d.corBg,
