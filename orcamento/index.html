@@ -1996,6 +1996,7 @@ function restaurarEstado() {
         const raw=localStorage.getItem("cpz_estado");
         if (!raw) return false;
         const e=JSON.parse(raw);
+        if (BRAND_LOCK && !!e.socio !== (BRAND_LOCK==='ba')) return false; // rascunho era da outra marca
         document.querySelectorAll('input[name="tipo"]').forEach(cb=>{
             cb.checked=cb.value===e.tipo;
             cb.closest(".tipo-btn").classList.toggle("ativo",cb.value===e.tipo);
