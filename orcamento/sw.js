@@ -1,4 +1,4 @@
-const CACHE = 'ba-orcamento-v11';
+const CACHE = 'ba-orcamento-v12';
 const ASSETS = [
   './index.html',
   './template-pdf.html',
