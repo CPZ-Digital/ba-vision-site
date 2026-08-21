@@ -1,4 +1,4 @@
-const CACHE = 'ba-orcamento-v10';
+const CACHE = 'ba-orcamento-v11';
 const ASSETS = [
   './index.html',
   './template-pdf.html',
@@ -23,7 +23,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: 'no-store' })
       .then(res => { caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res; })
       .catch(() => caches.match(e.request))
   );
