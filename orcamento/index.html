@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="color-scheme" content="light dark">
-<title>CPZ Orçamento</title>
+<title>B&amp;A Vision — Orçamento</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0055b3">
 <meta name="mobile-web-app-capable" content="yes">
@@ -171,9 +171,13 @@ body {
 }
 .logo-empresa {
     height: 34px;
-    width: auto;
+    width: 110px;
     border-radius: 6px;
-    background: #fff;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    box-sizing: content-box;
     padding: 4px 8px;
 }
 .topo-icon-btn {
@@ -1070,7 +1074,7 @@ body {
 <!-- ── TELA DE PIN ── -->
 <div id="pinOverlay">
     <div id="pinBox">
-        <img src="ba-vision-assinatura.png" id="pinLogo" style="height:44px;width:auto;margin-bottom:24px;display:block;margin-left:auto;margin-right:auto;border-radius:12px;">
+        <div id="pinLogo" style="height:44px;width:180px;margin:0 auto 24px;border-radius:12px;background-image:url('ba-vision-assinatura.png');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
         <p id="pinMsg">Digite seu PIN</p>
         <div id="pinDots">
             <span></span><span></span><span></span><span></span>
@@ -1102,7 +1106,7 @@ body {
             <h2 id="tituloApp" style="cursor:default;user-select:none;">Orçamento</h2>
             <p class="subtitulo" id="subtituloApp">B&A Vision</p>
         </div>
-        <img class="logo-empresa" id="logoTopo" src="ba-vision-assinatura.png" alt="B&A Vision">
+        <div class="logo-empresa" id="logoTopo" style="background-image:url('ba-vision-assinatura.png');" role="img" aria-label="B&amp;A Vision"></div>
     </div>
 
     <div id="followupBanner" style="display:none;"></div>
@@ -1238,7 +1242,7 @@ body {
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" src="cpz-assinatura.png" alt="CPZ" style="width:130px;height:auto;background:white;border-radius:8px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);color-scheme:light;">
+    <div id="logoRodape" role="img" aria-label="CPZ" style="width:130px;height:38px;background-color:white;background-image:url('cpz-assinatura.png');background-repeat:no-repeat;background-position:center;background-size:contain;border-radius:8px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);box-sizing:content-box;"></div>
     <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -1924,16 +1928,18 @@ const BRAND_LOCK = location.hostname.includes('bavision') ? 'ba'
                   : location.hostname.includes('cpz-digital') ? 'cpz'
                   : null;
 
+function _setLogo(el, file) { if (el) el.style.backgroundImage = "url('" + file + "')"; }
+
 function _aplicarBrandLock() {
     if (!BRAND_LOCK) return;
     const cb=document.getElementById("usarSocio");
     cb.checked = BRAND_LOCK === 'ba';
     document.body.classList.toggle('ba-vision', cb.checked);
     document.getElementById("subtituloApp").textContent=cb.checked?"B&A Vision":"CPZ Digital";
-    document.getElementById("logoTopo").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
-    document.getElementById("logoRodape").src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
+    _setLogo(document.getElementById("logoTopo"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png");
+    _setLogo(document.getElementById("logoRodape"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png");
     document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
-    const pl=document.getElementById("pinLogo"); if (pl) pl.src=cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
+    _setLogo(document.getElementById("pinLogo"), cb.checked?"ba-vision-assinatura.png":"cpz-assinatura.png");
 }
 _aplicarBrandLock(); // roda na hora, nao espera o init() (que depende de fetch de rede)
 
@@ -1944,8 +1950,8 @@ function toggleBAVision() {
     const ativo=cb.checked;
     document.body.classList.toggle('ba-vision', ativo);
     document.getElementById("subtituloApp").textContent=ativo?"B&A Vision":"CPZ Digital";
-    document.getElementById("logoTopo").src=ativo?"ba-vision-assinatura.png":"cpz-assinatura.png";
-    document.getElementById("logoRodape").src=ativo?"ba-vision-assinatura.png":"cpz-assinatura.png";
+    _setLogo(document.getElementById("logoTopo"), ativo?"ba-vision-assinatura.png":"cpz-assinatura.png");
+    _setLogo(document.getElementById("logoRodape"), ativo?"ba-vision-assinatura.png":"cpz-assinatura.png");
     mostrarToast(ativo?"B&A Vision ativada":"CPZ Digital ativada");
     calcular();
 }
@@ -2007,8 +2013,8 @@ function restaurarEstado() {
         socio.checked=e.socio||false;
         document.body.classList.toggle('ba-vision', socio.checked);
         document.getElementById("subtituloApp").textContent=socio.checked?"B&A Vision":"CPZ Digital";
-        document.getElementById("logoTopo").src=socio.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
-        document.getElementById("logoRodape").src=socio.checked?"ba-vision-assinatura.png":"cpz-assinatura.png";
+        _setLogo(document.getElementById("logoTopo"), socio.checked?"ba-vision-assinatura.png":"cpz-assinatura.png");
+        _setLogo(document.getElementById("logoRodape"), socio.checked?"ba-vision-assinatura.png":"cpz-assinatura.png");
         if (e.diasTrabalho) document.getElementById("diasTrabalho").value=e.diasTrabalho;
         if (e.diasDiarista) document.getElementById("diasDiarista").value=e.diasDiarista;
         if (e.pagModo) {
@@ -2054,8 +2060,8 @@ function limparOrcamento() {
     document.getElementById("usarSocio").checked=true;
     document.body.classList.add('ba-vision');
     document.getElementById("subtituloApp").textContent="B&A Vision";
-    document.getElementById("logoTopo").src="ba-vision-assinatura.png";
-    document.getElementById("logoRodape").src="ba-vision-assinatura.png";
+    _setLogo(document.getElementById("logoTopo"), "ba-vision-assinatura.png");
+    _setLogo(document.getElementById("logoRodape"), "ba-vision-assinatura.png");
     _aplicarBrandLock();
     document.getElementById("diasTrabalho").value=1;
     document.getElementById("diasDiarista").value=1;
