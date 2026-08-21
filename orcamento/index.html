@@ -170,8 +170,12 @@ body {
     letter-spacing: 0.2px;
 }
 .logo-empresa {
-    height: 42px;
+    height: auto;
     width: auto;
+    max-height: 42px;
+    max-width: 45%;
+    flex-shrink: 1;
+    min-width: 0;
 }
 .topo-icon-btn {
     flex-shrink: 0;
@@ -1067,7 +1071,7 @@ body {
 <!-- ── TELA DE PIN ── -->
 <div id="pinOverlay">
     <div id="pinBox">
-        <img id="pinLogo" src="ba-vision-assinatura-v3.png" style="height:54px;width:auto;margin:0 auto 24px;display:block;">
+        <img id="pinLogo" src="ba-vision-assinatura-v3.png" style="height:auto;width:auto;max-height:54px;max-width:100%;margin:0 auto 24px;display:block;">
         <p id="pinMsg">Digite seu PIN</p>
         <div id="pinDots">
             <span></span><span></span><span></span><span></span>
@@ -1235,7 +1239,7 @@ body {
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:31px;width:auto;">
+    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:auto;width:auto;max-height:31px;max-width:45%;">
     <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -3892,7 +3896,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=36');
+  navigator.serviceWorker.register('./sw.js?v=37');
 }
 
 </script>
