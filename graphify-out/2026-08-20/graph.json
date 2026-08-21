@@ -1,0 +1,245 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "project_vitale_on",
+        "label": "Vitale ON Project Implementation",
+        "nodes": [
+          "fotos_rio_vitaleon_001_jpg",
+          "fotos_rio_vitaleon_004_jpg",
+          "fotos_rio_vitaleon_005_jpg",
+          "fotos_rio_vitaleon_007_jpg"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.9,
+        "source_file": "index.html"
+      },
+      {
+        "id": "industrial_security_flow",
+        "label": "Industrial Security Solutions",
+        "nodes": [
+          "fotos_contagem_obramax_001_jpg",
+          "fotos_bh_obramax_002_jpg",
+          "fotos_bh_obramax_005_jpg"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "B&A Vision Landing Page",
+      "file_type": "code",
+      "source_file": "index.html",
+      "id": "index_html",
+      "community": 2,
+      "norm_label": "b&a vision landing page"
+    },
+    {
+      "label": "Hero Section",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "id": "index_hero",
+      "community": 3,
+      "norm_label": "hero section"
+    },
+    {
+      "label": "Portfolio Bento Grid",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "id": "index_portfolio",
+      "community": 0,
+      "norm_label": "portfolio bento grid"
+    },
+    {
+      "label": "Services Section",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "id": "index_servicos",
+      "community": 1,
+      "norm_label": "services section"
+    },
+    {
+      "label": "About Section",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "id": "index_sobre",
+      "community": 7,
+      "norm_label": "about section"
+    },
+    {
+      "label": "Contact Form",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "id": "index_contato",
+      "community": 3,
+      "norm_label": "contact form"
+    },
+    {
+      "label": "B&A Vision Logo",
+      "file_type": "image",
+      "source_file": "fotos/logo.PNG",
+      "id": "fotos_logo_png",
+      "community": 2,
+      "norm_label": "b&a vision logo"
+    },
+    {
+      "label": "Batch Configuration Interface",
+      "file_type": "image",
+      "source_file": "fotos/bh/Obramax 002.jpg",
+      "id": "fotos_bh_obramax_002_jpg",
+      "community": 0,
+      "norm_label": "batch configuration interface"
+    },
+    {
+      "label": "Hikvision Camera Array",
+      "file_type": "image",
+      "source_file": "fotos/bh/Obramax 005.jpg",
+      "id": "fotos_bh_obramax_005_jpg",
+      "community": 4,
+      "norm_label": "hikvision camera array"
+    },
+    {
+      "label": "Industrial Warehouse Installation",
+      "file_type": "image",
+      "source_file": "fotos/contagem/Obramax 001.jpg",
+      "id": "fotos_contagem_obramax_001_jpg",
+      "community": 0,
+      "norm_label": "industrial warehouse installation"
+    },
+    {
+      "label": "Wi-Fi Camera Setup",
+      "file_type": "image",
+      "source_file": "fotos/rio/Recreio 001.png",
+      "id": "fotos_rio_recreio_001_png",
+      "community": 5,
+      "norm_label": "wi-fi camera setup"
+    },
+    {
+      "label": "Vitale ON Condominium Promo",
+      "file_type": "image",
+      "source_file": "fotos/rio/VitaleOn 001.jpg",
+      "id": "fotos_rio_vitaleon_001_jpg",
+      "community": 0,
+      "norm_label": "vitale on condominium promo"
+    },
+    {
+      "label": "Technician at Work",
+      "file_type": "image",
+      "source_file": "fotos/rio/VitaleOn 004.jpg",
+      "id": "fotos_rio_vitaleon_004_jpg",
+      "community": 6,
+      "norm_label": "technician at work"
+    },
+    {
+      "label": "Intelbras PoE Testing",
+      "file_type": "image",
+      "source_file": "fotos/rio/VitaleOn 005.jpg",
+      "id": "fotos_rio_vitaleon_005_jpg",
+      "community": 1,
+      "norm_label": "intelbras poe testing"
+    },
+    {
+      "label": "Network Rack Cabling",
+      "file_type": "image",
+      "source_file": "fotos/rio/VitaleOn 007.jpg",
+      "id": "fotos_rio_vitaleon_007_jpg",
+      "community": 1,
+      "norm_label": "network rack cabling"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source": "index_html",
+      "target": "fotos_logo_png"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source": "index_hero",
+      "target": "index_contato"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source": "index_portfolio",
+      "target": "fotos_bh_obramax_002_jpg"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source": "index_portfolio",
+      "target": "fotos_contagem_obramax_001_jpg"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source": "index_portfolio",
+      "target": "fotos_rio_vitaleon_001_jpg"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "index.html",
+      "source": "fotos_rio_vitaleon_005_jpg",
+      "target": "index_servicos"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "index.html",
+      "source": "fotos_rio_vitaleon_007_jpg",
+      "target": "index_servicos"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "project_vitale_on",
+      "label": "Vitale ON Project Implementation",
+      "nodes": [
+        "fotos_rio_vitaleon_001_jpg",
+        "fotos_rio_vitaleon_004_jpg",
+        "fotos_rio_vitaleon_005_jpg",
+        "fotos_rio_vitaleon_007_jpg"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "index.html"
+    },
+    {
+      "id": "industrial_security_flow",
+      "label": "Industrial Security Solutions",
+      "nodes": [
+        "fotos_contagem_obramax_001_jpg",
+        "fotos_bh_obramax_002_jpg",
+        "fotos_bh_obramax_005_jpg"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    }
+  ],
+  "built_at_commit": "872b64795bb3228622c4b18c663163f0b548eae5"
+}

@@ -1,9 +1,9 @@
-const CACHE = 'ba-orcamento-v4';
+const CACHE = 'ba-orcamento-v5';
 const ASSETS = [
   './index.html',
   './template-pdf.html',
   './template-contrato.html',
-  './cpz-assinatura.png',
+  './cpz-assinatura-v2.png',
   './ba-vision-assinatura.png',
   './cpz-icon.png',
   './manifest.json'
