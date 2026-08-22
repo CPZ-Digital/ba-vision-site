@@ -2105,6 +2105,11 @@ function restaurarEstado() {
     } catch(err) { console.error(err); return false; }
 }
 
+function _horaArq() {
+    const d = new Date();
+    return String(d.getHours()).padStart(2,'0') + String(d.getMinutes()).padStart(2,'0') + String(d.getSeconds()).padStart(2,'0');
+}
+
 function limparOrcamento() {
     if (!confirm("Apagar o orçamento e começar do zero?")) return;
     localStorage.removeItem("cpz_estado");
@@ -2368,7 +2373,7 @@ function gerarPDF() {
         `.replace(/\{\{cor_pri\}\}/g, socio ? '#059669' : '#0055b3') : '',
     };
 
-    const nomeArq = (numero ? numero + '-' : '') + 'orcamento-' + nome.replace(/\s+/g, '-').toLowerCase() + '-' + (data || new Date().toISOString().slice(0,10)) + '.pdf';
+    const nomeArq = (numero ? numero + '-' : '') + 'orcamento-' + nome.replace(/\s+/g, '-').toLowerCase() + '-' + (data || new Date().toISOString().slice(0,10)) + '-' + _horaArq() + '.pdf';
 
     fetch('template-pdf.html')
         .then(r => r.text())
@@ -2808,7 +2813,7 @@ async function exportarXLS() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = (numero ? numero + '-' : '') + 'orcamento-' + nome.replace(/\s+/g, '-').toLowerCase() + '-' + (data || new Date().toISOString().slice(0, 10)) + '.xlsx';
+    a.download = (numero ? numero + '-' : '') + 'orcamento-' + nome.replace(/\s+/g, '-').toLowerCase() + '-' + (data || new Date().toISOString().slice(0, 10)) + '-' + _horaArq() + '.xlsx';
     a.click();
     URL.revokeObjectURL(url);
     mostrarToast('Planilha exportada!');
@@ -3798,7 +3803,7 @@ function gerarContrato(id) {
         '{{cidade_uf}}':           'Rio de Janeiro/RJ',
     };
 
-    const nomeArq = d.nomeArqBase + '-contrato.pdf';
+    const nomeArq = d.nomeArqBase + '-contrato-' + _horaArq() + '.pdf';
 
     fetch('template-contrato.html')
         .then(r => r.text())
@@ -3966,7 +3971,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=20');
+  navigator.serviceWorker.register('./sw.js?v=21');
 }
 
 </script>
