@@ -1973,7 +1973,7 @@ async function _cloudSyncStartup() {
         const [hist, kits, rasc] = await Promise.all([
             _cloudPullAll('propostas'),
             _cloudPullAll('kits'),
-            _supa.from('rascunho').select('*').eq('marca', _marca).maybeSingle().catch(() => null)
+            _supa.from('rascunho').select('*').eq('marca', _marca).maybeSingle()
         ]);
         if (hist) _salvarHistoricoStorage(hist.map(_rowToHist));
         if (kits) _salvarKits(kits.map(_rowToKit));
@@ -3966,7 +3966,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=19');
+  navigator.serviceWorker.register('./sw.js?v=20');
 }
 
 </script>
