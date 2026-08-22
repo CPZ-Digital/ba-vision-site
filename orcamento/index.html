@@ -6,13 +6,13 @@
 <meta name="color-scheme" content="light dark">
 <title>B&amp;A Vision — Orçamento</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0055b3">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CPZ Orçamento">
-<link rel="apple-touch-icon" href="ba-icon-v2.png">
-<link rel="icon" type="image/png" href="ba-icon-v2.png">
+<link rel="apple-touch-icon" href="cpz-icon.png">
+<link rel="icon" type="image/png" href="cpz-icon.png">
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
@@ -1065,6 +1065,7 @@ body {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="ba-vision">
 
@@ -1940,6 +1941,63 @@ function _aplicarBrandLock() {
 }
 _aplicarBrandLock(); // roda na hora, nao espera o init() (que depende de fetch de rede)
 
+// ── SYNC EM NUVEM (Supabase) ──
+const _marca = BRAND_LOCK || 'cpz';
+const _supa  = window.supabase.createClient(
+    'https://eqbmqqfsbooatsmzgttz.supabase.co',
+    'sb_publishable_IDA-WMWDbUE4cj0LllUeHg_Epoj7oa5'
+);
+
+async function _cloudUpsert(table, row) {
+    try { await _supa.from(table).upsert(row); } catch(e) { console.error('cloud upsert', table, e); }
+}
+async function _cloudDelete(table, id) {
+    try { await _supa.from(table).delete().eq('id', id); } catch(e) { console.error('cloud delete', table, e); }
+}
+async function _cloudPullAll(table) {
+    try {
+        const { data, error } = await _supa.from(table).select('*').eq('marca', _marca).order('updated_at', { ascending: false });
+        if (error) throw error;
+        return data;
+    } catch(e) { console.error('cloud pull', table, e); return null; }
+}
+
+function _histToRow(e) { return { id:e.id, marca:e.marca||_marca, nome:e.nome, numero:e.numero, data:e.data, data_venc:e.dataVenc||null, total:e.total, status:e.status, estado:e.estado, updated_at:new Date().toISOString() }; }
+function _rowToHist(r) { return { id:r.id, nome:r.nome, numero:r.numero, data:r.data, dataVenc:r.data_venc, total:r.total, marca:r.marca, status:r.status, estado:r.estado }; }
+function _kitToRow(k)  { return { id:k.id, marca:k.marca||_marca, nome:k.nome, itens:k, updated_at:new Date().toISOString() }; }
+function _rowToKit(r)  { return r.itens; }
+
+async function _cloudSyncStartup() {
+    // nunca deixa falha de rede travar o app (PWA precisa funcionar offline)
+    try {
+        const [hist, kits, rasc] = await Promise.all([
+            _cloudPullAll('propostas'),
+            _cloudPullAll('kits'),
+            _supa.from('rascunho').select('*').eq('marca', _marca).maybeSingle().catch(() => null)
+        ]);
+        if (hist) _salvarHistoricoStorage(hist.map(_rowToHist));
+        if (kits) _salvarKits(kits.map(_rowToKit));
+        if (rasc?.data?.estado) localStorage.setItem('cpz_estado', JSON.stringify(rasc.data.estado));
+    } catch(e) { console.error('cloud sync startup', e); }
+}
+
+function _cloudSubscribeRealtime() {
+    _supa.channel('sync-' + _marca)
+        .on('postgres_changes', { event:'*', schema:'public', table:'propostas', filter:`marca=eq.${_marca}` }, async () => {
+            const hist = await _cloudPullAll('propostas');
+            if (!hist) return;
+            _salvarHistoricoStorage(hist.map(_rowToHist));
+            if (document.getElementById('histOverlay').classList.contains('aberto')) renderHistorico();
+        })
+        .on('postgres_changes', { event:'*', schema:'public', table:'kits', filter:`marca=eq.${_marca}` }, async () => {
+            const kits = await _cloudPullAll('kits');
+            if (!kits) return;
+            _salvarKits(kits.map(_rowToKit));
+            if (document.getElementById('kitsOverlay').classList.contains('aberto')) renderKits();
+        })
+        .subscribe();
+}
+
 function toggleBAVision() {
     if (BRAND_LOCK) return;
     const cb=document.getElementById("usarSocio");
@@ -1994,6 +2052,7 @@ function salvarEstado() {
         estado.infra.push({nome:busca?busca.getValor():"", qtd:card.querySelector(".qtd-num").value, precoManual:isNaN(pm)?null:pm});
     });
     localStorage.setItem("cpz_estado",JSON.stringify(estado));
+    _cloudUpsert('rascunho', { marca:_marca, estado, updated_at:new Date().toISOString() });
 }
 
 function restaurarEstado() {
@@ -2049,6 +2108,7 @@ function restaurarEstado() {
 function limparOrcamento() {
     if (!confirm("Apagar o orçamento e começar do zero?")) return;
     localStorage.removeItem("cpz_estado");
+    _supa.from('rascunho').delete().eq('marca', _marca).then(()=>{}, ()=>{});
     document.getElementById("listaProdutos").innerHTML="";
     document.getElementById("listaInfra").innerHTML="";
     document.querySelectorAll('input[name="tipo"]').forEach((cb,i)=>{
@@ -3135,6 +3195,7 @@ function fecharFollowup() {
 // ── INIT ──
 async function init() {
     await carregarBanco();
+    await _cloudSyncStartup();
     if (!restaurarEstado()) {
         adicionarProduto();
         adicionarInfra();
@@ -3142,6 +3203,7 @@ async function init() {
     }
     calcular();
     verificarFollowups();
+    _cloudSubscribeRealtime();
 }
 // ── NUMERAÇÃO DE PROPOSTAS ──
 function _proximoNumero(marca) {
@@ -3193,6 +3255,7 @@ function salvarKit() {
     document.getElementById('kitNome').value = '';
     renderKits();
     mostrarToast('Kit salvo!');
+    _cloudUpsert('kits', _kitToRow(kit));
 }
 
 function carregarKit(id) {
@@ -3220,6 +3283,7 @@ function excluirKit(id) {
     if (!confirm('Excluir este kit?')) return;
     _salvarKits(_carregarKits().filter(k => k.id !== id));
     renderKits();
+    _cloudDelete('kits', id);
 }
 
 function renderKits() {
@@ -3325,6 +3389,7 @@ function salvarNoHistorico(nomeLabel) {
     const lista = _carregarHistorico();
     lista.unshift(entry);
     _salvarHistoricoStorage(lista);
+    _cloudUpsert('propostas', _histToRow(entry));
 }
 
 function salvarHistoricoManual() {
@@ -3341,9 +3406,10 @@ function excluirHistorico(id) {
     const lista = _carregarHistorico().filter(e => e.id !== id);
     _salvarHistoricoStorage(lista);
     renderHistorico();
+    _cloudDelete('propostas', id);
 }
 
-function reabrirHistorico(id) {
+async function reabrirHistorico(id) {
     const entry = _carregarHistorico().find(e => e.id === id);
     if (!entry) return;
     const temItens = document.querySelectorAll('.item-produto, .item-infra').length > 2;
@@ -3353,6 +3419,8 @@ function reabrirHistorico(id) {
     const hoje = new Date().toISOString().slice(0, 10);
     if (estado.clienteInfo) estado.clienteInfo = { ...estado.clienteInfo, data: hoje };
     localStorage.setItem('cpz_estado', JSON.stringify(estado));
+    // espera gravar na nuvem antes de recarregar, senão o init() puxa o rascunho antigo
+    await _cloudUpsert('rascunho', { marca:_marca, estado, updated_at:new Date().toISOString() });
     fecharHistorico();
     location.reload();
 }
@@ -3366,6 +3434,7 @@ function duplicarHistorico(id) {
     _salvarHistoricoStorage(lista);
     renderHistorico();
     mostrarToast('Proposta duplicada');
+    _cloudUpsert('propostas', _histToRow(copia));
 }
 
 function setStatusHistorico(id, status) {
@@ -3375,6 +3444,7 @@ function setStatusHistorico(id, status) {
     entry.status = entry.status === status ? 'aguardando' : status;
     _salvarHistoricoStorage(lista);
     renderHistorico();
+    _cloudUpsert('propostas', _histToRow(entry));
 }
 
 function exportarHistorico() {
@@ -3896,7 +3966,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=37');
+  navigator.serviceWorker.register('./sw.js?v=19');
 }
 
 </script>
