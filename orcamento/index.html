@@ -1581,6 +1581,10 @@ function criarBusca(listaOpcoes, placeholder, valorInicial, onSelect) {
         if (input.dataset.valor) {
             const opt=opcoes.find(o=>o.valor===input.dataset.valor);
             if (opt) input.value=opt.label;
+        } else if (input.value.trim()) {
+            // item digitado manualmente, fora do catálogo
+            input.dataset.valor=input.value.trim();
+            onSelect(input.dataset.valor);
         } else { input.value=""; }
     }
 
@@ -3971,7 +3975,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=21');
+  navigator.serviceWorker.register('./sw.js?v=22');
 }
 
 </script>
