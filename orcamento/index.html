@@ -1234,14 +1234,14 @@ body {
     </div>
 
 <!-- ASSINATURA -->
-<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:20px 18px 8px;">
-    <button class="topo-icon-btn" onclick="abrirHistorico()" title="Histórico" style="justify-self:start;">
+<div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:20px 18px 8px;">
+    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:auto;width:auto;max-height:31px;max-width:38%;">
+    <button class="topo-icon-btn" onclick="abrirHistorico()" title="Histórico">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:auto;width:auto;max-height:31px;max-width:100%;justify-self:center;">
-    <div style="display:flex;gap:4px;justify-self:end;">
+    <div style="display:flex;gap:4px;">
         <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -4227,7 +4227,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=27');
+  navigator.serviceWorker.register('./sw.js?v=28');
 }
 
 </script>
