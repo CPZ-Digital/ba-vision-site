@@ -1234,23 +1234,25 @@ body {
     </div>
 
 <!-- ASSINATURA -->
-<div style="display:flex;align-items:center;justify-content:space-between;padding:20px 18px 8px;">
-    <button class="topo-icon-btn" onclick="abrirHistorico()" title="Histórico">
+<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:20px 18px 8px;">
+    <button class="topo-icon-btn" onclick="abrirHistorico()" title="Histórico" style="justify-self:start;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:auto;width:auto;max-height:31px;max-width:45%;">
-    <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-        </svg>
-    </button>
-    <button class="topo-icon-btn" onclick="abrirNotaServico()" title="Nota de Serviço">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>
-        </svg>
-    </button>
+    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:auto;width:auto;max-height:31px;max-width:100%;justify-self:center;">
+    <div style="display:flex;gap:4px;justify-self:end;">
+        <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+        </button>
+        <button class="topo-icon-btn" onclick="abrirNotaServico()" title="Nota de Serviço">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>
+            </svg>
+        </button>
+    </div>
 </div>
 <div id="creditoDev" style="display:none;text-align:center;padding:0 0 14px;font-size:11px;color:var(--text-muted,#999);">App criado por CPZ Digital</div>
 
@@ -4225,7 +4227,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=24');
+  navigator.serviceWorker.register('./sw.js?v=25');
 }
 
 </script>
