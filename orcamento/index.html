@@ -1240,7 +1240,7 @@ body {
             <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
         </svg>
     </button>
-    <img id="logoRodape" alt="CPZ" src="cpz-assinatura-v4.png" style="height:auto;width:auto;max-height:31px;max-width:100%;justify-self:center;">
+    <span id="textoRodape" style="justify-self:center;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:0.3px;">B&amp;A Vision</span>
     <div style="display:flex;gap:4px;justify-self:end;">
         <button class="topo-icon-btn" onclick="abrirKits()" title="Kits">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -2008,7 +2008,7 @@ function _aplicarBrandLock() {
     document.body.classList.toggle('ba-vision', cb.checked);
     document.getElementById("subtituloApp").textContent=cb.checked?"B&A Vision":"CPZ Digital";
     _setLogo(document.getElementById("logoTopo"), cb.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
-    _setLogo(document.getElementById("logoRodape"), cb.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
+    document.getElementById("textoRodape").textContent = cb.checked?"B&A Vision":"CPZ Digital";
     document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
     _setLogo(document.getElementById("pinLogo"), cb.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
 }
@@ -2079,7 +2079,7 @@ function toggleBAVision() {
     document.body.classList.toggle('ba-vision', ativo);
     document.getElementById("subtituloApp").textContent=ativo?"B&A Vision":"CPZ Digital";
     _setLogo(document.getElementById("logoTopo"), ativo?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
-    _setLogo(document.getElementById("logoRodape"), ativo?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
+    document.getElementById("textoRodape").textContent = ativo?"B&A Vision":"CPZ Digital";
     mostrarToast(ativo?"B&A Vision ativada":"CPZ Digital ativada");
     calcular();
 }
@@ -2143,7 +2143,7 @@ function restaurarEstado() {
         document.body.classList.toggle('ba-vision', socio.checked);
         document.getElementById("subtituloApp").textContent=socio.checked?"B&A Vision":"CPZ Digital";
         _setLogo(document.getElementById("logoTopo"), socio.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
-        _setLogo(document.getElementById("logoRodape"), socio.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
+        document.getElementById("textoRodape").textContent = socio.checked?"B&A Vision":"CPZ Digital";
         if (e.diasTrabalho) document.getElementById("diasTrabalho").value=e.diasTrabalho;
         if (e.diasDiarista) document.getElementById("diasDiarista").value=e.diasDiarista;
         if (e.pagModo) {
@@ -2196,7 +2196,7 @@ function limparOrcamento() {
     document.body.classList.add('ba-vision');
     document.getElementById("subtituloApp").textContent="B&A Vision";
     _setLogo(document.getElementById("logoTopo"), "ba-vision-assinatura-v3.png");
-    _setLogo(document.getElementById("logoRodape"), "ba-vision-assinatura-v3.png");
+    document.getElementById("textoRodape").textContent = "B&A Vision";
     _aplicarBrandLock();
     document.getElementById("diasTrabalho").value=1;
     document.getElementById("diasDiarista").value=1;
@@ -4227,7 +4227,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=25');
+  navigator.serviceWorker.register('./sw.js?v=26');
 }
 
 </script>
