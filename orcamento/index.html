@@ -1246,6 +1246,11 @@ body {
             <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
         </svg>
     </button>
+    <button class="topo-icon-btn" onclick="abrirNotaServico()" title="Nota de Serviço">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>
+        </svg>
+    </button>
 </div>
 <div id="creditoDev" style="display:none;text-align:center;padding:0 0 14px;font-size:11px;color:var(--text-muted,#999);">App criado por CPZ Digital</div>
 
@@ -1383,6 +1388,50 @@ body {
             <button class="hist-salvar-btn" onclick="salvarKit()">Salvar</button>
         </div>
         <div id="kitsLista"></div>
+    </div>
+</div>
+
+<!-- MODAL NOTA DE SERVIÇO -->
+<div class="pag-overlay" id="notaOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Nota de Serviço</span>
+            <button class="pag-fechar" onclick="fecharNotaServico()">✕</button>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Cliente</label>
+            <input class="exp-input" id="notaCliente" type="text" placeholder="Nome do cliente" style="width:100%;">
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Telefone <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <input class="exp-input" id="notaTel" type="text" placeholder="(21) 90000-0000" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Data do serviço</label>
+                <input class="exp-input" id="notaData" type="date" style="width:100%;">
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Endereço <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <input class="exp-input" id="notaEndereco" type="text" placeholder="Local onde o serviço foi executado" style="width:100%;">
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Serviço executado</label>
+            <textarea class="exp-input" id="notaServico" rows="4" placeholder="Descreva o serviço/manutenção realizado…" style="resize:vertical;min-height:90px;line-height:1.5;"></textarea>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Peças/materiais utilizados <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <textarea class="exp-input" id="notaMateriais" rows="2" placeholder="Ex: 1x fonte 12V, 5m de cabo…" style="resize:vertical;min-height:50px;line-height:1.5;"></textarea>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Valor cobrado <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <input class="exp-input" id="notaValor" type="number" min="0" step="0.01" placeholder="0,00" style="width:100%;">
+        </div>
+        <button class="exp-btn" onclick="gerarNotaServico()" style="width:100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Gerar PDF
+        </button>
     </div>
 </div>
 
@@ -3842,6 +3891,118 @@ function gerarContrato(id) {
         .catch(e => alert('Erro ao carregar template: ' + e.message));
 }
 
+// ── NOTA DE SERVIÇO ──
+function abrirNotaServico() {
+    document.getElementById('notaCliente').value = '';
+    document.getElementById('notaTel').value = '';
+    document.getElementById('notaEndereco').value = '';
+    document.getElementById('notaServico').value = '';
+    document.getElementById('notaMateriais').value = '';
+    document.getElementById('notaValor').value = '';
+    document.getElementById('notaData').value = new Date().toISOString().slice(0,10);
+    document.getElementById('notaOverlay').classList.add('aberto');
+    document.querySelector('.fab-area').style.display = 'none';
+}
+
+function fecharNotaServico() {
+    document.getElementById('notaOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+
+document.getElementById('notaOverlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharNotaServico();
+});
+
+function gerarNotaServico() {
+    const cliente   = document.getElementById('notaCliente').value.trim();
+    const servico   = document.getElementById('notaServico').value.trim();
+    if (!cliente)  { mostrarToast('Informe o nome do cliente'); return; }
+    if (!servico)  { mostrarToast('Descreva o serviço executado'); return; }
+
+    const socio    = document.getElementById('usarSocio').checked;
+    const cor      = socio ? '#059669' : '#0055b3';
+    const corBg    = socio ? '#f0fbf7' : '#f0f5ff';
+    const tel      = document.getElementById('notaTel').value.trim();
+    const endereco = document.getElementById('notaEndereco').value.trim();
+    const materiais= document.getElementById('notaMateriais').value.trim();
+    const valor    = parseFloat(document.getElementById('notaValor').value);
+    const dataISO  = document.getElementById('notaData').value || new Date().toISOString().slice(0,10);
+    const dataFmt  = new Date(dataISO + 'T12:00:00').toLocaleDateString('pt-BR');
+    const fmtR     = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    const razaoSocial  = socio ? 'B&A Vision Segurança' : 'CPZ Digital';
+    const cnpj         = socio ? '62.456.202/0001-08' : '58.589.970/0001-54';
+    const contatoTel   = socio ? '(21) 99664-6927' : '(21) 96745-5648';
+    const contatoEmail = socio ? 'ba.visionseguranca@gmail.com' : 'contato@cpzdigital.com.br';
+    const responsavel  = socio ? 'Bruno &amp; Adriano — B&A Vision' : 'Adriano — CPZ Digital';
+    const footerLine   = socio
+        ? 'B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08'
+        : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54';
+    const fr = socio ? 5 : 0, fg = socio ? 150 : 105, fb = socio ? 105 : 179;
+
+    const placeholders = {
+        '{{logo_src}}':        socio ? 'ba-vision-assinatura-v3.png' : 'cpz-assinatura-v4.png',
+        '{{logo_height}}':     socio ? '48' : '40',
+        '{{cor_pri}}':         cor,
+        '{{cor_bg}}':          corBg,
+        '{{dataFmt}}':         dataFmt,
+        '{{numero_nota}}':     Date.now().toString().slice(-6),
+        '{{razao_social}}':    razaoSocial,
+        '{{cnpj}}':            cnpj,
+        '{{contato_tel}}':     contatoTel,
+        '{{contato_email}}':   contatoEmail,
+        '{{responsavel}}':     responsavel,
+        '{{cliente}}':         cliente.replace(/</g,'&lt;'),
+        '{{tel_row}}':         tel ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: ${tel}</p>` : '',
+        '{{endereco_row}}':    endereco ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">Local: ${endereco.replace(/</g,'&lt;')}</p>` : '',
+        '{{servico}}':         servico.replace(/</g,'&lt;').replace(/>/g,'&gt;'),
+        '{{materiais_block}}': materiais ? `
+            <p style="font-size:13px;font-weight:700;color:${cor};border-bottom:2px solid ${cor};padding-bottom:4px;margin:16px 0 8px;">Peças e Materiais Utilizados</p>
+            <p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 8px;white-space:pre-wrap;">${materiais.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>` : '',
+        '{{valor_block}}':     (!isNaN(valor) && valor > 0) ? `
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:${cor};margin:16px 0 8px;">
+                <tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">VALOR COBRADO</td>
+                <td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">${fmtR(valor)}</td></tr>
+            </table>` : '',
+    };
+
+    const nomeArq = 'nota-servico-' + cliente.replace(/\s+/g,'-').toLowerCase() + '-' + dataISO + '-' + _horaArq() + '.pdf';
+
+    mostrarToast('Gerando nota de serviço...');
+    fetch('template-nota-servico.html')
+        .then(r => r.text())
+        .then(tpl => {
+            let html = tpl;
+            Object.entries(placeholders).forEach(([k, v]) => { html = html.split(k).join(v); });
+            html2pdf().from(html).set({
+                margin:      [0, 0, 18, 0],
+                filename:    nomeArq,
+                image:       { type:'jpeg', quality:0.95 },
+                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                    onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
+                jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
+            }).toPdf().get('pdf').then(pdf => {
+                const n = pdf.internal.getNumberOfPages();
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                for (let i = 1; i <= n; i++) {
+                    pdf.setPage(i);
+                    pdf.setDrawColor(fr, fg, fb);
+                    pdf.setLineWidth(0.4);
+                    pdf.line(4, h - 11, w - 4, h - 11);
+                    pdf.setFontSize(7);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text(footerLine, w / 2, h - 7, { align: 'center' });
+                }
+                pdf.save(nomeArq);
+                mostrarToast('Nota de serviço gerada!');
+                fecharNotaServico();
+            });
+        })
+        .catch(e => alert('Erro ao carregar template: ' + e.message));
+}
+
 // ── PIN DE ACESSO ──
 const _PIN = '1472';
 let _pinDigitado = '';
@@ -3975,7 +4136,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=22');
+  navigator.serviceWorker.register('./sw.js?v=23');
 }
 
 </script>
