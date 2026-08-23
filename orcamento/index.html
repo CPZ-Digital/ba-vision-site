@@ -1396,7 +1396,14 @@ body {
     <div class="pag-modal">
         <div class="pag-header">
             <span class="pag-titulo">Nota de Serviço</span>
-            <button class="pag-fechar" onclick="fecharNotaServico()">✕</button>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="topo-icon-btn" onclick="abrirNotaHistorico()" title="Histórico de notas" style="width:32px;height:32px;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
+                    </svg>
+                </button>
+                <button class="pag-fechar" onclick="fecharNotaServico()">✕</button>
+            </div>
         </div>
         <div class="exp-field">
             <label class="exp-label">Cliente</label>
@@ -1432,6 +1439,17 @@ body {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Gerar PDF
         </button>
+    </div>
+</div>
+
+<!-- MODAL HISTÓRICO DE NOTAS DE SERVIÇO -->
+<div class="pag-overlay" id="notaHistOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Histórico de Notas de Serviço</span>
+            <button class="pag-fechar" onclick="fecharNotaHistorico()">✕</button>
+        </div>
+        <div id="notaHistLista"></div>
     </div>
 </div>
 
@@ -3913,6 +3931,62 @@ document.getElementById('notaOverlay').addEventListener('click', function(e) {
     if (e.target === this) fecharNotaServico();
 });
 
+// ── HISTÓRICO DE NOTAS DE SERVIÇO (local) ──
+function _carregarNotasHistorico() {
+    try { return JSON.parse(localStorage.getItem('cpz_notas_historico') || '[]'); }
+    catch { return []; }
+}
+function _salvarNotasHistoricoStorage(lista) {
+    localStorage.setItem('cpz_notas_historico', JSON.stringify(lista));
+}
+
+function abrirNotaHistorico() {
+    document.getElementById('notaOverlay').classList.remove('aberto');
+    renderNotaHistorico();
+    document.getElementById('notaHistOverlay').classList.add('aberto');
+}
+function fecharNotaHistorico() {
+    document.getElementById('notaHistOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+document.getElementById('notaHistOverlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharNotaHistorico();
+});
+
+function renderNotaHistorico() {
+    const lista = _carregarNotasHistorico();
+    const cont  = document.getElementById('notaHistLista');
+    if (!lista.length) { cont.innerHTML = '<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">Nenhuma nota de serviço registrada ainda.</p>'; return; }
+    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    cont.innerHTML = lista.map(e => `
+        <div class="hist-card">
+            <div class="hist-card-top">
+                <div class="hist-info">
+                    <div class="hist-badges"><span class="hist-badge" style="background:${e.marca==='ba'?'#d1f5e8':'#e8eef8'};color:${e.marca==='ba'?'#059669':'#0055b3'};">${e.marca==='ba'?'B&A Vision':'CPZ Digital'}</span></div>
+                    <div class="hist-nome">${e.cliente}</div>
+                    <div class="hist-meta">${e.dataFmt}${e.endereco ? ' · ' + e.endereco : ''}</div>
+                </div>
+                <div class="hist-total">${e.valor > 0 ? fmtR(e.valor) : ''}</div>
+            </div>
+            <div class="hist-acoes">
+                <button class="hist-btn hist-btn-contrato" onclick="reimprimirNota(${e.id})">📄 Reimprimir</button>
+                <button class="hist-btn hist-btn-excluir" onclick="excluirNotaHistorico(${e.id})">Excluir</button>
+            </div>
+        </div>`).join('');
+}
+
+function excluirNotaHistorico(id) {
+    if (!confirm('Excluir esta nota de serviço do histórico?')) return;
+    _salvarNotasHistoricoStorage(_carregarNotasHistorico().filter(e => e.id !== id));
+    renderNotaHistorico();
+}
+
+function reimprimirNota(id) {
+    const entry = _carregarNotasHistorico().find(e => e.id === id);
+    if (!entry) return;
+    _gerarNotaServicoPDF(entry, true);
+}
+
 function gerarNotaServico() {
     const cliente   = document.getElementById('notaCliente').value.trim();
     const servico   = document.getElementById('notaServico').value.trim();
@@ -3920,14 +3994,29 @@ function gerarNotaServico() {
     if (!servico)  { mostrarToast('Descreva o serviço executado'); return; }
 
     const socio    = document.getElementById('usarSocio').checked;
-    const cor      = socio ? '#059669' : '#0055b3';
-    const corBg    = socio ? '#f0fbf7' : '#f0f5ff';
     const tel      = document.getElementById('notaTel').value.trim();
     const endereco = document.getElementById('notaEndereco').value.trim();
     const materiais= document.getElementById('notaMateriais').value.trim();
-    const valor    = parseFloat(document.getElementById('notaValor').value);
+    const valor    = parseFloat(document.getElementById('notaValor').value) || 0;
     const dataISO  = document.getElementById('notaData').value || new Date().toISOString().slice(0,10);
     const dataFmt  = new Date(dataISO + 'T12:00:00').toLocaleDateString('pt-BR');
+
+    const entry = {
+        id: Date.now(), cliente, tel, endereco, servico, materiais, valor,
+        dataISO, dataFmt, marca: socio ? 'ba' : 'cpz'
+    };
+    const lista = _carregarNotasHistorico();
+    lista.unshift(entry);
+    _salvarNotasHistoricoStorage(lista);
+
+    _gerarNotaServicoPDF(entry, false);
+}
+
+function _gerarNotaServicoPDF(entry, reimpressao) {
+    const { cliente, tel, endereco, servico, materiais, valor, dataISO, dataFmt } = entry;
+    const socio    = entry.marca === 'ba';
+    const cor      = socio ? '#059669' : '#0055b3';
+    const corBg    = socio ? '#f0fbf7' : '#f0f5ff';
     const fmtR     = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
     const razaoSocial  = socio ? 'B&A Vision Segurança' : 'CPZ Digital';
@@ -3946,7 +4035,7 @@ function gerarNotaServico() {
         '{{cor_pri}}':         cor,
         '{{cor_bg}}':          corBg,
         '{{dataFmt}}':         dataFmt,
-        '{{numero_nota}}':     Date.now().toString().slice(-6),
+        '{{numero_nota}}':     String(entry.id).slice(-6),
         '{{razao_social}}':    razaoSocial,
         '{{cnpj}}':            cnpj,
         '{{contato_tel}}':     contatoTel,
@@ -3996,8 +4085,8 @@ function gerarNotaServico() {
                     pdf.text(footerLine, w / 2, h - 7, { align: 'center' });
                 }
                 pdf.save(nomeArq);
-                mostrarToast('Nota de serviço gerada!');
-                fecharNotaServico();
+                mostrarToast(reimpressao ? 'Nota reimpressa!' : 'Nota de serviço gerada!');
+                if (reimpressao) fecharNotaHistorico(); else fecharNotaServico();
             });
         })
         .catch(e => alert('Erro ao carregar template: ' + e.message));
@@ -4136,7 +4225,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=23');
+  navigator.serviceWorker.register('./sw.js?v=24');
 }
 
 </script>
