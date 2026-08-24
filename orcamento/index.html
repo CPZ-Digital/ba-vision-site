@@ -2023,7 +2023,7 @@ function _aplicarBrandLock() {
     document.body.classList.toggle('ba-vision', cb.checked);
     document.getElementById("subtituloApp").textContent=cb.checked?"B&A Vision":"CPZ Digital";
     _setLogo(document.getElementById("logoTopo"), cb.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
-    document.getElementById("creditoDev").style.display = BRAND_LOCK==='ba' ? 'block' : 'none';
+    document.getElementById("creditoDev").style.display = 'block';
     _setLogo(document.getElementById("pinLogo"), cb.checked?"ba-vision-assinatura-v3.png":"cpz-assinatura-v4.png");
 }
 _aplicarBrandLock(); // roda na hora, nao espera o init() (que depende de fetch de rede)
@@ -4238,7 +4238,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=29');
+  navigator.serviceWorker.register('./sw.js?v=30');
 }
 
 </script>
