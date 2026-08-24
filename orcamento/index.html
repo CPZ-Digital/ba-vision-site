@@ -575,8 +575,8 @@ body {
 .fab-area {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    padding: 10px 14px 20px;
-    background: linear-gradient(to top, var(--bg) 65%, transparent);
+    padding: 2px 14px 20px;
+    background: linear-gradient(to top, var(--bg) 85%, transparent);
     display: flex; gap: 9px;
     max-width: 480px;
     margin: auto;
@@ -4238,7 +4238,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=31');
+  navigator.serviceWorker.register('./sw.js?v=32');
 }
 
 </script>
