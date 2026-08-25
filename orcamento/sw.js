@@ -1,9 +1,10 @@
-const CACHE = 'ba-orcamento-v32';
+const CACHE = 'ba-orcamento-v33';
 const ASSETS = [
   './index.html',
   './template-pdf.html',
   './template-contrato.html',
   './template-nota-servico.html',
+  './qrcode.min.js',
   './cpz-assinatura-v4.png',
   './ba-vision-assinatura-v3.png',
   './cpz-icon.png',

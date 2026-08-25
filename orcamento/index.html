@@ -1081,6 +1081,7 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="qrcode.min.js"></script>
 </head>
 <body class="ba-vision">
 
@@ -2190,6 +2191,52 @@ function restaurarEstado() {
     } catch(err) { console.error(err); return false; }
 }
 
+// ── QR CODE PIX (chave = CNPJ da marca) ──
+function _crc16Pix(str) {
+    let crc = 0xFFFF;
+    for (let i = 0; i < str.length; i++) {
+        crc ^= str.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) {
+            crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+            crc &= 0xFFFF;
+        }
+    }
+    return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+function _emvPix(id, value) {
+    return id + String(value.length).padStart(2, '0') + value;
+}
+function _payloadPix(chave, nome, cidade, txid) {
+    const merchantAccount = _emvPix('26', _emvPix('00', 'BR.GOV.BCB.PIX') + _emvPix('01', chave));
+    let payload = _emvPix('00', '01') + merchantAccount + _emvPix('52', '0000') + _emvPix('53', '986') +
+        _emvPix('58', 'BR') + _emvPix('59', nome.substring(0, 25)) + _emvPix('60', cidade.substring(0, 15)) +
+        _emvPix('62', _emvPix('05', (txid || '***').substring(0, 25)));
+    payload += '6304';
+    return payload + _crc16Pix(payload);
+}
+function _pixBlockHTML(cor, corBg, cnpj, marca, numero) {
+    const chave   = cnpj.replace(/\D/g, '');
+    const payload = _payloadPix(chave, marca === 'B&A Vision' ? 'B&A Vision Seguranca' : 'CPZ Digital', 'Rio de Janeiro', numero || 'ORCAMENTO');
+    const qr = qrcode(0, 'M');
+    qr.addData(payload);
+    qr.make();
+    const qrSrc = qr.createDataURL(4, 2);
+    return `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;">
+        <tr><td style="background:${corBg};border:1.5px solid ${cor};border-radius:6px;padding:10px 14px;">
+            <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="width:54px;vertical-align:middle;">
+                    <img src="${qrSrc}" width="48" height="48" style="display:block;background:#fff;border:1px solid #ddd;border-radius:4px;padding:2px;">
+                </td>
+                <td style="vertical-align:middle;padding-left:12px;">
+                    <p style="margin:0;font-size:11.5px;font-weight:700;color:${cor};text-transform:uppercase;letter-spacing:0.4px;">Pague via Pix — ${marca}</p>
+                    <p style="margin:3px 0 0;font-size:10px;color:#555;">Escaneie o QR Code com o app do seu banco pra pagar</p>
+                    <p style="margin:3px 0 0;font-size:9.5px;color:#888;font-family:monospace;">Chave (CNPJ): ${cnpj}</p>
+                </td>
+            </tr></table>
+        </td></tr>
+    </table>`;
+}
+
 function _horaArq() {
     const d = new Date();
     return String(d.getHours()).padStart(2,'0') + String(d.getMinutes()).padStart(2,'0') + String(d.getSeconds()).padStart(2,'0');
@@ -2455,6 +2502,7 @@ function gerarPDF() {
             <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Observações do Cliente</p>
             <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 16px;white-space:pre-wrap;">${obs.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
         `.replace(/\{\{cor_pri\}\}/g, socio ? '#059669' : '#0055b3') : '',
+        '{{pix_block}}':         _pixBlockHTML(cor, socio ? '#f0fbf7' : '#f0f5ff', cnpj, marca, numero),
     };
 
     const nomeArq = (numero ? numero + '-' : '') + 'orcamento-' + nome.replace(/\s+/g, '-').toLowerCase() + '-' + (data || new Date().toISOString().slice(0,10)) + '-' + _horaArq() + '.pdf';
@@ -4238,7 +4286,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=32');
+  navigator.serviceWorker.register('./sw.js?v=33');
 }
 
 </script>
