@@ -1511,16 +1511,16 @@ body {
         </div>
         <div style="display:flex;gap:8px;">
             <div class="exp-field" style="flex:1;min-width:0;">
-                <label class="exp-label" style="font-size:11px;white-space:nowrap;">Prazo (meses)</label>
-                <input class="exp-input" id="locPrazoMeses" type="number" min="1" value="24" style="width:100%;padding:12px 8px;">
+                <label class="exp-label" style="font-size:11px;white-space:nowrap;">Validade proposta</label>
+                <input class="exp-input" id="locValidade" type="number" min="1" value="15" style="width:100%;padding:12px 8px;">
             </div>
             <div class="exp-field" style="flex:1;min-width:0;">
                 <label class="exp-label" style="font-size:11px;white-space:nowrap;">Visitas/mês</label>
                 <input class="exp-input" id="locVisitas" type="number" min="0" value="4" style="width:100%;padding:12px 8px;">
             </div>
             <div class="exp-field" style="flex:1;min-width:0;">
-                <label class="exp-label" style="font-size:11px;white-space:nowrap;">Validade</label>
-                <input class="exp-input" id="locValidade" type="number" min="1" value="15" style="width:100%;padding:12px 8px;">
+                <label class="exp-label" style="font-size:11px;white-space:nowrap;">Prazo contrato</label>
+                <input class="exp-input" id="locPrazoMeses" type="number" min="1" value="24" style="width:100%;padding:12px 8px;">
             </div>
         </div>
         <button class="exp-btn" onclick="gerarLocacao()" style="width:100%;">
@@ -4560,7 +4560,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=36');
+  navigator.serviceWorker.register('./sw.js?v=37');
 }
 
 </script>
