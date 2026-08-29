@@ -1471,7 +1471,14 @@ body {
     <div class="pag-modal">
         <div class="pag-header">
             <span class="pag-titulo">Proposta de Locação (B&amp;A Vision)</span>
-            <button class="pag-fechar" onclick="fecharLocacao()">✕</button>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="topo-icon-btn" onclick="abrirLocacaoHistorico()" title="Histórico de propostas de locação" style="width:32px;height:32px;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
+                    </svg>
+                </button>
+                <button class="pag-fechar" onclick="fecharLocacao()">✕</button>
+            </div>
         </div>
         <div class="exp-field">
             <label class="exp-label">Cliente</label>
@@ -1520,6 +1527,17 @@ body {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Gerar Proposta de Locação (PDF)
         </button>
+    </div>
+</div>
+
+<!-- MODAL HISTÓRICO DE PROPOSTAS DE LOCAÇÃO -->
+<div class="pag-overlay" id="locacaoHistOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Histórico de Propostas de Locação</span>
+            <button class="pag-fechar" onclick="fecharLocacaoHistorico()">✕</button>
+        </div>
+        <div id="locacaoHistLista"></div>
     </div>
 </div>
 
@@ -4058,6 +4076,62 @@ document.getElementById('locacaoOverlay').addEventListener('click', function(e) 
     if (e.target === this) fecharLocacao();
 });
 
+// ── HISTÓRICO DE PROPOSTAS DE LOCAÇÃO (local) ──
+function _carregarLocacaoHistorico() {
+    try { return JSON.parse(localStorage.getItem('cpz_locacao_historico') || '[]'); }
+    catch { return []; }
+}
+function _salvarLocacaoHistoricoStorage(lista) {
+    localStorage.setItem('cpz_locacao_historico', JSON.stringify(lista));
+}
+
+function abrirLocacaoHistorico() {
+    document.getElementById('locacaoOverlay').classList.remove('aberto');
+    renderLocacaoHistorico();
+    document.getElementById('locacaoHistOverlay').classList.add('aberto');
+}
+function fecharLocacaoHistorico() {
+    document.getElementById('locacaoHistOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+document.getElementById('locacaoHistOverlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharLocacaoHistorico();
+});
+
+function renderLocacaoHistorico() {
+    const lista = _carregarLocacaoHistorico();
+    const cont  = document.getElementById('locacaoHistLista');
+    if (!lista.length) { cont.innerHTML = '<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">Nenhuma proposta de locação registrada ainda.</p>'; return; }
+    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    cont.innerHTML = lista.map(e => `
+        <div class="hist-card">
+            <div class="hist-card-top">
+                <div class="hist-info">
+                    <div class="hist-badges"><span class="hist-badge" style="background:#d1f5e8;color:#059669;">B&amp;A Vision</span></div>
+                    <div class="hist-nome">${e.cliente}</div>
+                    <div class="hist-meta">${e.dataFmt}${e.endereco ? ' · ' + e.endereco : ''} · ${e.prazoMeses} meses</div>
+                </div>
+                <div class="hist-total">${fmtR(e.valorMensal)}/mês</div>
+            </div>
+            <div class="hist-acoes">
+                <button class="hist-btn hist-btn-contrato" onclick="reimprimirLocacao(${e.id})">📄 Reimprimir</button>
+                <button class="hist-btn hist-btn-excluir" onclick="excluirLocacaoHistorico(${e.id})">Excluir</button>
+            </div>
+        </div>`).join('');
+}
+
+function excluirLocacaoHistorico(id) {
+    if (!confirm('Excluir esta proposta de locação do histórico?')) return;
+    _salvarLocacaoHistoricoStorage(_carregarLocacaoHistorico().filter(e => e.id !== id));
+    renderLocacaoHistorico();
+}
+
+function reimprimirLocacao(id) {
+    const entry = _carregarLocacaoHistorico().find(e => e.id === id);
+    if (!entry) return;
+    _gerarLocacaoPDF(entry, true);
+}
+
 function gerarLocacao() {
     const cliente = document.getElementById('locCliente').value.trim();
     const valorInstalacao = parseFloat(document.getElementById('locValorInstalacao').value);
@@ -4072,11 +4146,7 @@ function gerarLocacao() {
     const prazoMeses = Number(document.getElementById('locPrazoMeses').value) || 24;
     const visitas = Number(document.getElementById('locVisitas').value) || 4;
     const validade = Number(document.getElementById('locValidade').value) || 15;
-    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-    const THs  = 'background:#059669;color:#fff;padding:5px 8px;font-size:9px;font-weight:700;text-align:left;';
-    const TDLs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;';
-    const TDCs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;text-align:center;';
     const todosItens = [];
     document.querySelectorAll('.item-produto').forEach(card => {
         const busca = card.querySelector('.item-busca-wrapper');
@@ -4093,7 +4163,26 @@ function gerarLocacao() {
         if (!nome || !qtd) return;
         todosItens.push({ descricao: nome, qtd });
     });
-    const relacaoMateriais = todosItens.length ? `
+
+    const entry = {
+        id: Date.now(), cliente, tel, endereco, dataISO, dataFmt,
+        valorInstalacao, valorMensal, prazoMeses, visitas, validade, todosItens
+    };
+    const lista = _carregarLocacaoHistorico();
+    lista.unshift(entry);
+    _salvarLocacaoHistoricoStorage(lista);
+
+    _gerarLocacaoPDF(entry, false);
+}
+
+function _gerarLocacaoPDF(entry, reimpressao) {
+    const { cliente, tel, endereco, dataFmt, dataISO, valorInstalacao, valorMensal, prazoMeses, visitas, validade, todosItens } = entry;
+    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    const THs  = 'background:#059669;color:#fff;padding:5px 8px;font-size:9px;font-weight:700;text-align:left;';
+    const TDLs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;';
+    const TDCs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;text-align:center;';
+    const relacaoMateriais = (todosItens && todosItens.length) ? `
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
         <tr><th style="${THs}width:36px;text-align:center;">Item</th><th style="${THs}">Descrição</th><th style="${THs}text-align:center;width:44px;">Qtd</th></tr>` +
         todosItens.map((it, i) => `<tr style="background:${i%2 ? '#f0fbf7' : '#fff'}">
@@ -4120,7 +4209,7 @@ function gerarLocacao() {
 
     const nomeArq = 'proposta-locacao-' + cliente.replace(/\s+/g,'-').toLowerCase() + '-' + dataISO + '-' + _horaArq() + '.pdf';
 
-    mostrarToast('Gerando proposta de locação...');
+    mostrarToast(reimpressao ? 'Reimprimindo proposta de locação...' : 'Gerando proposta de locação...');
     fetch('template-locacao.html')
         .then(r => r.text())
         .then(tpl => {
@@ -4148,8 +4237,8 @@ function gerarLocacao() {
                     pdf.text('B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08', w / 2, h - 7, { align: 'center' });
                 }
                 pdf.save(nomeArq);
-                mostrarToast('Proposta de locação gerada!');
-                fecharLocacao();
+                mostrarToast(reimpressao ? 'Proposta reimpressa!' : 'Proposta de locação gerada!');
+                if (reimpressao) fecharLocacaoHistorico(); else fecharLocacao();
             });
         })
         .catch(e => alert('Erro ao carregar template: ' + e.message));
@@ -4471,7 +4560,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=34');
+  navigator.serviceWorker.register('./sw.js?v=35');
 }
 
 </script>
