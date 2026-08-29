@@ -4243,7 +4243,6 @@ function _gerarLocacaoPDF(entry, reimpressao) {
                 const file   = new File([blob], nomeArq, { type: 'application/pdf' });
 
                 pdf.save(nomeArq);
-                window.open(URL.createObjectURL(blob), '_blank');
                 mostrarToast(reimpressao ? 'Proposta reimpressa!' : 'Proposta de locação gerada!');
                 if (reimpressao) fecharLocacaoHistorico(); else fecharLocacao();
                 exibirWppCard(cliente, fone, msgWpp, file, nomeArq);
@@ -4434,7 +4433,6 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
                 const file   = new File([blob], nomeArq, { type: 'application/pdf' });
 
                 pdf.save(nomeArq);
-                window.open(URL.createObjectURL(blob), '_blank');
                 mostrarToast(reimpressao ? 'Nota reimpressa!' : 'Nota de serviço gerada!');
                 if (reimpressao) fecharNotaHistorico(); else fecharNotaServico();
                 exibirWppCard(cliente, fone, msgWpp, file, nomeArq);
@@ -4576,7 +4574,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=44');
+  navigator.serviceWorker.register('./sw.js?v=45');
 }
 
 </script>
