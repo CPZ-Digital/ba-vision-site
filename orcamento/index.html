@@ -4216,7 +4216,7 @@ function _gerarLocacaoPDF(entry, reimpressao) {
             let html = tpl;
             Object.entries(placeholders).forEach(([k, v]) => { html = html.split(k).join(v); });
             html2pdf().from(html).set({
-                margin:      [0, 0, 18, 0],
+                margin:      [12, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
                 html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
@@ -4576,7 +4576,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=42');
+  navigator.serviceWorker.register('./sw.js?v=43');
 }
 
 </script>
