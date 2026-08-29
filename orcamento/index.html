@@ -2576,7 +2576,7 @@ function gerarPDF() {
         '{{cor_light}}':         socio ? '#d1f5e8' : '#e8eef8',
         '{{cor_bg}}':            socio ? '#f0fbf7' : '#f0f5ff',
         '{{cor_row}}':           socio ? '#f0fbf7' : '#f7f9ff',
-        '{{contato_email}}':     socio ? 'ba.visionseguranca@gmail.com' : 'contato@cpzdigital.com.br',
+        '{{contato_email}}':     socio ? 'contato@bavision.com.br' : 'contato@cpzdigital.com.br',
         '{{contato_tel}}':       socio ? '(21) 99664-6927' : '(21) 96745-5648',
         '{{geradoEm}}':          new Date().toLocaleDateString('pt-BR'),
         '{{obs_block}}':         obs ? `
@@ -2595,7 +2595,7 @@ function gerarPDF() {
             Object.entries(placeholders).forEach(([k, v]) => { html = html.split(k).join(v); });
             const [fr,fg,fb] = socio ? [5,150,105] : [0,85,179];
             const footerLine = socio
-                ? 'B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08  |  Responsáveis: Bruno & Adriano'
+                ? 'B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08  |  Responsáveis: Bruno & Adriano'
                 : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54  |  Responsável: Adriano';
             mostrarToast('Gerando PDF...');
             html2pdf().from(html).set({
@@ -2914,7 +2914,7 @@ async function exportarXLS() {
     // rodapé
     spacer();
     mergedRow(
-        marca + '   |   ' + (socio ? '(21) 99664-6927   |   ba.visionseguranca@gmail.com' : '(21) 96745-5648   |   contato@cpzdigital.com.br') +
+        marca + '   |   ' + (socio ? '(21) 99664-6927   |   contato@bavision.com.br' : '(21) 96745-5648   |   contato@cpzdigital.com.br') +
         '   |   CNPJ: ' + (socio ? '62.456.202/0001-08' : '58.589.970/0001-54'),
         COR_LT, 'FF555555', 9, 18
     );
@@ -2925,7 +2925,7 @@ async function exportarXLS() {
         { width: 5 }, { width: 22 }, { width: 16 }, { width: 18 }, { width: 18 }, { width: 18 }, { width: 20 }
     ];
     const NC2 = 7;
-    const contato2 = socio ? '(21) 99664-6927  ·  ba.visionseguranca@gmail.com' : '(21) 96745-5648  ·  contato@cpzdigital.com.br';
+    const contato2 = socio ? '(21) 99664-6927  ·  contato@bavision.com.br' : '(21) 96745-5648  ·  contato@cpzdigital.com.br';
 
     function mr2(text, bg, fc, fs, h) {
         const r = ws2.addRow([text]);
@@ -3930,7 +3930,7 @@ function _dadosDoHistorico(id) {
     const cnpj          = socio ? '62.456.202/0001-08' : '58.589.970/0001-54';
     const razaoSocial   = socio ? 'B&A Vision Segurança' : 'CPZ Digital';
     const contatoTel    = socio ? '(21) 99664-6927' : '(21) 96745-5648';
-    const contatoEmail  = socio ? 'ba.visionseguranca@gmail.com' : 'contato@cpzdigital.com.br';
+    const contatoEmail  = socio ? 'contato@bavision.com.br' : 'contato@cpzdigital.com.br';
     const garantia      = ci.garantia || '6 meses';
     const prazo         = (ci.prazo || '2') + ' dias úteis';
     const obs           = ci.obs || '';
@@ -3947,7 +3947,7 @@ function _dadosDoHistorico(id) {
         total: fmtR(totalFinal), validade,
         descPct, nomeArqBase: (numero ? numero + '-' : '') + (ci.nome || entry.nome).replace(/\s+/g,'-').toLowerCase() + '-' + data,
         footerLine: socio
-            ? 'B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08'
+            ? 'B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08'
             : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54',
         fr: socio ? 5 : 0, fg: socio ? 150 : 85, fb: socio ? 105 : 179
     };
@@ -4234,7 +4234,7 @@ function _gerarLocacaoPDF(entry, reimpressao) {
                     pdf.setFontSize(7);
                     pdf.setFont('helvetica', 'normal');
                     pdf.setTextColor(100, 100, 100);
-                    pdf.text('B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08', w / 2, h - 7, { align: 'center' });
+                    pdf.text('B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08', w / 2, h - 7, { align: 'center' });
                 }
 
                 const fone   = '55' + (tel || '').replace(/\D/g, '').replace(/^55/, '');
@@ -4364,10 +4364,10 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
     const razaoSocial  = socio ? 'B&A Vision Segurança' : 'CPZ Digital';
     const cnpj         = socio ? '62.456.202/0001-08' : '58.589.970/0001-54';
     const contatoTel   = socio ? '(21) 99664-6927' : '(21) 96745-5648';
-    const contatoEmail = socio ? 'ba.visionseguranca@gmail.com' : 'contato@cpzdigital.com.br';
+    const contatoEmail = socio ? 'contato@bavision.com.br' : 'contato@cpzdigital.com.br';
     const responsavel  = socio ? 'Bruno &amp; Adriano — B&A Vision' : 'Adriano — CPZ Digital';
     const footerLine   = socio
-        ? 'B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08'
+        ? 'B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08'
         : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54';
     const fr = socio ? 5 : 0, fg = socio ? 150 : 105, fb = socio ? 105 : 179;
 
@@ -4574,7 +4574,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=45');
+  navigator.serviceWorker.register('./sw.js?v=46');
 }
 
 </script>
