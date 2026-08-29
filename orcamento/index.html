@@ -4236,9 +4236,16 @@ function _gerarLocacaoPDF(entry, reimpressao) {
                     pdf.setTextColor(100, 100, 100);
                     pdf.text('B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08', w / 2, h - 7, { align: 'center' });
                 }
+
+                const fone   = '55' + (tel || '').replace(/\D/g, '').replace(/^55/, '');
+                const msgWpp = encodeURIComponent('Olá ' + cliente + '! Segue a proposta de locação de CFTV da B&A Vision.');
+                const blob   = new Blob([pdf.output('arraybuffer')], { type: 'application/pdf' });
+                const file   = new File([blob], nomeArq, { type: 'application/pdf' });
+
                 pdf.save(nomeArq);
                 mostrarToast(reimpressao ? 'Proposta reimpressa!' : 'Proposta de locação gerada!');
                 if (reimpressao) fecharLocacaoHistorico(); else fecharLocacao();
+                exibirWppCard(cliente, fone, msgWpp, file, nomeArq);
             });
         })
         .catch(e => alert('Erro ao carregar template: ' + e.message));
@@ -4419,9 +4426,16 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
                     pdf.setTextColor(100, 100, 100);
                     pdf.text(footerLine, w / 2, h - 7, { align: 'center' });
                 }
+
+                const fone   = '55' + (tel || '').replace(/\D/g, '').replace(/^55/, '');
+                const msgWpp = encodeURIComponent('Olá ' + cliente + '! Segue a nota de serviço da ' + razaoSocial + '.');
+                const blob   = new Blob([pdf.output('arraybuffer')], { type: 'application/pdf' });
+                const file   = new File([blob], nomeArq, { type: 'application/pdf' });
+
                 pdf.save(nomeArq);
                 mostrarToast(reimpressao ? 'Nota reimpressa!' : 'Nota de serviço gerada!');
                 if (reimpressao) fecharNotaHistorico(); else fecharNotaServico();
+                exibirWppCard(cliente, fone, msgWpp, file, nomeArq);
             });
         })
         .catch(e => alert('Erro ao carregar template: ' + e.message));
@@ -4560,7 +4574,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=40');
+  navigator.serviceWorker.register('./sw.js?v=41');
 }
 
 </script>
