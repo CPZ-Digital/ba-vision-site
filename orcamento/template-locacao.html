@@ -1,0 +1,132 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;color:#1a1a2e;table-layout:fixed;max-width:100%;">
+<tr><td style="padding:34px 28px 0 28px;overflow:hidden;word-break:break-word;">
+
+    <!-- CABEÇALHO -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid #059669;padding-bottom:10px;margin-bottom:14px;page-break-inside:avoid;">
+        <tr>
+            <td style="vertical-align:middle;height:52px;">
+                <img src="ba-vision-assinatura-v3.png" height="48" style="display:block;height:48px;width:auto;" crossorigin="anonymous">
+            </td>
+            <td style="text-align:right;vertical-align:middle;">
+                <p style="margin:0;font-size:16px;font-weight:700;color:#059669;">PROPOSTA DE LOCAÇÃO DE CFTV</p>
+                <p style="margin:4px 0 0;font-size:11px;color:#555;">Data: <strong>{{dataFmt}}</strong> &nbsp;|&nbsp; Válido por {{validade}} dias</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- CLIENTE -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;page-break-inside:avoid;">
+        <tr><td style="padding:10px 14px;background:#f0fbf7;border-left:4px solid #059669;">
+            <p style="margin:0 0 6px;font-size:10px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.6px;">Cliente</p>
+            <p style="margin:0;font-size:12px;font-weight:700;">{{nome}}</p>
+            {{tel_row}}
+            {{endereco_row}}
+        </td></tr>
+    </table>
+
+    <!-- 1. OBJETO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">1. Objeto da Proposta</p>
+    <p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 14px;">
+        A presente proposta tem como objetivo a instalação, configuração, <strong>locação</strong> e manutenção de um sistema de Circuito Fechado de Televisão (CFTV) destinado ao monitoramento e à segurança do local durante o período de execução da obra. A B&amp;A Vision Segurança Eletrônica fornecerá, em regime de locação, os equipamentos necessários ao funcionamento do sistema, ficando responsável pela instalação, configuração, manutenção preventiva e suporte técnico durante a vigência contratual.
+    </p>
+
+    <!-- 2. COMPOSIÇÃO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;page-break-after:avoid;">2. Composição do Sistema</p>
+    {{relacao_materiais}}
+    <p style="font-size:11px;color:#555;margin:0 0 14px;">O sistema será dimensionado para proporcionar aproximadamente <strong>{{dias_armazenamento}} dias de armazenamento</strong> das gravações, podendo haver variações conforme configuração das câmeras, movimentação registrada e demais condições técnicas.</p>
+
+    <!-- 3. INSTALAÇÃO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">3. Instalação e Infraestrutura</p>
+    <p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 8px;">O valor de instalação contempla a execução da infraestrutura necessária: passagem e organização do cabeamento, fixação e configuração dos equipamentos, testes de funcionamento, configuração de acesso remoto (quando houver internet no local) e entrega do sistema em pleno funcionamento.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#059669;margin-bottom:16px;">
+        <tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">VALOR DA INSTALAÇÃO E INFRAESTRUTURA</td>
+        <td style="padding:9px 16px;color:#fff;font-size:16px;font-weight:700;text-align:right;">{{valor_instalacao}}</td></tr>
+    </table>
+
+    <!-- 4. LOCAÇÃO E MANUTENÇÃO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">4. Locação e Manutenção</p>
+    <p style="font-size:12px;color:#444;margin:0 0 8px;">O sistema será disponibilizado à CONTRATANTE mediante pagamento mensal de:</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fbf7;border:1.5px solid #059669;border-radius:6px;margin-bottom:10px;">
+        <tr><td style="padding:12px 16px;text-align:center;">
+            <p style="margin:0;font-size:20px;font-weight:700;color:#059669;">{{valor_mensal}} / mês</p>
+        </td></tr>
+    </table>
+    <p style="font-size:11px;color:#555;line-height:1.9;margin:0 0 14px;">
+        O valor mensal contempla: locação dos equipamentos de CFTV; manutenção preventiva e corretiva decorrente de falhas naturais; até <strong>{{visitas}} visitas técnicas mensais</strong>; suporte técnico; verificação do sistema de gravação e armazenamento; ajustes básicos de configuração. As visitas técnicas não utilizadas no mês não são cumulativas para os meses seguintes.
+    </p>
+
+    <!-- 5. IMAGENS -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">5. Solicitação e Entrega das Imagens</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">
+        A CONTRATANTE poderá solicitar imagens gravadas com antecedência mínima de 24h. A B&amp;A Vision realizará a extração e disponibilização das gravações em até 48h, entregues mediante pendrive ou dispositivo de armazenamento fornecido pela própria CONTRATANTE. A B&amp;A Vision não se responsabiliza pela guarda permanente das imagens após a entrega.
+    </p>
+
+    <!-- 6. PRAZO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">6. Prazo Contratual, Renovação e Remanejamento</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">
+        O contrato terá prazo inicial de <strong>{{prazo_meses}} meses</strong>, contados a partir da data de instalação, renovado automaticamente por períodos sucessivos iguais salvo manifestação contrária com 30 dias de antecedência. Considerando o uso durante a obra, o contrato poderá permanecer vigente até a finalização desta, caso ocorra após o período inicial. Remanejamentos de câmeras/equipamentos durante a obra não estão incluídos na mensalidade e serão orçados separadamente, mediante aprovação prévia.
+    </p>
+
+    <!-- 7-13 CLÁUSULAS PADRÃO -->
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">7. Propriedade dos Equipamentos</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">Todos os equipamentos permanecem de propriedade da B&amp;A Vision durante e após o encerramento do contrato. A CONTRATANTE tem apenas o direito de utilização durante a vigência da locação. Ao término, os equipamentos serão recolhidos pela B&amp;A Vision, salvo acordo diverso.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">8. Manutenção e Suporte Técnico</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">Inclui verificação de câmeras, DVR, HD, conexões, ajustes básicos, inspeção de infraestrutura e diagnóstico de falhas. Não estão incluídos danos por vandalismo, furto, mau uso, alterações por terceiros, descargas elétricas, incêndio, inundação ou eventos de força maior — nesses casos, reparo/substituição mediante orçamento e aprovação prévia.</p>
+    </div>
+
+    <div style="page-break-before:always;page-break-inside:avoid;padding-top:40px;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">9. Responsabilidades da Contratante</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">Disponibilizar internet e energia elétrica adequadas no local; permitir acesso para instalação/manutenção; fornecer dispositivo de armazenamento para entrega de imagens; indicar formalmente pessoas autorizadas a acessar as imagens; zelar pela integridade física dos equipamentos locados; comunicar imediatamente qualquer falha, dano ou ocorrência.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">10. Propriedade e Acesso às Imagens / LGPD</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">As imagens captadas são de propriedade da CONTRATANTE; a B&amp;A Vision atua exclusivamente na disponibilização e suporte técnico do sistema, sem uso, divulgação ou compartilhamento a terceiros sem autorização expressa. Ambas as partes observam a Lei nº 13.709/2018 (LGPD); a CONTRATANTE define finalidades e pessoas autorizadas a acessar as gravações, e a B&amp;A Vision trata as imagens exclusivamente para execução do contrato, adotando medidas razoáveis de segurança.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">11. Acesso Remoto</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">Depende da conexão de internet fornecida pela CONTRATANTE. A B&amp;A Vision configura o acesso remoto quando possível, não se responsabilizando por indisponibilidades da operadora ou problemas externos à infraestrutura de CFTV.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;">
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:0 0 8px;">12. Inadimplemento e Rescisão</p>
+    <p style="font-size:11px;color:#555;line-height:1.8;margin:0 0 14px;">Atraso no pagamento gera multa de 2% + juros de 1% ao mês. Inadimplência acima de 15 dias permite suspender manutenção/suporte; acima de 30 dias, o contrato pode ser considerado rescindido, com retirada dos equipamentos (que seguem de propriedade da B&amp;A Vision) e cobrança dos valores vencidos. Rescisão antecipada por iniciativa da CONTRATANTE sem descumprimento da B&amp;A Vision pode sujeitar a multa rescisória a combinar.</p>
+    </div>
+
+    <!-- 13. INVESTIMENTO -->
+    <p style="font-size:13px;font-weight:700;color:#059669;border-bottom:2px solid #059669;padding-bottom:4px;margin:16px 0 8px;">13. Investimento</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px;page-break-inside:avoid;">
+        <tr><th style="background:#059669;color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-align:left;">Descrição</th>
+            <th style="background:#059669;color:#fff;padding:7px 12px;font-size:11px;font-weight:700;text-align:right;">Valor</th></tr>
+        <tr style="background:#fff;"><td style="padding:8px 12px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;">Instalação + infraestrutura completa</td>
+            <td style="padding:8px 12px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:700;">{{valor_instalacao}}</td></tr>
+        <tr style="background:#f0fbf7;"><td style="padding:8px 12px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;">Locação + manutenção mensal</td>
+            <td style="padding:8px 12px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:700;">{{valor_mensal}}/mês</td></tr>
+    </table>
+    <p style="font-size:12px;color:#444;margin:0 0 4px;">Considerando o prazo inicial de {{prazo_meses}} meses:</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#059669;margin-bottom:20px;">
+        <tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">INVESTIMENTO TOTAL NO PERÍODO INICIAL</td>
+        <td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">{{valor_total_periodo}}</td></tr>
+    </table>
+
+    <!-- ASSINATURAS -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;page-break-inside:avoid;">
+        <tr>
+            <td style="width:46%;height:32px;vertical-align:bottom;border-bottom:1px solid #555;"></td>
+            <td style="width:8%;"></td>
+            <td style="width:46%;height:32px;vertical-align:bottom;border-bottom:1px solid #555;"></td>
+        </tr>
+        <tr>
+            <td style="padding-top:4px;text-align:center;font-size:10px;color:#555;">B&amp;A Vision Segurança Eletrônica</td>
+            <td></td>
+            <td style="padding-top:4px;text-align:center;font-size:10px;color:#555;">{{nome}} — Contratante</td>
+        </tr>
+    </table>
+
+</td></tr>
+</table>

@@ -1269,6 +1269,12 @@ body {
         </svg>
         <span>Nota</span>
     </button>
+    <button class="topo-rect-btn" onclick="abrirLocacao()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/>
+        </svg>
+        <span>Locação</span>
+    </button>
 </div>
 <div id="creditoDev" style="display:none;text-align:center;padding:8px 0 4px;font-size:11px;color:var(--text-muted,#999);">Desenvolvido por CPZ Digital</div>
 
@@ -1456,6 +1462,63 @@ body {
         <button class="exp-btn" onclick="gerarNotaServico()" style="width:100%;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Gerar PDF
+        </button>
+    </div>
+</div>
+
+<!-- MODAL PROPOSTA DE LOCAÇÃO -->
+<div class="pag-overlay" id="locacaoOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Proposta de Locação (B&amp;A Vision)</span>
+            <button class="pag-fechar" onclick="fecharLocacao()">✕</button>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Cliente</label>
+            <input class="exp-input" id="locCliente" type="text" placeholder="Nome do cliente / obra" style="width:100%;">
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Telefone <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <input class="exp-input" id="locTel" type="text" placeholder="(21) 90000-0000" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Data da proposta</label>
+                <input class="exp-input" id="locData" type="date" style="width:100%;">
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Endereço / obra <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <input class="exp-input" id="locEndereco" type="text" placeholder="Local da instalação" style="width:100%;">
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin:4px 0 8px;">Composição do sistema puxada automaticamente dos itens do orçamento atual (produtos + infra).</p>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Valor da instalação</label>
+                <input class="exp-input" id="locValorInstalacao" type="number" min="0" step="0.01" placeholder="6000,00" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Valor mensal</label>
+                <input class="exp-input" id="locValorMensal" type="number" min="0" step="0.01" placeholder="1000,00" style="width:100%;">
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Prazo contratual (meses)</label>
+                <input class="exp-input" id="locPrazoMeses" type="number" min="1" value="24" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Visitas técnicas/mês</label>
+                <input class="exp-input" id="locVisitas" type="number" min="0" value="4" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Validade (dias)</label>
+                <input class="exp-input" id="locValidade" type="number" min="1" value="15" style="width:100%;">
+            </div>
+        </div>
+        <button class="exp-btn" onclick="gerarLocacao()" style="width:100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Gerar Proposta de Locação (PDF)
         </button>
     </div>
 </div>
@@ -3970,6 +4033,128 @@ function gerarContrato(id) {
         .catch(e => alert('Erro ao carregar template: ' + e.message));
 }
 
+// ── PROPOSTA DE LOCAÇÃO (só B&A Vision) ──
+function abrirLocacao() {
+    if (!document.getElementById('usarSocio').checked) {
+        mostrarToast('Proposta de Locação disponível só pra B&A Vision');
+        return;
+    }
+    document.getElementById('locCliente').value = _clienteInfo.nome || '';
+    document.getElementById('locTel').value = _clienteInfo.tel || '';
+    document.getElementById('locEndereco').value = _clienteInfo.endereco || '';
+    document.getElementById('locData').value = new Date().toISOString().slice(0,10);
+    document.getElementById('locValorInstalacao').value = '';
+    document.getElementById('locValorMensal').value = '';
+    document.getElementById('locacaoOverlay').classList.add('aberto');
+    document.querySelector('.fab-area').style.display = 'none';
+}
+
+function fecharLocacao() {
+    document.getElementById('locacaoOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+
+document.getElementById('locacaoOverlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharLocacao();
+});
+
+function gerarLocacao() {
+    const cliente = document.getElementById('locCliente').value.trim();
+    const valorInstalacao = parseFloat(document.getElementById('locValorInstalacao').value);
+    const valorMensal = parseFloat(document.getElementById('locValorMensal').value);
+    if (!cliente) { mostrarToast('Informe o nome do cliente'); return; }
+    if (isNaN(valorInstalacao) || isNaN(valorMensal)) { mostrarToast('Informe o valor de instalação e o valor mensal'); return; }
+
+    const tel = document.getElementById('locTel').value.trim();
+    const endereco = document.getElementById('locEndereco').value.trim();
+    const dataISO = document.getElementById('locData').value || new Date().toISOString().slice(0,10);
+    const dataFmt = new Date(dataISO + 'T12:00:00').toLocaleDateString('pt-BR');
+    const prazoMeses = Number(document.getElementById('locPrazoMeses').value) || 24;
+    const visitas = Number(document.getElementById('locVisitas').value) || 4;
+    const validade = Number(document.getElementById('locValidade').value) || 15;
+    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    const THs  = 'background:#059669;color:#fff;padding:5px 8px;font-size:9px;font-weight:700;text-align:left;';
+    const TDLs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;';
+    const TDCs = 'padding:4px 8px;font-size:9px;color:#333;border-bottom:1px solid #eee;text-align:center;';
+    const todosItens = [];
+    document.querySelectorAll('.item-produto').forEach(card => {
+        const busca = card.querySelector('.item-busca-wrapper');
+        const codigo = busca ? busca.getValor() : '';
+        const qtd = Number(card.querySelector('.qtd-num').value) || 0;
+        if (!codigo || !qtd) return;
+        const prod = produtos.find(p => p.codigo === codigo);
+        todosItens.push({ descricao: prod ? (prod.descricao || prod.nome || codigo) : codigo, qtd });
+    });
+    document.querySelectorAll('.item-infra').forEach(card => {
+        const busca = card.querySelector('.item-busca-wrapper');
+        const nome = busca ? busca.getValor() : '';
+        const qtd = Number(card.querySelector('.qtd-num').value) || 0;
+        if (!nome || !qtd) return;
+        todosItens.push({ descricao: nome, qtd });
+    });
+    const relacaoMateriais = todosItens.length ? `
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+        <tr><th style="${THs}width:36px;text-align:center;">Item</th><th style="${THs}">Descrição</th><th style="${THs}text-align:center;width:44px;">Qtd</th></tr>` +
+        todosItens.map((it, i) => `<tr style="background:${i%2 ? '#f0fbf7' : '#fff'}">
+            <td style="${TDCs}color:#888;">${i+1}</td>
+            <td style="${TDLs}">${it.descricao}</td>
+            <td style="${TDCs}">${it.qtd}</td></tr>`).join('') +
+        `</table>`
+        : '<p style="font-size:11px;color:#888;margin:0 0 10px;">Nenhum item no orçamento atual — adicione os equipamentos antes de gerar a proposta.</p>';
+
+    const placeholders = {
+        '{{dataFmt}}': dataFmt,
+        '{{validade}}': String(validade),
+        '{{nome}}': cliente.replace(/</g,'&lt;'),
+        '{{tel_row}}': tel ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: ${tel}</p>` : '',
+        '{{endereco_row}}': endereco ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">Local: ${endereco.replace(/</g,'&lt;')}</p>` : '',
+        '{{relacao_materiais}}': relacaoMateriais,
+        '{{dias_armazenamento}}': '30',
+        '{{valor_instalacao}}': fmtR(valorInstalacao),
+        '{{valor_mensal}}': fmtR(valorMensal),
+        '{{visitas}}': String(visitas),
+        '{{prazo_meses}}': String(prazoMeses),
+        '{{valor_total_periodo}}': fmtR(valorInstalacao + valorMensal * prazoMeses),
+    };
+
+    const nomeArq = 'proposta-locacao-' + cliente.replace(/\s+/g,'-').toLowerCase() + '-' + dataISO + '-' + _horaArq() + '.pdf';
+
+    mostrarToast('Gerando proposta de locação...');
+    fetch('template-locacao.html')
+        .then(r => r.text())
+        .then(tpl => {
+            let html = tpl;
+            Object.entries(placeholders).forEach(([k, v]) => { html = html.split(k).join(v); });
+            html2pdf().from(html).set({
+                margin:      [0, 0, 18, 0],
+                filename:    nomeArq,
+                image:       { type:'jpeg', quality:0.95 },
+                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                    onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
+                jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
+            }).toPdf().get('pdf').then(pdf => {
+                const n = pdf.internal.getNumberOfPages();
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                for (let i = 1; i <= n; i++) {
+                    pdf.setPage(i);
+                    pdf.setDrawColor(5, 150, 105);
+                    pdf.setLineWidth(0.4);
+                    pdf.line(4, h - 11, w - 4, h - 11);
+                    pdf.setFontSize(7);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text('B&A Vision  |  (21) 99664-6927  |  ba.visionseguranca@gmail.com  |  CNPJ: 62.456.202/0001-08', w / 2, h - 7, { align: 'center' });
+                }
+                pdf.save(nomeArq);
+                mostrarToast('Proposta de locação gerada!');
+                fecharLocacao();
+            });
+        })
+        .catch(e => alert('Erro ao carregar template: ' + e.message));
+}
+
 // ── NOTA DE SERVIÇO ──
 function abrirNotaServico() {
     document.getElementById('notaCliente').value = '';
@@ -4286,7 +4471,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=33');
+  navigator.serviceWorker.register('./sw.js?v=34');
 }
 
 </script>
