@@ -2013,8 +2013,6 @@ function aplicarDesconto() {
 }
 
 function calcular() {
-    const tipoEl=document.querySelector('input[name="tipo"]:checked');
-    const tipo=tipoEl?tipoEl.value:"analogica";
     const usarSocio=document.getElementById("usarSocio").checked;
 
     let qtdCameras=0, totalProd=0;
@@ -2041,22 +2039,21 @@ function calcular() {
     let nivel=qtdCameras>=33?"dificil":qtdCameras>=9?"medio":qtdCameras>=1?"facil":"";
     cam.className="cameras-badge"+(nivel?" "+nivel:"");
 
-    const tS={analogica:{facil:1.6,medio:1.7,dificil:1.7},ip:{facil:1.7,medio:1.9,dificil:2.0},wifi:{facil:2.0,medio:2.1,dificil:2.2},automacao:{facil:2.2,medio:2.4,dificil:2.7},sensores:{facil:2.0,medio:2.2,dificil:2.3}};
-    const tSo={analogica:{facil:2.1,medio:2.2,dificil:2.2},ip:{facil:2.3,medio:2.4,dificil:2.6},wifi:{facil:2.6,medio:2.7,dificil:2.8},automacao:{facil:3.0,medio:3.2,dificil:3.5},sensores:{facil:2.8,medio:3.0,dificil:3.2}};
-    const tab=usarSocio?tSo:tS;
-    const mult=(tab[tipo]||tab.analogica)[nivel||"facil"];
-
     const diasT=Number(document.getElementById("diasTrabalho").value)||0;
     const diasD=Number(document.getElementById("diasDiarista").value)||0;
     const desl=50*diasT;
-    const diarias=diasT*500*(usarSocio?2:1);
-    const diarista=diasD*120;
-    const despesas=desl+totalInfra+diarias+diarista;
-    const valorBruto=Math.round((totalProd*mult+despesas)/50)*50;
+    // ponytail: adicional por câmera representa o valor do trabalho em si, igual pras 2 marcas
+    // (calibrado com job real B&A: 50cam/dificil/68mil) — CPZ sai mais barato só por ter menos folha (1 dono vs 2 sócios)
+    const camAdicional={facil:400,medio:460,dificil:520};
+    const adicional=qtdCameras*(camAdicional[nivel||"facil"]);
+    const diarias=usarSocio?diasT*350*2:diasT*300;
+    const diarista=usarSocio?diasD*120:diasD*150;
+    const despesas=desl+totalInfra+diarias+diarista+adicional;
+    const valorBruto=Math.round((totalProd+despesas)/50)*50;
+    document.getElementById("rServico").textContent=fmt(despesas-totalInfra-adicional)+" + "+fmt(adicional)+" (dificuldade)";
 
     document.getElementById("rEquip").textContent=fmt(totalProd);
     document.getElementById("rInfra").textContent=fmt(totalInfra);
-    document.getElementById("rServico").textContent=fmt(despesas-totalInfra);
 
     _pag = { valorFinal: valorBruto, valorBruto, totalProd, totalInfra, desl, diarias, diarista };
     aplicarDesconto();
@@ -4574,7 +4571,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=46');
+  navigator.serviceWorker.register('./sw.js?v=47');
 }
 
 </script>
