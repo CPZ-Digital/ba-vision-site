@@ -1224,6 +1224,12 @@ body {
             <div class="resumo-linha"><span>Serviço e despesas</span><strong id="rServico">R$ 0,00</strong></div>
 
             <div style="border-top:1px solid rgba(255,255,255,0.12);margin:10px 0 8px;"></div>
+            <div class="resumo-linha" style="font-size:11px;opacity:0.6;"><span>Divisão do pool (diária+dificuldade)</span></div>
+            <div class="resumo-linha"><span id="rParteVoceLabel">Sua parte (70%)</span><strong id="rParteVoce">R$ 0,00</strong></div>
+            <div class="resumo-linha" id="rParteSocioRow" style="display:none;"><span>Bruno (40%)</span><strong id="rParteSocio">R$ 0,00</strong></div>
+            <div class="resumo-linha"><span id="rParteCaixaLabel">Caixa (30%)</span><strong id="rParteCaixa">R$ 0,00</strong></div>
+
+            <div style="border-top:1px solid rgba(255,255,255,0.12);margin:10px 0 8px;"></div>
 
             <div class="resumo-linha" style="align-items:center;">
                 <span style="display:flex;align-items:center;gap:5px;font-size:11px;opacity:0.6;">
@@ -2051,6 +2057,22 @@ function calcular() {
     const despesas=desl+totalInfra+diarias+diarista+adicional;
     const valorBruto=Math.round((totalProd+despesas)/50)*50;
     document.getElementById("rServico").textContent=fmt(despesas-totalInfra-adicional)+" + "+fmt(adicional)+" (dificuldade)";
+
+    // ponytail: divisão do pool líquido (diária+dificuldade) — 70/30 na CPZ, 40/40/20 no B&A, só informativo interno
+    const pool=diarias+adicional;
+    document.getElementById("rParteSocioRow").style.display=usarSocio?"":"none";
+    if (usarSocio) {
+        document.getElementById("rParteVoceLabel").textContent="Você (40%)";
+        document.getElementById("rParteCaixaLabel").textContent="Caixa (20%)";
+        document.getElementById("rParteVoce").textContent=fmt(pool*0.4);
+        document.getElementById("rParteSocio").textContent=fmt(pool*0.4);
+        document.getElementById("rParteCaixa").textContent=fmt(pool*0.2);
+    } else {
+        document.getElementById("rParteVoceLabel").textContent="Sua parte (70%)";
+        document.getElementById("rParteCaixaLabel").textContent="Caixa (30%)";
+        document.getElementById("rParteVoce").textContent=fmt(pool*0.7);
+        document.getElementById("rParteCaixa").textContent=fmt(pool*0.3);
+    }
 
     document.getElementById("rEquip").textContent=fmt(totalProd);
     document.getElementById("rInfra").textContent=fmt(totalInfra);
@@ -4571,7 +4593,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=47');
+  navigator.serviceWorker.register('./sw.js?v=48');
 }
 
 </script>
