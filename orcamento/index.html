@@ -3491,6 +3491,10 @@ function fecharFollowup() {
 
 // ── INIT ──
 async function init() {
+    // sem isso, num aparelho novo (sem sessão persistida) o pull da nuvem
+    // roda antes do login e falha silencioso -- sem retry depois que o
+    // usuário autentica pelo PIN, o app ficava com dado vazio até recarregar
+    await _ensureAuth();
     await carregarBanco();
     await _cloudSyncStartup();
     if (!restaurarEstado()) {
