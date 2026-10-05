@@ -1574,13 +1574,21 @@ body {
         </div>
         <div style="display:flex;gap:8px;">
             <div class="exp-field" style="flex:1;">
-                <label class="exp-label">CNPJ/CPF <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <label class="exp-label">CNPJ/CPF</label>
                 <input class="exp-input" id="moDoc" type="text" style="width:100%;">
             </div>
             <div class="exp-field" style="flex:1;">
                 <label class="exp-label">Telefone <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
                 <input class="exp-input" id="moTel" type="text" placeholder="(21) 90000-0000" style="width:100%;">
             </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Endereço da contratante</label>
+            <input class="exp-input" id="moEndC" type="text" placeholder="Sede/endereço da empresa contratante" style="width:100%;">
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Representante da contratante</label>
+            <input class="exp-input" id="moRep" type="text" placeholder="Nome de quem assina" style="width:100%;">
         </div>
         <div class="exp-field">
             <label class="exp-label">Local da obra</label>
@@ -1602,8 +1610,22 @@ body {
         </div>
         <div style="display:flex;gap:8px;">
             <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Previsão de conclusão</label>
+                <input class="exp-input" id="moFim" type="date" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Multa de rescisão (%)</label>
+                <input class="exp-input" id="moMulta" type="number" min="0" max="100" value="20" style="width:100%;">
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Diária de equipe parada R$ <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <input class="exp-input" id="moParada" type="number" min="0" step="0.01" placeholder="Ex: 1000 — cobrado por dia de paralisação" style="width:100%;">
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
                 <label class="exp-label">Prazo de execução</label>
-                <input class="exp-input" id="moPrazo" type="text" value="5 dias úteis" style="width:100%;">
+                <input class="exp-input" id="moPrazo" type="text" value="aprox. 30 dias" style="width:100%;">
             </div>
             <div class="exp-field" style="flex:1;">
                 <label class="exp-label">Garantia do serviço</label>
@@ -1612,11 +1634,17 @@ body {
         </div>
         <div class="exp-field">
             <label class="exp-label">Forma de pagamento</label>
-            <textarea class="exp-input" id="moPagamento" rows="2" style="resize:vertical;min-height:50px;line-height:1.5;">50% na assinatura e 50% na conclusão do serviço.</textarea>
+            <textarea class="exp-input" id="moPagamento" rows="3" style="resize:vertical;min-height:60px;line-height:1.5;">a) 30% (sinal) no ato da assinatura;
+b) 40% na metade da execução;
+c) 30% na conclusão e entrega dos serviços.</textarea>
         </div>
         <div class="exp-field">
             <label class="exp-label">Observações <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
             <textarea class="exp-input" id="moObs" rows="2" style="resize:vertical;min-height:50px;line-height:1.5;"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;"><label class="exp-label">Testemunha 1 <span style="color:var(--muted);font-weight:400">(opc.)</span></label><input class="exp-input" id="moT1" type="text" placeholder="Nome" style="width:100%;"></div>
+            <div class="exp-field" style="flex:1;"><label class="exp-label">Testemunha 2 <span style="color:var(--muted);font-weight:400">(opc.)</span></label><input class="exp-input" id="moT2" type="text" placeholder="Nome" style="width:100%;"></div>
         </div>
         <button class="exp-btn" onclick="gerarMO()" style="width:100%;">Gerar contrato</button>
     </div>
@@ -4611,7 +4639,7 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
 
 // ── CONTRATO DE MÃO DE OBRA (material fornecido pelo contratante) ──
 function abrirMO() {
-    ['moCliente','moDoc','moTel','moEndereco','moEscopo','moValor','moObs'].forEach(id => document.getElementById(id).value = '');
+    ['moCliente','moDoc','moTel','moEndC','moRep','moEndereco','moEscopo','moValor','moParada','moObs','moT1','moT2','moFim'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('moInicio').value = new Date().toISOString().slice(0,10);
     document.getElementById('moOverlay').classList.add('aberto');
     document.querySelector('.fab-area').style.display = 'none';
@@ -4673,6 +4701,7 @@ function gerarMO() {
     const cliente = v('moCliente'), escopo = v('moEscopo'), endereco = v('moEndereco');
     const valor = parseFloat(document.getElementById('moValor').value);
     if (!cliente)  { mostrarToast('Informe o contratante'); return; }
+    if (!v('moDoc')) { mostrarToast('Informe o CNPJ/CPF da contratante'); return; }
     if (!endereco) { mostrarToast('Informe o local da obra'); return; }
     if (!escopo)   { mostrarToast('Descreva o escopo do serviço'); return; }
     if (isNaN(valor) || valor <= 0) { mostrarToast('Informe o valor total'); return; }
@@ -4681,7 +4710,9 @@ function gerarMO() {
     const inicioISO = v('moInicio') || dataISO;
     const entry = {
         id: Date.now(), marca: document.getElementById('usarSocio').checked ? 'ba' : 'cpz',
-        cliente, doc: v('moDoc'), tel: v('moTel'), endereco, escopo, valor,
+        cliente, doc: v('moDoc'), tel: v('moTel'), endC: v('moEndC'), rep: v('moRep'), t1: v('moT1'), t2: v('moT2'),
+        multa: Math.min(100, Math.max(0, Number(v('moMulta')) || 20)), parada: parseFloat(document.getElementById('moParada').value) || 0,
+        fimFmt: v('moFim') ? new Date(v('moFim') + 'T12:00:00').toLocaleDateString('pt-BR') : 'a definir', endereco, escopo, valor,
         prazo: v('moPrazo') || 'a combinar', garantia: v('moGarantia') || '90 dias',
         pagamento: v('moPagamento') || 'A combinar.', obs: v('moObs'),
         dataISO, dataFmt: new Date(dataISO + 'T12:00:00').toLocaleDateString('pt-BR'),
@@ -4693,8 +4724,35 @@ function gerarMO() {
     _gerarMOPDF(entry, false);
 }
 
+function _valorExtenso(v) {
+    const U = ['zero','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+    const D = ['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+    const C = ['','cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+    const ate999 = n => {
+        if (n === 100) return 'cem';
+        const c = Math.floor(n / 100), r = n % 100, p = [];
+        if (c) p.push(C[c]);
+        if (r) p.push(r < 20 ? U[r] : D[Math.floor(r / 10)] + (r % 10 ? ' e ' + U[r % 10] : ''));
+        return p.join(' e ');
+    };
+    const inteiro = n => {
+        if (n === 0) return 'zero';
+        const mi = Math.floor(n / 1e6), mil = Math.floor(n % 1e6 / 1e3), r = n % 1e3, p = [];
+        if (mi) p.push(ate999(mi) + (mi === 1 ? ' milhão' : ' milhões'));
+        if (mil) p.push(mil === 1 ? 'mil' : ate999(mil) + ' mil');
+        if (r) p.push(ate999(r));
+        const ultimoComE = r && (r < 100 || r % 100 === 0);
+        return p.reduce((a, b, k) => k === 0 ? b : a + (k === p.length - 1 && ultimoComE ? ' e ' : ', ') + b, '');
+    };
+    const cents = Math.round(v * 100), reais = Math.floor(cents / 100), cs = cents % 100;
+    let t = inteiro(reais) + (reais === 1 ? ' real' : (reais >= 1e6 && reais % 1e6 === 0 ? ' de reais' : ' reais'));
+    if (cs) t += ' e ' + inteiro(cs) + (cs === 1 ? ' centavo' : ' centavos');
+    return t;
+}
+
 function _gerarMOPDF(entry, reimpressao) {
     const { cliente, doc, tel, endereco, escopo, valor, prazo, garantia, pagamento, obs, dataISO, dataFmt, inicioFmt } = entry;
+    const blank = '_______________________';
     const socio = entry.marca === 'ba';
     const cor   = socio ? '#059669' : '#0055b3';
     const esc   = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -4703,33 +4761,36 @@ function _gerarMOPDF(entry, reimpressao) {
     const footerLine  = socio
         ? 'B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08'
         : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54';
-    const row = t => t ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">${t}</p>` : '';
 
     const placeholders = {
         '{{logo_src}}':      socio ? 'ba-vision-assinatura-v3.png' : 'cpz-assinatura-v4.png',
         '{{logo_height}}':   socio ? '48' : '40',
         '{{cor_pri}}':       cor,
-        '{{cor_bg}}':        socio ? '#f0fbf7' : '#f0f5ff',
         '{{numero}}':        String(entry.id).slice(-6),
         '{{dataFmt}}':       dataFmt,
         '{{razao_social}}':  razaoSocial,
         '{{cnpj}}':          socio ? '62.456.202/0001-08' : '58.589.970/0001-54',
-        '{{contato_tel}}':   socio ? '(21) 99664-6927' : '(21) 96745-5648',
-        '{{contato_email}}': socio ? 'contato@bavision.com.br' : 'contato@cpzdigital.com.br',
+        '{{sede_contratada}}': socio ? 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360' : 'com sede no Rio de Janeiro/RJ',
+        '{{rep_contratada}}': socio ? 'Bruno Leonardo de Souza Leite' : 'Adriano',
         '{{cliente}}':       esc(cliente),
-        '{{doc_row}}':       row(doc && 'CNPJ/CPF: ' + esc(doc)),
-        '{{tel_row}}':       row(tel && 'Tel: ' + esc(tel)),
-        '{{endereco_row}}':  row('Obra: ' + esc(endereco)),
+        '{{doc}}':           esc(doc),
+        '{{end_contratante}}': esc(entry.endC || blank),
+        '{{rep_contratante}}': esc(entry.rep || blank),
         '{{local_obra}}':    esc(endereco),
         '{{escopo}}':        esc(escopo),
         '{{prazo}}':         esc(prazo),
         '{{inicio}}':        inicioFmt,
+        '{{fim}}':           entry.fimFmt || 'a definir',
         '{{valor}}':         fmtR(valor),
+        '{{valor_extenso}}': _valorExtenso(valor),
         '{{pagamento}}':     esc(pagamento),
         '{{garantia}}':      esc(garantia),
+        '{{multa}}':         String(entry.multa ?? 20),
+        '{{diaria_parada}}': entry.parada > 0 ? '(' + fmtR(entry.parada) + ' por dia)' : '(conforme orçamento a ser apresentado)',
+        '{{test1_nome}}':    esc(entry.t1 || blank), '{{test1_cpf}}': blank,
+        '{{test2_nome}}':    esc(entry.t2 || blank), '{{test2_cpf}}': blank,
         '{{cidade_uf}}':     'Rio de Janeiro/RJ',
-        '{{obs_block}}':     obs ? `<p style="font-size:13px;font-weight:700;color:${cor};border-bottom:2px solid ${cor};padding-bottom:4px;margin:14px 0 8px;">Observações</p>
-            <p style="font-size:11px;color:#444;line-height:1.8;margin:0;white-space:pre-wrap;">${esc(obs)}</p>` : '',
+        '{{obs_block}}':     obs ? `<h3>Cláusula 24ª — Das Condições Especiais</h3><p style="white-space:pre-wrap;">${esc(obs)}</p>` : '',
     };
     const fr = socio ? 5 : 0, fg = socio ? 150 : 105, fb = socio ? 105 : 179;
     const nomeArq = 'contrato-mao-de-obra-' + cliente.replace(/\s+/g,'-').toLowerCase() + '-' + dataISO + '-' + _horaArq() + '.pdf';
@@ -4908,7 +4969,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=51');
+  navigator.serviceWorker.register('./sw.js?v=52');
 }
 
 </script>

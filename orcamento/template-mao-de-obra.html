@@ -1,98 +1,136 @@
-<table width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;color:#1a1a2e;table-layout:fixed;max-width:100%;">
+<style>
+.mo h3{font-size:12px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:3px;margin:14px 0 6px;page-break-after:avoid;text-transform:uppercase;}
+.mo p{font-size:10.5px;color:#333;line-height:1.7;margin:0 0 5px;text-align:justify;page-break-inside:avoid;}
+.mo p b{color:#111;}
+</style>
+<table class="mo" width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;color:#1a1a2e;table-layout:fixed;max-width:100%;">
 <tr><td style="padding:0 28px 0 28px;overflow:hidden;word-break:break-word;">
 
-    <!-- CABEÇALHO -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid {{cor_pri}};padding-bottom:10px;margin-bottom:16px;page-break-inside:avoid;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid {{cor_pri}};padding-bottom:10px;margin-bottom:14px;page-break-inside:avoid;">
         <tr>
             <td style="vertical-align:middle;height:52px;">
                 <img src="{{logo_src}}" height="{{logo_height}}" style="display:block;height:{{logo_height}}px;width:auto;" crossorigin="anonymous">
             </td>
             <td style="text-align:right;vertical-align:middle;">
-                <p style="margin:0;font-size:15px;font-weight:700;color:{{cor_pri}};">CONTRATO DE PRESTAÇÃO<br>DE SERVIÇOS — MÃO DE OBRA</p>
-                <p style="margin:4px 0 0;font-size:11px;color:#555;">Nº {{numero}} &nbsp;|&nbsp; {{dataFmt}}</p>
+                <p style="margin:0;font-size:14px;font-weight:700;color:{{cor_pri}};text-align:right;">CONTRATO DE PRESTAÇÃO DE SERVIÇOS<br>DE MÃO DE OBRA — SEGURANÇA ELETRÔNICA</p>
+                <p style="margin:4px 0 0;font-size:11px;color:#555;text-align:right;">Nº {{numero}} &nbsp;|&nbsp; {{dataFmt}}</p>
             </td>
         </tr>
     </table>
 
-    <!-- PARTES -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;page-break-inside:avoid;table-layout:fixed;">
-        <tr>
-            <td style="width:48%;padding:10px 12px;background:{{cor_bg}};border-left:4px solid {{cor_pri}};vertical-align:top;word-break:break-word;">
-                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:{{cor_pri}};text-transform:uppercase;letter-spacing:0.6px;">Contratada (prestadora)</p>
-                <p style="margin:0;font-size:12px;font-weight:700;">{{razao_social}}</p>
-                <p style="margin:2px 0 0;font-size:11px;color:#555;">CNPJ: {{cnpj}}</p>
-                <p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: {{contato_tel}}</p>
-                <p style="margin:2px 0 0;font-size:11px;color:#555;">E-mail: {{contato_email}}</p>
-            </td>
-            <td style="width:4%;"></td>
-            <td style="width:48%;padding:10px 12px;background:#f9f9f9;border-left:4px solid #aaa;vertical-align:top;word-break:break-word;">
-                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.6px;">Contratante</p>
-                <p style="margin:0;font-size:12px;font-weight:700;">{{cliente}}</p>
-                {{doc_row}}
-                {{tel_row}}
-                {{endereco_row}}
-            </td>
-        </tr>
-    </table>
+    <p><b>CONTRATANTE:</b> {{cliente}}, inscrito(a) no CPF/CNPJ sob nº {{doc}}, com endereço em {{end_contratante}}, neste ato representado(a) por {{rep_contratante}}.</p>
+    <p><b>CONTRATADA:</b> {{razao_social}}, inscrita no CNPJ sob nº {{cnpj}}, {{sede_contratada}}, neste ato representada por {{rep_contratada}}.</p>
+    <p>As partes acima identificadas celebram o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 1ª — Do Objeto</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 6px;">O presente contrato tem por objeto a prestação, pela CONTRATADA, de serviços de <strong>mão de obra especializada</strong> para instalação e configuração de sistemas de segurança eletrônica, conforme escopo abaixo, no local: <strong>{{local_obra}}</strong>.</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;white-space:pre-wrap;"><strong>Escopo:</strong> {{escopo}}</p>
-    </div>
+    <h3>Cláusula 1ª — Do Objeto e do Escopo</h3>
+    <p><b>1.1.</b> O contrato tem por objeto a prestação, pela CONTRATADA, de serviços de <b>mão de obra especializada</b> para instalação de sistema de segurança eletrônica no imóvel situado em <b>{{local_obra}}</b>, conforme o escopo: <i>{{escopo}}</i></p>
+    <p><b>1.2.</b> A CONTRATADA fornece <b>exclusivamente a mão de obra</b> e as ferramentas manuais de uso próprio de sua equipe. Todo o material, equipamento, cabeamento e insumo é de fornecimento e responsabilidade da CONTRATANTE (Cláusula 3ª).</p>
+    <p><b>1.3.</b> Somente o que está descrito no item 1.1 integra o contrato. Qualquer serviço não descrito, ainda que correlato, é considerado adicional e depende de orçamento e aprovação prévia (Cláusula 8ª).</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 2ª — Dos Materiais e Equipamentos</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Todo o material, equipamento, cabeamento, infraestrutura, ferramentas especiais e insumos necessários à execução do serviço serão <strong>fornecidos integralmente pela CONTRATANTE</strong>, em quantidade e qualidade adequadas e no prazo necessário ao cronograma. A CONTRATADA fornece exclusivamente a mão de obra e suas ferramentas manuais de uso próprio. A falta, atraso ou inadequação do material suspende o prazo de execução, sem prejuízo da remuneração pelos dias em que a equipe permanecer à disposição.</p>
-    </div>
+    <h3>Cláusula 2ª — Dos Serviços Não Incluídos</h3>
+    <p><b>2.1.</b> Salvo previsão expressa no item 1.1, não estão incluídos: obras civis (quebra, furação em alvenaria especial, reboco, pintura e acabamento); instalações e adequações elétricas (tomadas, quadros, circuitos, aterramento); configuração de internet, rede corporativa ou equipamentos de terceiros; programação de equipamentos não instalados pela CONTRATADA; locação ou fornecimento de andaimes, plataformas, escadas especiais ou guindastes; taxas, licenças, laudos e ART/RRT; e remoção de entulho.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 3ª — Do Prazo</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Execução prevista: <strong>{{prazo}}</strong>, com início em <strong>{{inicio}}</strong>, condicionado à liberação do local e à disponibilidade dos materiais. O prazo poderá ser prorrogado em razão de chuvas, impedimento de acesso, alterações de escopo, atraso de outras equipes ou de material, ou caso fortuito/força maior.</p>
-    </div>
+    <h3>Cláusula 3ª — Dos Materiais e Equipamentos da Contratante</h3>
+    <p><b>3.1.</b> A CONTRATANTE fornecerá, às suas expensas, todos os materiais e equipamentos necessários, <b>em quantidade suficiente, de boa qualidade, compatíveis entre si e entregues no local da obra com antecedência mínima de 48 (quarenta e oito) horas</b> do início de cada etapa.</p>
+    <p><b>3.2.</b> A CONTRATADA conferirá os materiais no recebimento apenas quanto à quantidade aparente. Não responde por defeito de fabricação, vício oculto, incompatibilidade, inadequação técnica, baixa qualidade ou especificação incorreta dos materiais fornecidos pela CONTRATANTE, nem pelo desempenho do sistema deles decorrente.</p>
+    <p><b>3.3.</b> A guarda, a segurança e o armazenamento dos materiais no local são de responsabilidade da CONTRATANTE, que deverá disponibilizar espaço trancável. Perda, furto, roubo ou dano de materiais no local não gera responsabilidade à CONTRATADA, salvo dolo comprovado de sua equipe.</p>
+    <p><b>3.4.</b> A falta, o atraso ou a inadequação de material suspende o prazo de execução e <b>não exime a CONTRATANTE do pagamento</b>, aplicando-se a Cláusula 5ª quanto à equipe mobilizada e ociosa.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 4ª — Do Valor e Pagamento</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 8px;">Pela mão de obra, a CONTRATANTE pagará à CONTRATADA o valor total de:</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:{{cor_pri}};margin-bottom:8px;">
-        <tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">VALOR TOTAL DA MÃO DE OBRA</td>
-        <td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">{{valor}}</td></tr>
-    </table>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 6px;white-space:pre-wrap;"><strong>Forma de pagamento:</strong> {{pagamento}}</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Atraso no pagamento gera multa de 2% e juros de 1% ao mês. Serviços adicionais fora do escopo serão orçados à parte e dependem de aprovação prévia.</p>
-    </div>
+    <h3>Cláusula 4ª — Do Prazo de Execução</h3>
+    <p><b>4.1.</b> Os serviços terão início em <b>{{inicio}}</b> e previsão de conclusão em <b>{{fim}}</b> ({{prazo}}), condicionados à liberação das áreas, ao fornecimento dos materiais e ao pagamento da parcela inicial.</p>
+    <p><b>4.2.</b> O prazo é <b>estimativo</b> e será automaticamente prorrogado, sem penalidade à CONTRATADA, em razão de: alteração de escopo; atraso de materiais; falta de acesso ou de liberação de áreas; interferência de outras equipes ou da obra; chuvas e condições climáticas; condições ocultas do local; inadimplência; caso fortuito ou força maior.</p>
+    <p><b>4.3.</b> O início dos serviços depende do pagamento da parcela de sinal. Sem ele, a CONTRATADA não é obrigada a mobilizar equipe ou reservar agenda.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 5ª — Obrigações da Contratada</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Executar o serviço com técnica e zelo; manter equipe devidamente identificada e capacitada; utilizar EPIs e cumprir as normas de segurança do local (incluindo trabalho em altura quando aplicável); zelar pelos materiais recebidos e comunicar perdas, defeitos ou sobras; manter o local organizado ao fim de cada jornada; entregar o sistema instalado e testado.</p>
-    </div>
+    <h3>Cláusula 5ª — Dos Atrasos, Paralisações e Custos Adicionais</h3>
+    <p><b>5.1.</b> O prazo e o preço foram fixados considerando o andamento normal da obra e o acesso contínuo da equipe aos locais de trabalho.</p>
+    <p><b>5.2.</b> Havendo atraso, paralisação, impedimento de acesso, falta de material ou qualquer circunstância atribuível à CONTRATANTE, à construtora, a outros prestadores ou a terceiros a ela vinculados, o período excedente <b>não será prorrogação gratuita</b> e estará sujeito à cobrança de custos adicionais.</p>
+    <p><b>5.3.</b> Os custos adicionais compreendem, conforme o caso: <b>diária de equipe parada ou ociosa {{diaria_parada}}</b>; mão de obra e horas adicionais; mobilização e desmobilização; deslocamentos, alimentação e logística; reagendamento da equipe; e demais despesas comprovadamente decorrentes da extensão do prazo.</p>
+    <p><b>5.4.</b> Se a paralisação exigir a retirada da equipe e posterior retorno, a nova mobilização será cobrada à parte, mediante orçamento, e o retorno ficará sujeito à disponibilidade de agenda da CONTRATADA.</p>
+    <p><b>5.5.</b> A CONTRATADA não é obrigada a manter equipe ou estrutura reservada à obra durante períodos de paralisação não causados por ela, e tais períodos não configuram atraso seu.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 6ª — Obrigações da Contratante</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Fornecer os materiais e equipamentos (Cláusula 2ª); garantir acesso livre e seguro ao local, pontos de energia e, quando necessário, andaimes, escadas ou plataformas; disponibilizar responsável para acompanhar e validar o serviço; efetuar os pagamentos nas datas acordadas; informar interferências da obra (elétrica, hidráulica, alvenaria, outras equipes) que afetem a execução.</p>
-    </div>
+    <h3>Cláusula 6ª — Do Acesso ao Local</h3>
+    <p><b>6.1.</b> A CONTRATANTE garantirá à equipe acesso livre, seguro e desimpedido ao local, em horário comercial ou conforme acordado, incluindo áreas técnicas, shafts, forros, coberturas, salas técnicas e pontos de energia e água para a execução.</p>
+    <p><b>6.2.</b> A restrição de acesso que prejudique a execução altera o cronograma e, quando exigir nova mobilização, gera cobrança adicional após comunicação à CONTRATANTE.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 7ª — Da Garantia do Serviço</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">A CONTRATADA garante a <strong>execução do serviço (mão de obra)</strong> por <strong>{{garantia}}</strong> a contar da conclusão, corrigindo sem custo falhas decorrentes de erro de instalação. A garantia <strong>não cobre</strong> defeitos de fabricação, incompatibilidade ou má qualidade dos materiais fornecidos pela CONTRATANTE, danos por mau uso, intervenção de terceiros, descarga elétrica, vandalismo, umidade/infiltração ou eventos de força maior. A CONTRATADA não responde pelo desempenho, qualidade de imagem ou durabilidade dos equipamentos fornecidos pela CONTRATANTE.</p>
-    </div>
+    <h3>Cláusula 7ª — Das Condições do Local</h3>
+    <p><b>7.1.</b> A execução considera as condições aparentes e acessíveis do local. A CONTRATADA não responde por instalações ocultas, tubulações, cabos, estruturas ou interferências não informadas e não identificáveis previamente, nem por danos delas decorrentes.</p>
+    <p><b>7.2.</b> Identificadas condições que exijam alteração de rota, método, material ou equipe, a CONTRATADA poderá propor solução alternativa e orçamento complementar.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 8ª — Da Natureza da Contratação</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">A relação é de prestação de serviços entre empresas independentes, sem vínculo empregatício entre a CONTRATANTE e os profissionais da CONTRATADA, que responde por seus encargos trabalhistas, previdenciários e fiscais. Cada parte responde por danos que, por culpa ou dolo, causar a pessoas ou bens da outra ou de terceiros.</p>
-    </div>
+    <h3>Cláusula 8ª — Das Alterações de Escopo e Serviços Adicionais</h3>
+    <p><b>8.1.</b> Alterações solicitadas pela CONTRATANTE (aumento de quantidade, mudança de rota ou de pontos, retrabalho por mudança de projeto, serviços extras) geram orçamento adicional e poderão alterar o prazo.</p>
+    <p><b>8.2.</b> Os serviços adicionais somente serão executados após aprovação do orçamento, por escrito, e-mail ou aplicativo de mensagens, e serão pagos conforme acordado, ou, na ausência de acordo, à razão de diária proporcional ao valor deste contrato.</p>
+    <p><b>8.3.</b> Retrabalho decorrente de mudança de projeto, de instrução da CONTRATANTE ou de intervenção de terceiros é considerado serviço adicional.</p>
 
-    <div style="page-break-inside:avoid;margin-top:14px;">
-    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 9ª — Da Rescisão e do Foro</p>
-    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">O contrato pode ser rescindido por qualquer das partes mediante aviso por escrito com 5 dias de antecedência, devendo a CONTRATANTE pagar os serviços já executados e os materiais/horas já mobilizados. O descumprimento de qualquer cláusula autoriza a rescisão imediata. Fica eleito o foro da comarca de {{cidade_uf}} para dirimir quaisquer questões deste contrato.</p>
-    </div>
+    <h3>Cláusula 9ª — Do Valor e das Condições de Pagamento</h3>
+    <p><b>9.1.</b> Pelos serviços, a CONTRATANTE pagará à CONTRATADA o valor total de <b>{{valor}} ({{valor_extenso}})</b>.</p>
+    <p style="white-space:pre-wrap;"><b>9.2.</b> Forma de pagamento: {{pagamento}}</p>
+    <p><b>9.3.</b> Os pagamentos serão feitos exclusivamente por PIX, chave CNPJ {{cnpj}}, de titularidade da CONTRATADA, ou outro meio expressamente informado por ela por escrito. Pagamentos feitos a terceiros ou por outros meios não serão considerados quitação.</p>
+    <p><b>9.4.</b> O atraso em qualquer parcela sujeita a CONTRATANTE a <b>multa moratória de 2%</b> sobre o valor em atraso, <b>juros de 1% ao mês</b> pro rata die e <b>correção monetária pelo IPCA</b>, sem prejuízo do disposto nos itens seguintes.</p>
+    <p><b>9.5.</b> O atraso superior a <b>5 (cinco) dias</b> autoriza a CONTRATADA a <b>suspender imediatamente os serviços</b>, sem aviso adicional, ficando o prazo suspenso e aplicando-se a Cláusula 5ª ao período de suspensão. O atraso superior a <b>15 (quinze) dias</b> autoriza o vencimento antecipado de todas as parcelas vincendas e a rescisão por culpa da CONTRATANTE (Cláusula 15ª).</p>
+    <p><b>9.6.</b> A CONTRATANTE reconhece que o valor da última parcela é devido na conclusão dos serviços, independentemente de pendências menores (“punch list”), que não justificam retenção de pagamento. A entrega formal fica condicionada à quitação integral.</p>
+    <p><b>9.7.</b> Não é admitida compensação, retenção ou abatimento de valores sem concordância escrita da CONTRATADA. Os custos de cobrança, inclusive honorários advocatícios de 10% e despesas de protesto, correrão por conta da CONTRATANTE.</p>
+
+    <h3>Cláusula 10ª — Da Garantia dos Serviços</h3>
+    <p><b>10.1.</b> A CONTRATADA garante a <b>mão de obra e os serviços por ela executados</b> pelo prazo de <b>{{garantia}}</b>, contado da conclusão. A garantia consiste exclusivamente na correção, sem custo, de defeito de execução comprovadamente a ela atribuível.</p>
+    <p><b>10.2.</b> A garantia <b>não abrange</b>: materiais e equipamentos fornecidos pela CONTRATANTE (inclusive defeito, incompatibilidade ou baixa qualidade); mau uso; intervenção, manutenção ou alteração por terceiros; vandalismo, furto, acidentes e danos físicos; umidade, infiltração e problemas estruturais; surtos, descargas e oscilações elétricas; falhas da rede elétrica, de dados ou de internet; ampliações posteriores; e eventos de força maior.</p>
+    <p><b>10.3.</b> A garantia fica suspensa enquanto houver parcela vencida e não paga.</p>
+    <p><b>10.4.</b> A CONTRATADA não garante desempenho, qualidade de imagem, durabilidade ou funcionamento dos equipamentos fornecidos pela CONTRATANTE.</p>
+
+    <h3>Cláusula 11ª — Das Obrigações da Contratante</h3>
+    <p><b>11.1.</b> São obrigações da CONTRATANTE: fornecer os materiais (Cláusula 3ª); garantir acesso e condições de trabalho (Cláusula 6ª); informar previamente instalações ocultas e restrições do local; designar responsável com poder de decisão para acompanhar e aprovar etapas; efetuar os pagamentos nas datas; fornecer, quando necessário, andaimes, escadas e plataformas seguros; e comunicar por escrito qualquer intervenção de terceiros que possa afetar o serviço.</p>
+
+    <h3>Cláusula 12ª — Das Obrigações da Contratada</h3>
+    <p><b>12.1.</b> São obrigações da CONTRATADA: executar os serviços conforme o escopo; disponibilizar equipe compatível; adotar as medidas de segurança aplicáveis à atividade; zelar pelos materiais sob sua guarda direta durante a execução; comunicar ocorrências que afetem prazo, custo ou execução; e entregar os serviços dentro do escopo contratado.</p>
+
+    <h3>Cláusula 13ª — Da Segurança e dos Equipamentos de Acesso</h3>
+    <p><b>13.1.</b> Trabalhos em altura ou em locais que exijam equipamentos especiais (andaimes, plataformas, munck, guindaste) dependem de disponibilização pela CONTRATANTE em condições seguras. A CONTRATADA poderá recusar a execução em condições que ofereçam risco à sua equipe, sem que isso configure descumprimento.</p>
+
+    <h3>Cláusula 14ª — Da Conclusão e Aceitação</h3>
+    <p><b>14.1.</b> Concluídos os serviços, a CONTRATADA comunicará a CONTRATANTE para conferência e entrega, por qualquer meio escrito.</p>
+    <p><b>14.2.</b> A CONTRATANTE terá <b>5 (cinco) dias corridos</b> para apontar, por escrito, defeitos de execução relacionados ao escopo. Decorrido o prazo sem manifestação, ou havendo a utilização do sistema, os serviços serão considerados <b>aceitos tacitamente</b>, ressalvada a garantia da Cláusula 10ª.</p>
+
+    <h3>Cláusula 15ª — Da Rescisão e da Multa</h3>
+    <p><b>15.1.</b> A rescisão deve ser comunicada por escrito. Rescindido o contrato por qualquer motivo, são devidos à CONTRATADA todos os valores correspondentes aos serviços executados e em andamento, às horas e diárias mobilizadas e aos custos já assumidos até a data da rescisão.</p>
+    <p><b>15.2. Rescisão pela CONTRATANTE sem justa causa</b>, desistência ou cancelamento após a assinatura: a CONTRATANTE pagará, além do item 15.1, <b>multa compensatória de {{multa}}% sobre o valor total do contrato</b>, em razão da reserva de agenda, mobilização de equipe e lucros cessantes. Se o cancelamento ocorrer antes do início, a multa incidirá sobre o valor total e o sinal já pago será abatido dela, não restituído.</p>
+    <p><b>15.3. Rescisão por culpa da CONTRATANTE</b> (inadimplência superior a 15 dias, impedimento reiterado de acesso, falta reiterada de material, ou descumprimento de qualquer obrigação não sanado em 5 dias após notificação): aplica-se a multa do item 15.2, vencendo-se antecipadamente as parcelas vincendas, e a CONTRATADA poderá retirar sua equipe sem responsabilidade por qualquer dano decorrente da interrupção.</p>
+    <p><b>15.4. Rescisão pela CONTRATADA por culpa sua</b> (abandono injustificado dos serviços, não sanado em 10 dias após notificação): a CONTRATADA devolverá o valor recebido proporcional ao serviço não executado e pagará multa de <b>10% sobre o valor do serviço não executado</b>, limitada ao valor recebido, nada mais sendo devido a título de indenização.</p>
+    <p><b>15.5.</b> As multas desta cláusula têm natureza de cláusula penal compensatória, são devidas independentemente de comprovação de prejuízo e não excluem a cobrança dos demais valores devidos.</p>
+
+    <h3>Cláusula 16ª — Da Limitação de Responsabilidade</h3>
+    <p><b>16.1.</b> Cada parte responde pelos danos diretos que, por culpa ou dolo comprovados, causar à outra. A responsabilidade total da CONTRATADA, a qualquer título, fica limitada ao <b>valor efetivamente recebido</b> neste contrato.</p>
+    <p><b>16.2.</b> A CONTRATADA não responde por lucros cessantes, danos indiretos ou perda de dados, imagens, receita ou oportunidade, nem por eventos de segurança, furtos ou sinistros ocorridos no local, independentemente do funcionamento do sistema.</p>
+
+    <h3>Cláusula 17ª — Da Inexistência de Vínculo e das Obrigações Trabalhistas</h3>
+    <p><b>17.1.</b> Este contrato não gera vínculo empregatício, societário ou de subordinação entre a CONTRATANTE e os colaboradores da CONTRATADA, que responde por seus encargos trabalhistas, previdenciários e fiscais.</p>
+    <p><b>17.2.</b> Havendo reclamação ou ação de pessoa vinculada à CONTRATANTE, à construtora ou a terceiros contra a CONTRATADA por fatos de responsabilidade daqueles, a CONTRATANTE a ressarcirá integralmente, inclusive custas e honorários.</p>
+
+    <h3>Cláusula 18ª — Do Não Aliciamento</h3>
+    <p><b>18.1.</b> Durante a vigência e por <b>12 (doze) meses</b> após o término, a CONTRATANTE não contratará, direta ou indiretamente, colaboradores da CONTRATADA que tenham atuado neste contrato, sob pena de multa equivalente a <b>6 (seis) vezes</b> a remuneração mensal do profissional aliciado, ou, na impossibilidade de apuração, de 10% do valor do contrato.</p>
+
+    <h3>Cláusula 19ª — Da Força Maior e do Caso Fortuito</h3>
+    <p><b>19.1.</b> Nenhuma das partes responde pelo descumprimento decorrente de caso fortuito ou força maior (incluindo greves, ordens de autoridade, calamidades e chuvas intensas), enquanto perdurar o evento, ficando os prazos suspensos. A parte afetada comunicará a outra assim que possível. Persistindo o evento por mais de 60 dias, qualquer parte poderá rescindir o contrato, sem multa, pagando-se os serviços executados.</p>
+
+    <h3>Cláusula 20ª — Das Comunicações, Aprovações e Assinatura Eletrônica</h3>
+    <p><b>20.1.</b> As comunicações, orçamentos complementares e aprovações poderão ser feitas por escrito, e-mail ou aplicativo de mensagens, desde que identifiquem as partes e o conteúdo, e valem como prova de ciência e aprovação.</p>
+    <p><b>20.2.</b> As partes concordam com a assinatura por meio eletrônico ou digital, que terá a mesma validade da assinatura física.</p>
+
+    <h3>Cláusula 21ª — Da Confidencialidade e dos Dados Pessoais</h3>
+    <p><b>21.1.</b> As partes manterão sigilo sobre as informações técnicas e comerciais a que tiverem acesso, e observarão a Lei nº 13.709/2018 (LGPD) no tratamento de dados pessoais necessários à execução do contrato.</p>
+
+    <h3>Cláusula 22ª — Das Disposições Gerais</h3>
+    <p><b>22.1.</b> O contrato não pode ser cedido ou subcontratado pela CONTRATANTE sem anuência escrita da CONTRATADA. A CONTRATADA poderá subcontratar parte da mão de obra, permanecendo responsável perante a CONTRATANTE.</p>
+    <p><b>22.2.</b> Este instrumento substitui entendimentos anteriores e só pode ser alterado por escrito. A tolerância de uma parte quanto ao descumprimento não importa renúncia ao direito. A nulidade de uma cláusula não afeta as demais.</p>
+    <p><b>22.3.</b> Este contrato, assinado por duas testemunhas, constitui <b>título executivo extrajudicial</b> (art. 784, III, do Código de Processo Civil), podendo as obrigações de pagar nele previstas ser cobradas por execução.</p>
+
+    <h3>Cláusula 23ª — Do Foro</h3>
+    <p><b>23.1.</b> Fica eleito o foro da comarca de <b>{{cidade_uf}}</b> para dirimir quaisquer controvérsias deste contrato, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
 
     {{obs_block}}
 
-    <p style="font-size:11px;color:#444;margin:14px 0 0;">{{cidade_uf}}, {{dataFmt}}.</p>
+    <p style="margin-top:10px;">E, por estarem de acordo, as partes assinam este instrumento em duas vias de igual teor, na presença de duas testemunhas.</p>
+    <p>{{cidade_uf}}, {{dataFmt}}.</p>
 
-    <!-- ASSINATURAS -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0 0;page-break-inside:avoid;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 0;page-break-inside:avoid;">
         <tr>
             <td style="width:46%;height:34px;vertical-align:bottom;border-bottom:1.5px solid #555;"></td>
             <td style="width:8%;"></td>
@@ -100,14 +138,27 @@
         </tr>
         <tr>
             <td style="padding-top:5px;text-align:center;">
-                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{razao_social}}</p>
-                <p style="margin:1px 0 0;font-size:10px;color:#666;">CONTRATADA</p>
+                <p style="margin:0;font-size:10.5px;font-weight:700;color:#222;text-align:center;">{{razao_social}}</p>
+                <p style="margin:1px 0 0;font-size:9.5px;color:#666;text-align:center;">CONTRATADA — CNPJ {{cnpj}}</p>
             </td>
             <td></td>
             <td style="padding-top:5px;text-align:center;">
-                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{cliente}}</p>
-                <p style="margin:1px 0 0;font-size:10px;color:#666;">CONTRATANTE</p>
+                <p style="margin:0;font-size:10.5px;font-weight:700;color:#222;text-align:center;">{{cliente}}</p>
+                <p style="margin:1px 0 0;font-size:9.5px;color:#666;text-align:center;">CONTRATANTE — {{doc}}</p>
             </td>
+        </tr>
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0 0;page-break-inside:avoid;">
+        <tr>
+            <td style="width:46%;height:30px;vertical-align:bottom;border-bottom:1px solid #555;"></td>
+            <td style="width:8%;"></td>
+            <td style="width:46%;height:30px;vertical-align:bottom;border-bottom:1px solid #555;"></td>
+        </tr>
+        <tr>
+            <td style="padding-top:4px;text-align:center;"><p style="margin:0;font-size:9.5px;color:#555;text-align:center;">TESTEMUNHA 1 — Nome: {{test1_nome}}<br>CPF: {{test1_cpf}}</p></td>
+            <td></td>
+            <td style="padding-top:4px;text-align:center;"><p style="margin:0;font-size:9.5px;color:#555;text-align:center;">TESTEMUNHA 2 — Nome: {{test2_nome}}<br>CPF: {{test2_cpf}}</p></td>
         </tr>
     </table>
 
