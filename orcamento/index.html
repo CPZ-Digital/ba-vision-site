@@ -1282,6 +1282,12 @@ body {
         </svg>
         <span>Locação</span>
     </button>
+    <button class="topo-rect-btn" onclick="abrirMO()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>
+        </svg>
+        <span>M. Obra</span>
+    </button>
 </div>
 <div id="creditoDev" style="display:none;text-align:center;padding:8px 0 4px;font-size:11px;color:var(--text-muted,#999);">Desenvolvido por <a href="https://cpzdigital.com.br" target="_blank" rel="noopener" style="color:inherit;">CPZ Digital</a></div>
 
@@ -1545,6 +1551,85 @@ body {
             <button class="pag-fechar" onclick="fecharLocacaoHistorico()">✕</button>
         </div>
         <div id="locacaoHistLista"></div>
+    </div>
+</div>
+
+<!-- MODAL CONTRATO DE MÃO DE OBRA -->
+<div class="pag-overlay" id="moOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Contrato de Mão de Obra</span>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="topo-icon-btn" onclick="abrirMOHistorico()" title="Histórico" style="width:32px;height:32px;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
+                    </svg>
+                </button>
+                <button class="pag-fechar" onclick="fecharMO()">✕</button>
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Contratante (empresa/cliente)</label>
+            <input class="exp-input" id="moCliente" type="text" placeholder="Razão social ou nome" style="width:100%;">
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">CNPJ/CPF <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <input class="exp-input" id="moDoc" type="text" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Telefone <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <input class="exp-input" id="moTel" type="text" placeholder="(21) 90000-0000" style="width:100%;">
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Local da obra</label>
+            <input class="exp-input" id="moEndereco" type="text" placeholder="Endereço onde será executado" style="width:100%;">
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Escopo do serviço</label>
+            <textarea class="exp-input" id="moEscopo" rows="4" placeholder="Ex: instalação de 16 câmeras IP, passagem de cabos, configuração do NVR…" style="resize:vertical;min-height:90px;line-height:1.5;"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Valor total</label>
+                <input class="exp-input" id="moValor" type="number" min="0" step="0.01" placeholder="0,00" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Início</label>
+                <input class="exp-input" id="moInicio" type="date" style="width:100%;">
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Prazo de execução</label>
+                <input class="exp-input" id="moPrazo" type="text" value="5 dias úteis" style="width:100%;">
+            </div>
+            <div class="exp-field" style="flex:1;">
+                <label class="exp-label">Garantia do serviço</label>
+                <input class="exp-input" id="moGarantia" type="text" value="90 dias" style="width:100%;">
+            </div>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Forma de pagamento</label>
+            <textarea class="exp-input" id="moPagamento" rows="2" style="resize:vertical;min-height:50px;line-height:1.5;">50% na assinatura e 50% na conclusão do serviço.</textarea>
+        </div>
+        <div class="exp-field">
+            <label class="exp-label">Observações <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <textarea class="exp-input" id="moObs" rows="2" style="resize:vertical;min-height:50px;line-height:1.5;"></textarea>
+        </div>
+        <button class="exp-btn" onclick="gerarMO()" style="width:100%;">Gerar contrato</button>
+    </div>
+</div>
+
+<!-- MODAL HISTÓRICO CONTRATOS DE MÃO DE OBRA -->
+<div class="pag-overlay" id="moHistOverlay">
+    <div class="pag-modal">
+        <div class="pag-header">
+            <span class="pag-titulo">Histórico — Mão de Obra</span>
+            <button class="pag-fechar" onclick="fecharMOHistorico()">✕</button>
+        </div>
+        <div id="moHistLista"></div>
     </div>
 </div>
 
@@ -2159,7 +2244,7 @@ const _supa  = window.supabase.createClient(
     'sb_publishable_IDA-WMWDbUE4cj0LllUeHg_Epoj7oa5'
 );
 
-// O PIN abaixo só tranca a TELA (conveniência local); quem protege o dado de
+// O PIN acima só tranca a TELA (conveniência local); quem protege o dado de
 // verdade agora é RLS + esta sessão real do Supabase. Sem login, a policy
 // bloqueia leitura/escrita (auditoria de segurança 2026-09-16). A sessão
 // persiste no localStorage do supabase-js, então isso só pede senha uma vez
@@ -4524,6 +4609,170 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
         .catch(e => alert('Erro ao carregar template: ' + e.message));
 }
 
+// ── CONTRATO DE MÃO DE OBRA (material fornecido pelo contratante) ──
+function abrirMO() {
+    ['moCliente','moDoc','moTel','moEndereco','moEscopo','moValor','moObs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('moInicio').value = new Date().toISOString().slice(0,10);
+    document.getElementById('moOverlay').classList.add('aberto');
+    document.querySelector('.fab-area').style.display = 'none';
+}
+function fecharMO() {
+    document.getElementById('moOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+document.getElementById('moOverlay').addEventListener('click', function(e) { if (e.target === this) fecharMO(); });
+
+function _carregarMOHistorico() {
+    try { return JSON.parse(localStorage.getItem('cpz_mo_historico') || '[]'); }
+    catch { return []; }
+}
+function abrirMOHistorico() {
+    document.getElementById('moOverlay').classList.remove('aberto');
+    renderMOHistorico();
+    document.getElementById('moHistOverlay').classList.add('aberto');
+}
+function fecharMOHistorico() {
+    document.getElementById('moHistOverlay').classList.remove('aberto');
+    document.querySelector('.fab-area').style.display = '';
+}
+document.getElementById('moHistOverlay').addEventListener('click', function(e) { if (e.target === this) fecharMOHistorico(); });
+
+function renderMOHistorico() {
+    const lista = _carregarMOHistorico();
+    const cont  = document.getElementById('moHistLista');
+    if (!lista.length) { cont.innerHTML = '<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0;">Nenhum contrato de mão de obra ainda.</p>'; return; }
+    const fmtR = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    cont.innerHTML = lista.map(e => `
+        <div class="hist-card">
+            <div class="hist-card-top">
+                <div class="hist-info">
+                    <div class="hist-badges"><span class="hist-badge" style="background:${e.marca==='ba'?'#d1f5e8':'#e8eef8'};color:${e.marca==='ba'?'#059669':'#0055b3'};">${e.marca==='ba'?'B&amp;A Vision':'CPZ Digital'}</span></div>
+                    <div class="hist-nome">${e.cliente.replace(/</g,'&lt;')}</div>
+                    <div class="hist-meta">${e.dataFmt}${e.endereco ? ' · ' + e.endereco.replace(/</g,'&lt;') : ''}</div>
+                </div>
+                <div class="hist-total">${fmtR(e.valor)}</div>
+            </div>
+            <div class="hist-acoes">
+                <button class="hist-btn hist-btn-contrato" onclick="reimprimirMO(${e.id})">📄 Reimprimir</button>
+                <button class="hist-btn hist-btn-excluir" onclick="excluirMO(${e.id})">Excluir</button>
+            </div>
+        </div>`).join('');
+}
+function excluirMO(id) {
+    if (!confirm('Excluir este contrato do histórico?')) return;
+    localStorage.setItem('cpz_mo_historico', JSON.stringify(_carregarMOHistorico().filter(e => e.id !== id)));
+    renderMOHistorico();
+}
+function reimprimirMO(id) {
+    const entry = _carregarMOHistorico().find(e => e.id === id);
+    if (entry) _gerarMOPDF(entry, true);
+}
+
+function gerarMO() {
+    const v = id => document.getElementById(id).value.trim();
+    const cliente = v('moCliente'), escopo = v('moEscopo'), endereco = v('moEndereco');
+    const valor = parseFloat(document.getElementById('moValor').value);
+    if (!cliente)  { mostrarToast('Informe o contratante'); return; }
+    if (!endereco) { mostrarToast('Informe o local da obra'); return; }
+    if (!escopo)   { mostrarToast('Descreva o escopo do serviço'); return; }
+    if (isNaN(valor) || valor <= 0) { mostrarToast('Informe o valor total'); return; }
+
+    const dataISO   = new Date().toISOString().slice(0,10);
+    const inicioISO = v('moInicio') || dataISO;
+    const entry = {
+        id: Date.now(), marca: document.getElementById('usarSocio').checked ? 'ba' : 'cpz',
+        cliente, doc: v('moDoc'), tel: v('moTel'), endereco, escopo, valor,
+        prazo: v('moPrazo') || 'a combinar', garantia: v('moGarantia') || '90 dias',
+        pagamento: v('moPagamento') || 'A combinar.', obs: v('moObs'),
+        dataISO, dataFmt: new Date(dataISO + 'T12:00:00').toLocaleDateString('pt-BR'),
+        inicioFmt: new Date(inicioISO + 'T12:00:00').toLocaleDateString('pt-BR')
+    };
+    const lista = _carregarMOHistorico();
+    lista.unshift(entry);
+    localStorage.setItem('cpz_mo_historico', JSON.stringify(lista));
+    _gerarMOPDF(entry, false);
+}
+
+function _gerarMOPDF(entry, reimpressao) {
+    const { cliente, doc, tel, endereco, escopo, valor, prazo, garantia, pagamento, obs, dataISO, dataFmt, inicioFmt } = entry;
+    const socio = entry.marca === 'ba';
+    const cor   = socio ? '#059669' : '#0055b3';
+    const esc   = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const fmtR  = n => 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    const razaoSocial = socio ? 'B&A Vision Segurança' : 'CPZ Digital';
+    const footerLine  = socio
+        ? 'B&A Vision  |  (21) 99664-6927  |  contato@bavision.com.br  |  CNPJ: 62.456.202/0001-08'
+        : 'CPZ Digital  |  (21) 96745-5648  |  contato@cpzdigital.com.br  |  CNPJ: 58.589.970/0001-54';
+    const row = t => t ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">${t}</p>` : '';
+
+    const placeholders = {
+        '{{logo_src}}':      socio ? 'ba-vision-assinatura-v3.png' : 'cpz-assinatura-v4.png',
+        '{{logo_height}}':   socio ? '48' : '40',
+        '{{cor_pri}}':       cor,
+        '{{cor_bg}}':        socio ? '#f0fbf7' : '#f0f5ff',
+        '{{numero}}':        String(entry.id).slice(-6),
+        '{{dataFmt}}':       dataFmt,
+        '{{razao_social}}':  razaoSocial,
+        '{{cnpj}}':          socio ? '62.456.202/0001-08' : '58.589.970/0001-54',
+        '{{contato_tel}}':   socio ? '(21) 99664-6927' : '(21) 96745-5648',
+        '{{contato_email}}': socio ? 'contato@bavision.com.br' : 'contato@cpzdigital.com.br',
+        '{{cliente}}':       esc(cliente),
+        '{{doc_row}}':       row(doc && 'CNPJ/CPF: ' + esc(doc)),
+        '{{tel_row}}':       row(tel && 'Tel: ' + esc(tel)),
+        '{{endereco_row}}':  row('Obra: ' + esc(endereco)),
+        '{{local_obra}}':    esc(endereco),
+        '{{escopo}}':        esc(escopo),
+        '{{prazo}}':         esc(prazo),
+        '{{inicio}}':        inicioFmt,
+        '{{valor}}':         fmtR(valor),
+        '{{pagamento}}':     esc(pagamento),
+        '{{garantia}}':      esc(garantia),
+        '{{cidade_uf}}':     'Rio de Janeiro/RJ',
+        '{{obs_block}}':     obs ? `<p style="font-size:13px;font-weight:700;color:${cor};border-bottom:2px solid ${cor};padding-bottom:4px;margin:14px 0 8px;">Observações</p>
+            <p style="font-size:11px;color:#444;line-height:1.8;margin:0;white-space:pre-wrap;">${esc(obs)}</p>` : '',
+    };
+    const fr = socio ? 5 : 0, fg = socio ? 150 : 105, fb = socio ? 105 : 179;
+    const nomeArq = 'contrato-mao-de-obra-' + cliente.replace(/\s+/g,'-').toLowerCase() + '-' + dataISO + '-' + _horaArq() + '.pdf';
+
+    mostrarToast(reimpressao ? 'Reimprimindo contrato...' : 'Gerando contrato...');
+    fetch('template-mao-de-obra.html')
+        .then(r => r.text())
+        .then(tpl => {
+            let html = tpl;
+            Object.entries(placeholders).forEach(([k, val]) => { html = html.split(k).join(val); });
+            html2pdf().from(html).set({
+                margin:      [12, 0, 18, 0],
+                filename:    nomeArq,
+                image:       { type:'jpeg', quality:0.95 },
+                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                    onclone: d => { d.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
+                jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
+            }).toPdf().get('pdf').then(pdf => {
+                const n = pdf.internal.getNumberOfPages();
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                for (let i = 1; i <= n; i++) {
+                    pdf.setPage(i);
+                    pdf.setDrawColor(fr, fg, fb);
+                    pdf.setLineWidth(0.4);
+                    pdf.line(4, h - 11, w - 4, h - 11);
+                    pdf.setFontSize(7);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text(footerLine, w / 2, h - 7, { align: 'center' });
+                }
+                const fone   = '55' + (tel || '').replace(/\D/g, '').replace(/^55/, '');
+                const msgWpp = encodeURIComponent('Olá ' + cliente + '! Segue o contrato de mão de obra da ' + razaoSocial + '.');
+                const file   = new File([new Blob([pdf.output('arraybuffer')], { type: 'application/pdf' })], nomeArq, { type: 'application/pdf' });
+                pdf.save(nomeArq);
+                mostrarToast(reimpressao ? 'Contrato reimpresso!' : 'Contrato gerado!');
+                if (reimpressao) fecharMOHistorico(); else fecharMO();
+                exibirWppCard(cliente, fone, msgWpp, file, nomeArq);
+            });
+        })
+        .catch(e => alert('Erro ao carregar template: ' + e.message));
+}
+
 // ── PIN DE ACESSO ──
 const _PIN = '1472';
 let _pinDigitado = '';
@@ -4551,19 +4800,21 @@ function pinDigit(d) {
     _pinAtualizar();
     if (_pinDigitado.length === 4) {
         if (_pinDigitado === _PIN) {
-            _ensureAuth().then(() => _bioSuportado().then(ok => {
-                if (ok && !localStorage.getItem('cpz_bio_cred')) {
-                    const msg = document.getElementById('pinMsg');
-                    msg.textContent = 'PIN correto!';
-                    msg.style.color = '#4ade80';
-                    const btn = document.getElementById('pinSaveBio');
-                    btn.textContent = '🔐 Salvar biometria para próxima vez\n(ou aguarde 3s)';
-                    btn.style.display = 'block';
-                    _pinUnlockTimer = setTimeout(_pinUnlock, 3000);
-                } else {
-                    _pinUnlock();
-                }
-            }));
+            _ensureAuth().then(() => {
+                _bioSuportado().then(ok => {
+                    if (ok && !localStorage.getItem('cpz_bio_cred')) {
+                        const msg = document.getElementById('pinMsg');
+                        msg.textContent = 'PIN correto!';
+                        msg.style.color = '#4ade80';
+                        const btn = document.getElementById('pinSaveBio');
+                        btn.textContent = '🔐 Salvar biometria para próxima vez\n(ou aguarde 3s)';
+                        btn.style.display = 'block';
+                        _pinUnlockTimer = setTimeout(_pinUnlock, 3000);
+                    } else {
+                        _pinUnlock();
+                    }
+                });
+            });
         } else {
             const box = document.getElementById('pinBox');
             box.classList.add('shake');
@@ -4657,7 +4908,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=50');
+  navigator.serviceWorker.register('./sw.js?v=51');
 }
 
 </script>

@@ -1,0 +1,115 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;color:#1a1a2e;table-layout:fixed;max-width:100%;">
+<tr><td style="padding:0 28px 0 28px;overflow:hidden;word-break:break-word;">
+
+    <!-- CABEÇALHO -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid {{cor_pri}};padding-bottom:10px;margin-bottom:16px;page-break-inside:avoid;">
+        <tr>
+            <td style="vertical-align:middle;height:52px;">
+                <img src="{{logo_src}}" height="{{logo_height}}" style="display:block;height:{{logo_height}}px;width:auto;" crossorigin="anonymous">
+            </td>
+            <td style="text-align:right;vertical-align:middle;">
+                <p style="margin:0;font-size:15px;font-weight:700;color:{{cor_pri}};">CONTRATO DE PRESTAÇÃO<br>DE SERVIÇOS — MÃO DE OBRA</p>
+                <p style="margin:4px 0 0;font-size:11px;color:#555;">Nº {{numero}} &nbsp;|&nbsp; {{dataFmt}}</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- PARTES -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;page-break-inside:avoid;table-layout:fixed;">
+        <tr>
+            <td style="width:48%;padding:10px 12px;background:{{cor_bg}};border-left:4px solid {{cor_pri}};vertical-align:top;word-break:break-word;">
+                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:{{cor_pri}};text-transform:uppercase;letter-spacing:0.6px;">Contratada (prestadora)</p>
+                <p style="margin:0;font-size:12px;font-weight:700;">{{razao_social}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">CNPJ: {{cnpj}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">Tel: {{contato_tel}}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#555;">E-mail: {{contato_email}}</p>
+            </td>
+            <td style="width:4%;"></td>
+            <td style="width:48%;padding:10px 12px;background:#f9f9f9;border-left:4px solid #aaa;vertical-align:top;word-break:break-word;">
+                <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.6px;">Contratante</p>
+                <p style="margin:0;font-size:12px;font-weight:700;">{{cliente}}</p>
+                {{doc_row}}
+                {{tel_row}}
+                {{endereco_row}}
+            </td>
+        </tr>
+    </table>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 1ª — Do Objeto</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 6px;">O presente contrato tem por objeto a prestação, pela CONTRATADA, de serviços de <strong>mão de obra especializada</strong> para instalação e configuração de sistemas de segurança eletrônica, conforme escopo abaixo, no local: <strong>{{local_obra}}</strong>.</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;white-space:pre-wrap;"><strong>Escopo:</strong> {{escopo}}</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 2ª — Dos Materiais e Equipamentos</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Todo o material, equipamento, cabeamento, infraestrutura, ferramentas especiais e insumos necessários à execução do serviço serão <strong>fornecidos integralmente pela CONTRATANTE</strong>, em quantidade e qualidade adequadas e no prazo necessário ao cronograma. A CONTRATADA fornece exclusivamente a mão de obra e suas ferramentas manuais de uso próprio. A falta, atraso ou inadequação do material suspende o prazo de execução, sem prejuízo da remuneração pelos dias em que a equipe permanecer à disposição.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 3ª — Do Prazo</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Execução prevista: <strong>{{prazo}}</strong>, com início em <strong>{{inicio}}</strong>, condicionado à liberação do local e à disponibilidade dos materiais. O prazo poderá ser prorrogado em razão de chuvas, impedimento de acesso, alterações de escopo, atraso de outras equipes ou de material, ou caso fortuito/força maior.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 4ª — Do Valor e Pagamento</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 8px;">Pela mão de obra, a CONTRATANTE pagará à CONTRATADA o valor total de:</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:{{cor_pri}};margin-bottom:8px;">
+        <tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">VALOR TOTAL DA MÃO DE OBRA</td>
+        <td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">{{valor}}</td></tr>
+    </table>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 6px;white-space:pre-wrap;"><strong>Forma de pagamento:</strong> {{pagamento}}</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Atraso no pagamento gera multa de 2% e juros de 1% ao mês. Serviços adicionais fora do escopo serão orçados à parte e dependem de aprovação prévia.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 5ª — Obrigações da Contratada</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Executar o serviço com técnica e zelo; manter equipe devidamente identificada e capacitada; utilizar EPIs e cumprir as normas de segurança do local (incluindo trabalho em altura quando aplicável); zelar pelos materiais recebidos e comunicar perdas, defeitos ou sobras; manter o local organizado ao fim de cada jornada; entregar o sistema instalado e testado.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 6ª — Obrigações da Contratante</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">Fornecer os materiais e equipamentos (Cláusula 2ª); garantir acesso livre e seguro ao local, pontos de energia e, quando necessário, andaimes, escadas ou plataformas; disponibilizar responsável para acompanhar e validar o serviço; efetuar os pagamentos nas datas acordadas; informar interferências da obra (elétrica, hidráulica, alvenaria, outras equipes) que afetem a execução.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 7ª — Da Garantia do Serviço</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">A CONTRATADA garante a <strong>execução do serviço (mão de obra)</strong> por <strong>{{garantia}}</strong> a contar da conclusão, corrigindo sem custo falhas decorrentes de erro de instalação. A garantia <strong>não cobre</strong> defeitos de fabricação, incompatibilidade ou má qualidade dos materiais fornecidos pela CONTRATANTE, danos por mau uso, intervenção de terceiros, descarga elétrica, vandalismo, umidade/infiltração ou eventos de força maior. A CONTRATADA não responde pelo desempenho, qualidade de imagem ou durabilidade dos equipamentos fornecidos pela CONTRATANTE.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 8ª — Da Natureza da Contratação</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">A relação é de prestação de serviços entre empresas independentes, sem vínculo empregatício entre a CONTRATANTE e os profissionais da CONTRATADA, que responde por seus encargos trabalhistas, previdenciários e fiscais. Cada parte responde por danos que, por culpa ou dolo, causar a pessoas ou bens da outra ou de terceiros.</p>
+    </div>
+
+    <div style="page-break-inside:avoid;margin-top:14px;">
+    <p style="font-size:13px;font-weight:700;color:{{cor_pri}};border-bottom:2px solid {{cor_pri}};padding-bottom:4px;margin:0 0 8px;">Cláusula 9ª — Da Rescisão e do Foro</p>
+    <p style="font-size:11px;color:#444;line-height:1.8;margin:0 0 14px;">O contrato pode ser rescindido por qualquer das partes mediante aviso por escrito com 5 dias de antecedência, devendo a CONTRATANTE pagar os serviços já executados e os materiais/horas já mobilizados. O descumprimento de qualquer cláusula autoriza a rescisão imediata. Fica eleito o foro da comarca de {{cidade_uf}} para dirimir quaisquer questões deste contrato.</p>
+    </div>
+
+    {{obs_block}}
+
+    <p style="font-size:11px;color:#444;margin:14px 0 0;">{{cidade_uf}}, {{dataFmt}}.</p>
+
+    <!-- ASSINATURAS -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0 0;page-break-inside:avoid;">
+        <tr>
+            <td style="width:46%;height:34px;vertical-align:bottom;border-bottom:1.5px solid #555;"></td>
+            <td style="width:8%;"></td>
+            <td style="width:46%;height:34px;vertical-align:bottom;border-bottom:1.5px solid #555;"></td>
+        </tr>
+        <tr>
+            <td style="padding-top:5px;text-align:center;">
+                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{razao_social}}</p>
+                <p style="margin:1px 0 0;font-size:10px;color:#666;">CONTRATADA</p>
+            </td>
+            <td></td>
+            <td style="padding-top:5px;text-align:center;">
+                <p style="margin:0;font-size:11px;font-weight:700;color:#222;">{{cliente}}</p>
+                <p style="margin:1px 0 0;font-size:10px;color:#666;">CONTRATANTE</p>
+            </td>
+        </tr>
+    </table>
+
+</td></tr>
+</table>
