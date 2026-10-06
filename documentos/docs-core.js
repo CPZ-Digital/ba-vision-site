@@ -241,7 +241,7 @@
     const nomeArq = doc.arq(entry.v, entry) + '-' + hora() + '.pdf';
     return html2pdf().from(html).set({
       margin: doc.margin, filename: nomeArq, image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, windowWidth: 720, scrollX: 0, scrollY: 0, onclone: d => { d.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
+      html2canvas: { scale: 2, useCORS: true, windowWidth: Math.max(720, document.documentElement.clientWidth), scrollX: 0, scrollY: 0, onclone: d => { d.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).toPdf().get('pdf').then(pdf => {
       const n = pdf.internal.getNumberOfPages(), w = pdf.internal.pageSize.getWidth(), h = pdf.internal.pageSize.getHeight();

@@ -2803,7 +2803,7 @@ function gerarPDF() {
                 margin:      [0, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
-                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                html2canvas: { scale:2, useCORS:true, windowWidth:Math.max(720,document.documentElement.clientWidth), scrollX:0, scrollY:0,
                     onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
                 jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' },
                 pagebreak:   { mode: ['css', 'legacy'] }
@@ -4232,7 +4232,7 @@ function gerarContrato(id) {
                 margin:      [0, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
-                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                html2canvas: { scale:2, useCORS:true, windowWidth:Math.max(720,document.documentElement.clientWidth), scrollX:0, scrollY:0,
                     onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
                 jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
             }).toPdf().get('pdf').then(pdf => {
@@ -4424,7 +4424,7 @@ function _gerarLocacaoPDF(entry, reimpressao) {
                 margin:      [12, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
-                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                html2canvas: { scale:2, useCORS:true, windowWidth:Math.max(720,document.documentElement.clientWidth), scrollX:0, scrollY:0,
                     onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
                 jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
             }).toPdf().get('pdf').then(pdf => {
@@ -4614,7 +4614,7 @@ function _gerarNotaServicoPDF(entry, reimpressao) {
                 margin:      [0, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
-                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                html2canvas: { scale:2, useCORS:true, windowWidth:Math.max(720,document.documentElement.clientWidth), scrollX:0, scrollY:0,
                     onclone: doc => { doc.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
                 jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
             }).toPdf().get('pdf').then(pdf => {
@@ -4814,7 +4814,7 @@ function _gerarMOPDF(entry, reimpressao) {
                 margin:      [12, 0, 18, 0],
                 filename:    nomeArq,
                 image:       { type:'jpeg', quality:0.95 },
-                html2canvas: { scale:2, useCORS:true, windowWidth:720, scrollX:0, scrollY:0,
+                html2canvas: { scale:2, useCORS:true, windowWidth:Math.max(720,document.documentElement.clientWidth), scrollX:0, scrollY:0,
                     onclone: d => { d.body.style.cssText = 'margin:0!important;padding:0!important;'; } },
                 jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
             }).toPdf().get('pdf').then(pdf => {
@@ -4978,7 +4978,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=54');
+  navigator.serviceWorker.register('./sw.js?v=55');
 }
 
 </script>
