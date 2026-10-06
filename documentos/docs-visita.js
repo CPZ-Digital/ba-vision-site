@@ -19,7 +19,7 @@
   const doc = {
     id: 'visita', icon: '📋', nome: 'Relatório de Visita', sub: 'Checklist, fotos e status da manutenção', margin: [12, 0, 18, 0],
     campos: [
-      { k: 'cliente', l: 'Cliente', req: 1 }, { k: 'endereco', l: 'Local atendido' },
+      { k: 'cliente', l: 'Cliente', req: 1 }, { k: 'doc', l: 'CNPJ/CPF (para o alerta de reputação)', ph: 'opcional' }, { k: 'endereco', l: 'Local atendido' },
       { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 }, { k: 'ref', l: 'Contrato (nº/ref.) (opcional)', half: 1 },
       { k: 'tipo', l: 'Tipo de visita', t: 'select', opts: [['Preventiva (obrigatória)', 'Preventiva (obrigatória)'], ['Corretiva (chamado)', 'Corretiva (chamado)'], ['Emergencial', 'Emergencial'], ['Visita adicional agendada', 'Visita adicional agendada']] },
       { k: 'visitaNum', l: 'Visita nº / incluídas no mês (ex: 1 de 2)', half: 1 }, { k: 'cobranca', l: 'Cobrança', t: 'select', opts: [['Incluída no contrato', 'Incluída no contrato'], ['Cobrada (visita adicional)', 'Cobrada (adicional)'], ['Cobrada (emergencial)', 'Cobrada (emergencial)']], half: 1 },

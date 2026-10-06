@@ -150,7 +150,7 @@
 
     { id: 'os', icon: '🔧', nome: 'Ordem de Serviço', sub: 'Manutenção / visita técnica', margin: [12, 0, 18, 0],
       campos: [
-        { k: 'cliente', l: 'Cliente', req: 1 }, { k: 'tel', l: 'Telefone', half: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 },
+        { k: 'cliente', l: 'Cliente', req: 1 }, { k: 'doc', l: 'CNPJ/CPF (opcional)' }, { k: 'tel', l: 'Telefone', half: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 },
         { k: 'endereco', l: 'Endereço' },
         { k: 'tipo', l: 'Tipo', t: 'select', opts: [['Manutenção corretiva', 'Manutenção corretiva'], ['Manutenção preventiva', 'Manutenção preventiva'], ['Visita técnica', 'Visita técnica'], ['Instalação', 'Instalação']], half: 1 }, { k: 'tecnico', l: 'Técnico', half: 1 },
         { k: 'chegada', l: 'Chegada', t: 'time', half: 1 }, { k: 'saida', l: 'Saída', t: 'time', half: 1 },

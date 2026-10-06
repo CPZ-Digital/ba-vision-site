@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-06.6';
+  const DOCS_VERSION = '2026-10-06.7';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -125,6 +125,7 @@
     { id: 'inst', icon: '📄', nome: 'Contrato de Instalação', sub: 'Fornecimento + instalação de CFTV', margin: [0, 0, 18, 0],
       campos: [
         { k: 'cliente', l: 'Nome do cliente', req: 1 },
+        { k: 'doc', l: 'CNPJ/CPF (para o alerta de reputação)', ph: 'opcional' },
         { k: 'tel', l: 'Telefone', half: 1 }, { k: 'email', l: 'E-mail', half: 1 },
         { k: 'endereco', l: 'Local de instalação / endereço do contratante' },
         { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 }, { k: 'numero', l: 'Nº do contrato (opcional)', half: 1 },
@@ -185,6 +186,7 @@
     { id: 'loc', icon: '📹', nome: 'Proposta de Locação', sub: 'Locação de CFTV com manutenção', margin: [12, 0, 18, 0],
       campos: [
         { k: 'cliente', l: 'Cliente', req: 1 },
+        { k: 'doc', l: 'CNPJ/CPF (para o alerta de reputação)', ph: 'opcional' },
         { k: 'tel', l: 'Telefone', half: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 },
         { k: 'endereco', l: 'Local da obra' },
         { k: 'itens', l: 'Composição do sistema (um por linha: "8x Câmera Bullet")', t: 'textarea', ph: '8x Câmera Bullet 2MP\n1x NVR 8 canais\n1x HD 2TB' },
@@ -211,6 +213,7 @@
     { id: 'nota', icon: '🧾', nome: 'Nota de Serviço', sub: 'Manutenção / serviço avulso', margin: [0, 0, 18, 0],
       campos: [
         { k: 'cliente', l: 'Cliente', req: 1 },
+        { k: 'doc', l: 'CNPJ/CPF (para o alerta de reputação)', ph: 'opcional' },
         { k: 'tel', l: 'Telefone (opcional)', half: 1 }, { k: 'data', l: 'Data do serviço', t: 'date', def: hoje, half: 1 },
         { k: 'endereco', l: 'Endereço (opcional)' },
         { k: 'servico', l: 'Serviço executado', t: 'textarea', req: 1, ph: 'Descreva o serviço/manutenção realizado…' },
@@ -303,7 +306,7 @@
     if (f.t === 'textarea') inp = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(val == null ? '' : val)}</textarea>`;
     else if (f.t === 'select') inp = `<select id="${id}">${f.opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`;
     else inp = `<input id="${id}" type="${f.t === 'number' ? 'text' : (f.t || 'text')}"${f.t === 'number' ? ' inputmode="decimal" autocomplete="off"' : ''} value="${v}" placeholder="${esc(f.ph || '')}">`;
-    return `<div class="field"${dep}>${lab}${inp}</div>`;
+    return `<div class="field"${dep}>${lab}${inp}${f.k === 'doc' ? '<div id="rep-hint"></div>' : ''}</div>`;
   }
 
   function abrirForm(doc) {
@@ -323,6 +326,7 @@
       el.style.display = on ? '' : 'none';
     });
     $('docs-b').onchange = refreshDeps; refreshDeps();
+    const di = $('dc-doc'); if (di) { const upd = () => { const r = lookupRep(di.value); $('rep-hint').innerHTML = r ? repHintHtml(r) : ''; }; di.addEventListener('input', upd); upd(); }
     $('docs-f').innerHTML = `<span class="toast" id="docs-toast">Gerando PDF...</span><button class="btn btn-cancel" id="docs-c">Cancelar</button><button class="btn btn-pdf" id="docs-g">⬇ Gerar PDF</button>`;
     $('docs-c').onclick = fechar;
     $('docs-g').onclick = () => submeter(doc);
@@ -358,6 +362,9 @@
     if (falta) { alert('Preencha: ' + falta.l); return; }
     const erro = doc.validar(v);
     if (erro) { alert(erro); return; }
+    const rr = lookupRep(v.doc);
+    if (rr && (rr.nivel === 'mal' || rr.nivel === 'atencao') &&
+        !confirm('⚠️ ATENÇÃO — ' + NIVEIS[rr.nivel][0] + '\n\n' + rr.nome + ' (' + fmtDoc(rr.doc) + ')\n' + (rr.obs ? rr.obs + '\n' : '') + 'Cadastrado em ' + fmtData(rr.data) + '\n\nGerar o documento mesmo assim?')) return;
     const entry = { id: Date.now(), doc: doc.id, brand, dataISO: hoje(), v };
     entry.titulo = doc.titulo(v); entry.valor = doc.valor(v);
     const btn = $('docs-g'), toast = $('docs-toast');
@@ -395,6 +402,64 @@
     $('docs-ov').classList.add('open');
   }
 
+  /* ───────── REPUTAÇÃO DE CLIENTES (por CNPJ/CPF) — fica só neste aparelho ───────── */
+  const RKEY = 'docs_rep_' + brand;
+  const NIVEIS = {
+    otimo: ['⭐ Excelente pagador', '#15803d', '#dcfce7'], bom: ['👍 Bom pagador', '#16a34a', '#f0fdf4'], regular: ['➖ Regular', '#6b7280', '#f3f4f6'],
+    atencao: ['⚠️ Atenção — atrasa pagamentos', '#b45309', '#fffbeb'], mal: ['⛔ Mal pagador', '#b91c1c', '#fef2f2']
+  };
+  const digits = x => String(x || '').replace(/\D/g, '');
+  const fmtDoc = d => d.length === 14 ? d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5') : d.length === 11 ? d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : d;
+  const loadRep = () => { try { return JSON.parse(localStorage.getItem(RKEY) || '[]'); } catch (e) { return []; } };
+  const saveRep = l => { try { localStorage.setItem(RKEY, JSON.stringify(l)); } catch (e) {} };
+  const lookupRep = doc => { const d = digits(doc); return (d.length === 11 || d.length === 14) ? loadRep().find(r => r.doc === d) || null : null; };
+  function repHintHtml(r) {
+    const n = NIVEIS[r.nivel] || NIVEIS.regular;
+    return `<div style="margin-top:5px;padding:7px 10px;border-radius:6px;font-size:12px;line-height:1.4;background:${n[2]};color:${n[1]};border:1px solid ${n[1]}55"><b>${n[0]}</b> — ${esc(r.nome)}${r.obs ? ': ' + esc(r.obs) : ''} <span style="opacity:.7">(${fmtData(r.data)})</span></div>`;
+  }
+
+  function abrirRep() {
+    ensureOverlay();
+    $('docs-t').textContent = '⭐ Reputação de clientes';
+    $('docs-b').innerHTML = `<div style="background:#f6f8fc;border:1px solid #dbe3f3;border-radius:10px;padding:14px;margin-bottom:14px">
+      <div class="field-row"><div class="field"><label>CNPJ/CPF *</label><input id="rp-doc" type="text" inputmode="numeric" placeholder="só números ou com pontuação"></div>
+      <div class="field"><label>Nome / empresa *</label><input id="rp-nome" type="text"></div></div>
+      <div class="field"><label>Classificação</label><select id="rp-nivel">${Object.entries(NIVEIS).map(([k, n]) => `<option value="${k}">${n[0]}</option>`).join('')}</select></div>
+      <div class="field"><label>Observação (fatos: valores, atrasos, o que aconteceu)</label><textarea id="rp-obs" placeholder="Ex: atrasou 60 dias o último pagamento (R$ 12.000); precisou de cobrança"></textarea></div>
+      <button class="btn btn-pdf" id="rp-salvar" style="width:100%">Salvar cliente</button>
+      <div style="font-size:10.5px;color:#888;margin-top:6px">Uso interno. Registre só fatos. Cadastrar o mesmo CNPJ/CPF de novo atualiza o registro. Fica salvo apenas neste aparelho (use Exportar para copiar para outro).</div></div>
+      <div class="field"><input id="rp-q" type="search" placeholder="Buscar por nome ou CNPJ/CPF…"></div><div id="rp-lista"></div>`;
+    $('docs-f').innerHTML = `<button class="btn btn-cancel" id="rp-exp">⬇ Exportar</button><button class="btn btn-cancel" id="rp-imp">⬆ Importar</button><input id="rp-file" type="file" accept=".json" style="display:none"><button class="btn btn-pdf" id="rp-fechar">Fechar</button>`;
+    const draw = () => {
+      const q = $('rp-q').value.trim().toLowerCase(), qd = digits(q), ordem = { mal: 0, atencao: 1, regular: 2, bom: 3, otimo: 4 };
+      const l = loadRep().filter(r => !q || r.nome.toLowerCase().includes(q) || (qd && r.doc.includes(qd))).sort((a, b) => ordem[a.nivel] - ordem[b.nivel] || a.nome.localeCompare(b.nome));
+      $('rp-lista').innerHTML = l.length ? l.map(r => { const n = NIVEIS[r.nivel] || NIVEIS.regular; return `<div class="hist-item"><div class="hi-main"><div class="hi-t">${esc(r.nome)} <span style="font-weight:400;color:#888;font-size:11px">${fmtDoc(r.doc)}</span></div>
+        <div class="hi-s"><span class="hist-tag" style="background:${n[2]};color:${n[1]}">${n[0]}</span>${fmtData(r.data)}${r.obs ? ' · ' + esc(r.obs) : ''}</div></div>
+        <button class="btn btn-pdf btn-sm" data-e="${r.doc}">Editar</button><button class="btn btn-red btn-sm" data-x="${r.doc}">Excluir</button></div>`; }).join('')
+        : '<p style="text-align:center;color:#888;font-size:13px;padding:20px 0;">Nenhum cliente cadastrado.</p>';
+    };
+    $('rp-q').oninput = draw; draw();
+    $('rp-salvar').onclick = () => {
+      const d = digits($('rp-doc').value), nome = $('rp-nome').value.trim();
+      if (d.length !== 11 && d.length !== 14) { alert('Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.'); return; }
+      if (!nome) { alert('Informe o nome ou a empresa.'); return; }
+      const l = loadRep().filter(r => r.doc !== d);
+      l.push({ doc: d, nome, nivel: $('rp-nivel').value, obs: $('rp-obs').value.trim(), data: hoje() });
+      saveRep(l); ['rp-doc', 'rp-nome', 'rp-obs'].forEach(i => $(i).value = ''); $('rp-nivel').value = 'otimo'; draw(); renderRepCount();
+    };
+    $('rp-lista').onclick = ev => {
+      const e = ev.target.dataset.e, x = ev.target.dataset.x;
+      if (e) { const r = loadRep().find(z => z.doc === e); $('rp-doc').value = fmtDoc(r.doc); $('rp-nome').value = r.nome; $('rp-nivel').value = r.nivel; $('rp-obs').value = r.obs || ''; $('docs-b').scrollTop = 0; }
+      if (x && confirm('Excluir este cliente do cadastro?')) { saveRep(loadRep().filter(z => z.doc !== x)); draw(); renderRepCount(); }
+    };
+    $('rp-exp').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(loadRep(), null, 1)], { type: 'application/json' })); a.download = 'reputacao-clientes-' + brand + '.json'; a.click(); };
+    $('rp-imp').onclick = () => $('rp-file').click();
+    $('rp-file').onchange = ev => { const f = ev.target.files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { try { const novos = JSON.parse(fr.result); const m = new Map(loadRep().map(r => [r.doc, r])); novos.forEach(r => { if (r && r.doc && r.nome && NIVEIS[r.nivel]) m.set(digits(r.doc), Object.assign({}, r, { doc: digits(r.doc) })); }); saveRep([...m.values()]); draw(); renderRepCount(); alert('Importado: ' + novos.length + ' registro(s).'); } catch (e) { alert('Arquivo inválido.'); } }; fr.readAsText(f); };
+    $('rp-fechar').onclick = fechar;
+    $('docs-ov').classList.add('open');
+  }
+  function renderRepCount() { const el = $('docs-rep-sub'); if (el) el.textContent = loadRep().length + ' cadastrado(s) neste aparelho'; }
+
   function renderHistCount() {
     const el = $('docs-hist-sub'); if (el) el.textContent = loadH().length + ' gerado(s) neste aparelho';
   }
@@ -403,7 +468,8 @@
     { t: '📱 Apps por assinatura', ids: ['L:barbearia', 'L:smart', 'licenca', 'lgpd'] },
     { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'visita', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
     { t: '🤝 Vendedores e indicação', ids: ['L:referral', 'parceria', 'comissao'] },
-    { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] }
+    { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] },
+    { t: '👥 Clientes', ids: ['rep'] }
   ];
   function montar() {
     const box = $('docs-orc'); if (!box) return;
@@ -411,6 +477,7 @@
     const q0 = ($('docs-q') || {}).value || '';
     const legacy = window.DOCS_LEGACY || [];
     const todos = {}; DOCS.forEach(d => todos[d.id] = d); legacy.forEach(l => todos[l.id] = l);
+    todos.rep = { id: 'rep', icon: '⭐', nome: 'Reputação de clientes', sub: '<span id="docs-rep-sub"></span>' };
     const usados = new Set(); GRUPOS.forEach(g => g.ids.forEach(i => usados.add(i)));
     const grupos = GRUPOS.map(g => ({ t: g.t, ids: g.ids.filter(i => todos[i]) }));
     const sobra = Object.keys(todos).filter(i => !usados.has(i)); if (sobra.length) grupos.push({ t: '📄 Outros', ids: sobra });
@@ -430,11 +497,12 @@
       if (e.target.closest('[data-hist]')) return abrirHistorico();
       const c = e.target.closest('.card'); if (!c) return;
       const id = c.dataset.doc, l = legacy.find(x => x.id === id);
+      if (id === 'rep') return abrirRep();
       if (l) window[l.fn](); else abrirForm(byId(id));
     };
-    renderHistCount();
+    renderHistCount(); renderRepCount();
   }
-  window.DOCS_API = { DOCS, gerarPDF, abrirForm, abrirHistorico, remontar: montar };
+  window.DOCS_API = { DOCS, gerarPDF, abrirForm, abrirHistorico, remontar: montar, rep: { load: loadRep, save: saveRep, lookup: lookupRep, abrir: abrirRep } };
   window.DOCS_EXTENSO = valorExtenso;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
 })();
