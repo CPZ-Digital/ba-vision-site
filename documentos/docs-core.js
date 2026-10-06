@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-06.3';
+  const DOCS_VERSION = '2026-10-06.4';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -269,6 +269,7 @@
       .g-h small{font-size:11px;color:#999;font-weight:400}.docs-top{display:flex;gap:12px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
       .docs-q{flex:1;min-width:200px;padding:11px 14px;border:1.5px solid #ccd6e8;border-radius:10px;font-size:14px;outline:none;background:#fff}.docs-q:focus{border-color:${B.cor}}
       .docs-hist-btn{padding:11px 18px;border-radius:10px;border:1.5px solid ${B.cor};background:#fff;color:${B.cor};font-weight:700;font-size:13px;cursor:pointer}.docs-hist-btn:hover{background:${B.corBg}}
+      .chk-g{display:flex;flex-wrap:wrap;gap:8px 18px;padding:6px 0}.field .chk{display:flex;align-items:center;gap:6px;font-size:13px;color:#1a1a2e;margin:0;cursor:pointer}.field .chk input{width:auto;margin:0}
       .docs-vazio{text-align:center;color:#888;font-size:13px;padding:30px 0}
       #docs-orc .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}#docs-orc .card{width:auto;padding:20px 16px}@media(max-width:520px){#docs-orc .cards{grid-template-columns:1fr 1fr;gap:10px}.docs-q{min-width:100%}}
       .field select,.field textarea{width:100%;padding:8px 10px;border:1px solid #ccd6e8;border-radius:6px;font-size:13px;color:#1a1a2e;outline:none;font-family:inherit;background:#fff}
@@ -295,6 +296,7 @@
   function fieldHtml(f, val) {
     const id = 'dc-' + f.k, v = val == null ? '' : esc(val).replace(/"/g, '&quot;');
     const lab = `<label>${esc(f.l)}${f.req ? ' *' : ''}</label>`;
+    if (f.t === 'check') { const sel = String(val == null ? '' : val).split('|'); return `<div class="field">${lab}<div class="chk-g" id="${id}">${f.opts.map(o => `<label class="chk"><input type="checkbox" value="${o[0]}"${sel.includes(o[0]) ? ' checked' : ''}> ${esc(o[1])}</label>`).join('')}</div></div>`; }
     let inp;
     if (f.t === 'textarea') inp = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(val == null ? '' : val)}</textarea>`;
     else if (f.t === 'select') inp = `<select id="${id}">${f.opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`;
@@ -330,7 +332,7 @@
 
   async function submeter(doc) {
     const v = {};
-    doc.campos.forEach(f => { const raw = $('dc-' + f.k).value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
+    doc.campos.forEach(f => { if (f.t === 'check') { v[f.k] = [...$('dc-' + f.k).querySelectorAll('input:checked')].map(i => i.value).join('|'); return; } const raw = $('dc-' + f.k).value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
     const ruim = doc.campos.find(f => f.t === 'number' && v[f.k] !== '' && !isFinite(Number(v[f.k])));
     if (ruim) { alert('Valor inválido em: ' + ruim.l); return; }
     const falta = doc.campos.find(f => f.req && !v[f.k]);
@@ -379,7 +381,7 @@
 
   const GRUPOS = [
     { t: '📱 Apps por assinatura', ids: ['L:barbearia', 'L:smart', 'licenca', 'lgpd'] },
-    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
+    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
     { t: '🤝 Vendedores e indicação', ids: ['L:referral', 'parceria', 'comissao'] },
     { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] }
   ];
