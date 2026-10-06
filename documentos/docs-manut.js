@@ -18,6 +18,7 @@
     portao: ['Inspeção e lubrificação do motor, cremalheira/correntes e roldanas (conforme o tipo)', 'Teste de fim de curso, fotocélulas e sensor antiesmagamento/anticolisão', 'Teste dos controles remotos/TAGs, da central e da botoeira', 'Verificação de travas, sinalização e do funcionamento da parada de emergência', 'Conferência de fixações, trilhos/guias e alinhamento']
   };
 
+  window.DOCS_MANUT = { SIS, NOME, ROTINA };
   const doc = {
     id: 'manut', icon: '🛠️', nome: 'Contrato de Manutenção', sub: 'CFTV, acesso, interfone, portão', margin: [12, 0, 18, 0],
     campos: [

@@ -16,8 +16,11 @@
   const ext = v => window.DOCS_EXTENSO(v);
   const parseL = t => String(t || '').split('\n').map(l => l.trim()).filter(Boolean);
 
-  const sec = (t, c) => `<p style="font-size:13px;font-weight:700;color:${B.cor};border-bottom:2px solid ${B.cor};padding-bottom:4px;margin:16px 0 8px;page-break-after:avoid;">${t}</p>` +
-    (c ? `<div style="page-break-inside:avoid;"><p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 8px;white-space:pre-wrap;text-align:justify;">${c}</p></div>` : '');
+  const sec = (t, c) => {
+    const h = `<p style="font-size:13px;font-weight:700;color:${B.cor};border-bottom:2px solid ${B.cor};padding-bottom:4px;margin:16px 0 8px;page-break-after:avoid;">${t}</p>`;
+    // com conteúdo: título + texto no mesmo bloco, para o título não ficar sozinho no fim da página
+    return c ? `<div style="page-break-inside:avoid;">${h}<p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 8px;white-space:pre-wrap;text-align:justify;">${c}</p></div>` : h;
+  };
   const p = c => `<p style="font-size:12px;color:#444;line-height:1.8;margin:0 0 8px;white-space:pre-wrap;text-align:justify;">${c}</p>`;
   const lista = (linhas, marca) => '<div style="page-break-inside:avoid;margin:0 0 8px;">' + linhas.map(l => `<p style="font-size:12px;color:#444;line-height:1.7;margin:0 0 2px;">${marca || '•'} ${esc(l)}</p>`).join('') + '</div>';
   const box = (rot, val) => `<table width="100%" cellpadding="0" cellspacing="0" style="background:${B.cor};margin:10px 0;page-break-inside:avoid;"><tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">${rot}</td><td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">${val}</td></tr></table>`;

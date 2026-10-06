@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-06.4';
+  const DOCS_VERSION = '2026-10-06.6';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -296,12 +296,14 @@
   function fieldHtml(f, val) {
     const id = 'dc-' + f.k, v = val == null ? '' : esc(val).replace(/"/g, '&quot;');
     const lab = `<label>${esc(f.l)}${f.req ? ' *' : ''}</label>`;
-    if (f.t === 'check') { const sel = String(val == null ? '' : val).split('|'); return `<div class="field">${lab}<div class="chk-g" id="${id}">${f.opts.map(o => `<label class="chk"><input type="checkbox" value="${o[0]}"${sel.includes(o[0]) ? ' checked' : ''}> ${esc(o[1])}</label>`).join('')}</div></div>`; }
+    const dep = f.dep ? ` data-dep="${f.dep}"` : '';
+    if (f.t === 'foto') return `<div class="field"${dep}>${lab}<input id="${id}" type="file" accept="image/*" multiple style="width:100%;padding:8px 0;"><div style="font-size:11px;color:#888;margin-top:2px">Até 6 fotos. Elas entram no PDF, mas não ficam salvas no histórico.</div></div>`;
+    if (f.t === 'check') { const sel = String(val == null ? '' : val).split('|'); return `<div class="field"${dep}>${lab}<div class="chk-g" id="${id}">${f.opts.map(o => `<label class="chk"><input type="checkbox" value="${o[0]}"${sel.includes(o[0]) ? ' checked' : ''}> ${esc(o[1])}</label>`).join('')}</div></div>`; }
     let inp;
     if (f.t === 'textarea') inp = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(val == null ? '' : val)}</textarea>`;
     else if (f.t === 'select') inp = `<select id="${id}">${f.opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`;
     else inp = `<input id="${id}" type="${f.t === 'number' ? 'text' : (f.t || 'text')}"${f.t === 'number' ? ' inputmode="decimal" autocomplete="off"' : ''} value="${v}" placeholder="${esc(f.ph || '')}">`;
-    return `<div class="field">${lab}${inp}</div>`;
+    return `<div class="field"${dep}>${lab}${inp}</div>`;
   }
 
   function abrirForm(doc) {
@@ -315,6 +317,12 @@
     });
     if (open) html += '</div>';
     $('docs-b').innerHTML = html;
+    const refreshDeps = () => $('docs-b').querySelectorAll('[data-dep]').forEach(el => {
+      const [fk, val] = el.dataset.dep.split(':'), box = $('dc-' + fk);
+      const on = box && (box.querySelector ? [...box.querySelectorAll('input:checked')].some(i => i.value === val) : box.value === val);
+      el.style.display = on ? '' : 'none';
+    });
+    $('docs-b').onchange = refreshDeps; refreshDeps();
     $('docs-f').innerHTML = `<span class="toast" id="docs-toast">Gerando PDF...</span><button class="btn btn-cancel" id="docs-c">Cancelar</button><button class="btn btn-pdf" id="docs-g">⬇ Gerar PDF</button>`;
     $('docs-c').onclick = fechar;
     $('docs-g').onclick = () => submeter(doc);
@@ -330,9 +338,20 @@
     return t;
   }
 
+  // lê e reduz as fotos escolhidas (máx. 6, lado maior 900px, JPEG) para caberem no PDF
+  function lerFotos(input) {
+    const files = [...(input.files || [])].slice(0, 6);
+    return Promise.all(files.map(file => new Promise(res => {
+      const fr = new FileReader();
+      fr.onload = () => { const img = new Image(); img.onload = () => { const sc = Math.min(1, 900 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res({ s: c.toDataURL('image/jpeg', 0.72), w: c.width, h: c.height }); }; img.onerror = () => res(null); img.src = fr.result; };
+      fr.onerror = () => res(null); fr.readAsDataURL(file);
+    }))).then(a => a.filter(Boolean));
+  }
+
   async function submeter(doc) {
     const v = {};
-    doc.campos.forEach(f => { if (f.t === 'check') { v[f.k] = [...$('dc-' + f.k).querySelectorAll('input:checked')].map(i => i.value).join('|'); return; } const raw = $('dc-' + f.k).value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
+    for (const f of doc.campos) { if (f.t === 'foto') { v.fotos = await lerFotos($('dc-' + f.k)); } }
+    doc.campos.forEach(f => { if (f.t === 'foto') return; if (f.t === 'check') { v[f.k] = [...$('dc-' + f.k).querySelectorAll('input:checked')].map(i => i.value).join('|'); return; } const raw = $('dc-' + f.k).value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
     const ruim = doc.campos.find(f => f.t === 'number' && v[f.k] !== '' && !isFinite(Number(v[f.k])));
     if (ruim) { alert('Valor inválido em: ' + ruim.l); return; }
     const falta = doc.campos.find(f => f.req && !v[f.k]);
@@ -345,6 +364,7 @@
     btn.disabled = true; toast.style.display = 'inline';
     try {
       await gerarPDF(doc, entry);
+      delete entry.v.fotos;
       const l = loadH(); l.unshift(entry); saveH(l);
       fechar(); renderHistCount();
     } catch (e) { alert('Erro ao gerar PDF: ' + e.message); }
@@ -381,7 +401,7 @@
 
   const GRUPOS = [
     { t: '📱 Apps por assinatura', ids: ['L:barbearia', 'L:smart', 'licenca', 'lgpd'] },
-    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
+    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'visita', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
     { t: '🤝 Vendedores e indicação', ids: ['L:referral', 'parceria', 'comissao'] },
     { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] }
   ];
