@@ -261,16 +261,26 @@
 
   /* ───────── UI ───────── */
   const $ = id => document.getElementById(id);
-  function ensureOverlay() {
-    if ($('docs-ov')) return;
-    const st = document.createElement('style');
-    st.textContent = `.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid #ccd6e8;border-radius:6px;font-size:13px;color:#1a1a2e;outline:none;font-family:inherit;background:#fff}
+  function ensureStyle() {
+    if ($('docs-style')) return;
+    const st = document.createElement('style'); st.id = 'docs-style';
+    st.textContent = `.g-h{font-size:15px;font-weight:700;color:#1a1a2e;margin:28px 0 12px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid ${B.corL}}
+      .g-h small{font-size:11px;color:#999;font-weight:400}.docs-top{display:flex;gap:12px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+      .docs-q{flex:1;min-width:200px;padding:11px 14px;border:1.5px solid #ccd6e8;border-radius:10px;font-size:14px;outline:none;background:#fff}.docs-q:focus{border-color:${B.cor}}
+      .docs-hist-btn{padding:11px 18px;border-radius:10px;border:1.5px solid ${B.cor};background:#fff;color:${B.cor};font-weight:700;font-size:13px;cursor:pointer}.docs-hist-btn:hover{background:${B.corBg}}
+      .docs-vazio{text-align:center;color:#888;font-size:13px;padding:30px 0}
+      #docs-orc .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}#docs-orc .card{width:auto;padding:20px 16px}@media(max-width:520px){#docs-orc .cards{grid-template-columns:1fr 1fr;gap:10px}.docs-q{min-width:100%}}
+      .field select,.field textarea{width:100%;padding:8px 10px;border:1px solid #ccd6e8;border-radius:6px;font-size:13px;color:#1a1a2e;outline:none;font-family:inherit;background:#fff}
       .field textarea{resize:vertical;min-height:64px;line-height:1.4}.field select:focus,.field textarea:focus{border-color:${B.cor}}
       .hist-item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eee}.hist-item .hi-main{flex:1;min-width:0}
       .hist-item .hi-t{font-size:13px;font-weight:700;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hist-item .hi-s{font-size:11px;color:#888}
       .hist-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:${B.corL};color:${B.cor};margin-right:6px}
       .btn-sm{padding:5px 10px;font-size:11px}.btn-red{background:#fde8e8;color:#c0392b}`;
     document.head.appendChild(st);
+  }
+  function ensureOverlay() {
+    ensureStyle();
+    if ($('docs-ov')) return;
     const ov = document.createElement('div');
     ov.className = 'overlay'; ov.id = 'docs-ov';
     ov.innerHTML = `<div class="modal" style="width:560px"><div class="modal-header"><h3 id="docs-t"></h3><button class="modal-close" id="docs-x">×</button></div>
@@ -355,14 +365,38 @@
     const el = $('docs-hist-sub'); if (el) el.textContent = loadH().length + ' gerado(s) neste aparelho';
   }
 
+  const GRUPOS = [
+    { t: '📱 Apps por assinatura', ids: ['L:barbearia', 'L:smart', 'licenca', 'lgpd'] },
+    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
+    { t: '🤝 Vendedores e indicação', ids: ['L:referral', 'parceria', 'comissao'] },
+    { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] }
+  ];
   function montar() {
     const box = $('docs-orc'); if (!box) return;
-    box.innerHTML = `<h2>Contratos e documentos de obra</h2><div class="cards">` +
-      DOCS.map(d => `<div class="card" data-doc="${d.id}"><div class="card-icon">${d.icon}</div><div class="card-name">${d.nome}</div><div class="card-sub">${d.sub}</div></div>`).join('') +
-      `<div class="card" data-hist="1"><div class="card-icon">📂</div><div class="card-name">Documentos gerados</div><div class="card-sub" id="docs-hist-sub"></div></div></div>`;
+    ensureStyle();
+    const q0 = ($('docs-q') || {}).value || '';
+    const legacy = window.DOCS_LEGACY || [];
+    const todos = {}; DOCS.forEach(d => todos[d.id] = d); legacy.forEach(l => todos[l.id] = l);
+    const usados = new Set(); GRUPOS.forEach(g => g.ids.forEach(i => usados.add(i)));
+    const grupos = GRUPOS.map(g => ({ t: g.t, ids: g.ids.filter(i => todos[i]) }));
+    const sobra = Object.keys(todos).filter(i => !usados.has(i)); if (sobra.length) grupos.push({ t: '📄 Outros', ids: sobra });
+    box.innerHTML = `<div class="docs-top"><input class="docs-q" id="docs-q" type="search" placeholder="Buscar documento… (ex: contrato, recibo, nota)" value="${esc(q0)}"><button class="docs-hist-btn" data-hist="1">📂 Documentos gerados <span id="docs-hist-sub" style="font-weight:400;font-size:11px"></span></button></div><div id="docs-grupos"></div>`;
+    const draw = () => {
+      const q = $('docs-q').value.trim().toLowerCase();
+      const html = grupos.map(g => {
+        const ids = g.ids.filter(i => !q || (todos[i].nome + ' ' + todos[i].sub + ' ' + g.t).toLowerCase().includes(q));
+        if (!ids.length) return '';
+        return `<div class="g-h">${g.t} <small>${ids.length}</small></div><div class="cards">` +
+          ids.map(i => { const d = todos[i]; return `<div class="card" data-doc="${i}"><div class="card-icon">${d.icon}</div><div class="card-name">${d.nome}</div><div class="card-sub">${d.sub}</div></div>`; }).join('') + '</div>';
+      }).join('');
+      $('docs-grupos').innerHTML = html || '<div class="docs-vazio">Nenhum documento encontrado.</div>';
+    };
+    $('docs-q').oninput = draw; draw();
     box.onclick = e => {
+      if (e.target.closest('[data-hist]')) return abrirHistorico();
       const c = e.target.closest('.card'); if (!c) return;
-      if (c.dataset.hist) abrirHistorico(); else abrirForm(byId(c.dataset.doc));
+      const id = c.dataset.doc, l = legacy.find(x => x.id === id);
+      if (l) window[l.fn](); else abrirForm(byId(id));
     };
     renderHistCount();
   }
