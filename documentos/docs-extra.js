@@ -62,7 +62,7 @@
           p(`Recebemos de <b>${esc(v.cliente)}</b>${v.doc ? ', CNPJ/CPF <b>' + esc(v.doc) + '</b>' : ''}, a importância de <b>${fmtR(val)}</b> (${ext(val)}), referente a <b>${esc(v.referente)}</b>, paga por <b>${esc(v.forma)}</b> em <b>${fmtData(v.data)}</b>.`) +
           box('VALOR RECEBIDO', fmtR(val)) +
           p('Damos plena e geral quitação do valor acima recebido' + (saldo > 0 ? `, ficando pendente o saldo de <b>${fmtR(saldo)}</b>, a ser pago conforme combinado` : '') + '.');
-        return wrap('RECIBO DE PAGAMENTO', e, v, corpo, [contratada, null]);
+        return wrap('RECIBO DE PAGAMENTO', e, v, corpo, [[B.razao, 'RECEBEDOR'], null], { rotA: 'Quem recebeu', rotB: 'Quem pagou' });
       },
       arq: (v, e) => 'recibo-' + slug(v.cliente) + '-' + (v.data || e.dataISO) },
 
@@ -98,7 +98,7 @@
       titulo: v => v.cliente, valor: v => fmtR(v.valor), validar: v => !(parseFloat(v.valor) > 0) ? 'Informe o valor' : '',
       html(v, e) {
         const val = parseFloat(v.valor), add = Number(v.prazoAdd) || 0;
-        const corpo = p(`Termo aditivo ao contrato <b>${esc(v.ref)}</b>, firmado entre as partes acima.`) +
+        const corpo = p(`Termo aditivo ao contrato de referência <b>${esc(v.ref)}</b>, firmado entre as partes acima.`) +
           sec('1. Do serviço adicional', esc(v.descricao)) + sec('2. Do motivo', esc(v.motivo) + '.') +
           sec('3. Do valor') + box('VALOR ADICIONAL', fmtR(val)) + p(`(${ext(val)}). <b>Pagamento:</b> ${esc(v.pagamento)}`) +
           sec('4. Do prazo', add > 0 ? `O prazo de execução fica acrescido de <b>${add} dia(s)</b>, contados da aprovação deste aditivo e da disponibilidade de acesso e materiais.` : 'Este aditivo não altera o prazo do contrato original, salvo atraso decorrente de causas previstas nele.') +
@@ -119,7 +119,7 @@
       html(v, e) {
         const parada = parseFloat(v.parada) || 0;
         const corpo = sec('Notificação') + p(`À <b>${esc(v.cliente)}</b>${v.doc ? ' (' + esc(v.doc) + ')' : ''}.`) +
-          p(`Pela presente, a CONTRATADA <b>notifica</b> que, desde <b>${fmtData(v.data)}</b>, a execução dos serviços do contrato <b>${esc(v.ref)}</b> encontra-se <b>paralisada</b>, pelo seguinte motivo, não imputável à CONTRATADA:`) +
+          p(`Pela presente, a CONTRATADA <b>notifica</b> que, desde <b>${fmtData(v.data)}</b>, a execução dos serviços do contrato de referência <b>${esc(v.ref)}</b> encontra-se <b>paralisada</b>, pelo seguinte motivo, não imputável à CONTRATADA:`) +
           sec('Motivo', esc(v.motivo)) + sec('Providências exigidas', esc(v.exigencia) + `\n\nPrazo para regularização: <b>${Number(v.prazo) || 3} dia(s)</b> a contar do recebimento desta notificação.`) +
           sec('Consequências', `Nos termos do contrato, o período de paralisação não é considerado atraso da CONTRATADA, o prazo de execução fica suspenso e passam a ser devidos os <b>custos adicionais</b> (diária de equipe parada${parada > 0 ? ', ' + fmtR(parada) + ' por dia' : ''}, mobilização, reagendamento e demais despesas). Persistindo a situação após o prazo acima, a CONTRATADA poderá <b>suspender definitivamente os serviços e rescindir o contrato por culpa da CONTRATANTE</b>, com a cobrança da multa e dos valores previstos na cláusula de rescisão.`) +
           p('A presente notificação também é válida se enviada por e-mail ou aplicativo de mensagens, conforme o contrato.');
