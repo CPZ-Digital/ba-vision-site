@@ -23,14 +23,15 @@
   const box = (rot, val) => `<table width="100%" cellpadding="0" cellspacing="0" style="background:${B.cor};margin:10px 0;page-break-inside:avoid;"><tr><td style="padding:9px 16px;color:#fff;font-size:12px;font-weight:700;">${rot}</td><td style="padding:9px 16px;color:#fff;font-size:18px;font-weight:700;text-align:right;">${val}</td></tr></table>`;
   const linha = t => t ? `<p style="margin:2px 0 0;font-size:11px;color:#555;">${t}</p>` : '';
 
-  function wrap(titulo, e, v, corpo, sigs) {
+  function wrap(titulo, e, v, corpo, sigs, opt) {
+    opt = opt || {};
     const partes = `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;page-break-inside:avoid;table-layout:fixed;"><tr>
       <td style="width:48%;padding:10px 12px;background:${B.corBg};border-left:4px solid ${B.cor};vertical-align:top;">
-        <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:${B.cor};text-transform:uppercase;letter-spacing:.6px;">Contratada</p>
+        <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:${B.cor};text-transform:uppercase;letter-spacing:.6px;">${opt.rotA || 'Contratada'}</p>
         <p style="margin:0;font-size:12px;font-weight:700;">${B.razao}</p>${linha('CNPJ: ' + B.cnpj)}${linha('Tel: ' + B.tel)}${linha('E-mail: ' + B.email)}</td>
       <td style="width:4%;"></td>
       <td style="width:48%;padding:10px 12px;background:#f9f9f9;border-left:4px solid #aaa;vertical-align:top;">
-        <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.6px;">Cliente / Contratante</p>
+        <p style="margin:0 0 5px;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.6px;">${opt.rotB || 'Cliente / Contratante'}</p>
         <p style="margin:0;font-size:12px;font-weight:700;">${esc(v.cliente)}</p>${linha(v.doc && 'CNPJ/CPF: ' + esc(v.doc))}${linha(v.tel && 'Tel: ' + esc(v.tel))}${linha(v.endereco && 'Local: ' + esc(v.endereco))}</td></tr></table>`;
     const col = s => s ? `<td style="padding-top:5px;text-align:center;"><p style="margin:0;font-size:11px;font-weight:700;color:#222;text-align:center;">${s[0]}</p><p style="margin:1px 0 0;font-size:10px;color:#666;text-align:center;">${s[1]}</p></td>` : '<td></td>';
     const assin = `<table width="100%" cellpadding="0" cellspacing="0" style="margin:34px 0 0;page-break-inside:avoid;"><tr>
@@ -180,9 +181,47 @@
           sec('Validade', 'A garantia vale mediante o pagamento integral do serviço e fica suspensa enquanto houver parcela vencida e não paga.');
         return wrap('TERMO DE GARANTIA', e, v, corpo, [contratada, contratante(v)]);
       },
-      arq: (v, e) => 'garantia-' + slug(v.cliente) + '-' + (v.concl || e.dataISO) }
+      arq: (v, e) => 'garantia-' + slug(v.cliente) + '-' + (v.concl || e.dataISO) },
+
+    { id: 'lucro', icon: '📊', nome: 'Divisão de Lucro da Obra', sub: 'Resumo interno entre sócios', margin: [12, 0, 18, 0],
+      campos: [
+        { k: 'cliente', l: 'Obra / cliente', req: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 }, { k: 'recebido', l: 'Valor total recebido (R$)', t: 'number', req: 1, half: 1 },
+        { k: 'material', l: 'Material (repasse) R$', t: 'number', def: '0', half: 1 }, { k: 'infra', l: 'Infraestrutura (repasse) R$', t: 'number', def: '0', half: 1 },
+        { k: 'dias', l: 'Dias de trabalho dos sócios', t: 'number', req: 1, half: 1 }, { k: 'diaria', l: 'Diária de cada sócio R$', t: 'number', def: brand === 'ba' ? '350' : '300', half: 1 },
+        { k: 'diasDiar', l: 'Diaristas: total de diárias', t: 'number', def: '0', half: 1 }, { k: 'valDiar', l: 'Valor da diária do diarista R$', t: 'number', def: '150', half: 1 },
+        { k: 'desl', l: 'Deslocamento R$ (vazio = R$50 × dias)', t: 'number', half: 1 }, { k: 'outros', l: 'Outros custos R$', t: 'number', def: '0', half: 1 },
+        { k: 'obs', l: 'Observações', t: 'textarea' }
+      ],
+      titulo: v => v.cliente, valor: v => fmtR(v.recebido), validar: v => !(parseFloat(v.recebido) > 0) ? 'Informe o valor recebido' : '',
+      html(v, e) {
+        const n = k => parseFloat(v[k]) || 0, ba = brand === 'ba';
+        const rec = n('recebido'), mat = n('material'), inf = n('infra'), dias = n('dias'), socios = ba ? 2 : 1;
+        const diarias = dias * n('diaria') * socios, diaristas = n('diasDiar') * n('valDiar');
+        const desl = v.desl === '' ? 50 * dias : n('desl'), out = n('outros');
+        const custos = mat + inf + diarias + diaristas + desl + out, pool = rec - custos;
+        const linhaT = (a, b, forte) => `<tr><td style="padding:6px 10px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;${forte ? 'font-weight:700;' : ''}">${a}</td><td style="padding:6px 10px;font-size:12px;color:#333;border-bottom:1px solid #e8e8e8;text-align:right;${forte ? 'font-weight:700;' : ''}">${b}</td></tr>`;
+        const tab = rows => `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px;page-break-inside:avoid;">${rows}</table>`;
+        const parteDe = pct => (pool > 0 ? pool * pct : 0);
+        const dSocio = dias * n('diaria');
+        const divisao = ba
+          ? [['Adriano', dSocio, 0.4], ['Bruno', dSocio, 0.4], ['Caixa da empresa', 0, 0.2]]
+          : [['Adriano', dSocio, 0.7], ['Caixa da empresa', 0, 0.3]];
+        const corpo = sec('Resultado da obra') + tab(
+            linhaT('Valor recebido', fmtR(rec), 1) + linhaT('(−) Material (repasse)', fmtR(mat)) + linhaT('(−) Infraestrutura (repasse)', fmtR(inf)) +
+            linhaT('(−) Diárias dos sócios (' + dias + ' dia(s) × ' + socios + ' × ' + fmtR(n('diaria')) + ')', fmtR(diarias)) +
+            linhaT('(−) Diaristas (' + n('diasDiar') + ' diária(s))', fmtR(diaristas)) + linhaT('(−) Deslocamento', fmtR(desl)) + linhaT('(−) Outros custos', fmtR(out)) +
+            linhaT('Lucro a dividir', fmtR(pool), 1)) +
+          (pool > 0
+            ? sec('Divisão') + tab(divisao.map(([nome, di, pc]) => linhaT(nome + ' — diária ' + fmtR(di) + ' + ' + Math.round(pc * 100) + '% do lucro (' + fmtR(parteDe(pc)) + ')', fmtR(di + parteDe(pc)), 1)).join('')) +
+              p('A diária é remuneração garantida pelo trabalho e não entra na divisão; apenas o lucro (resultado depois de todos os custos) é dividido nas proporções acima.')
+            : p('<b>Atenção:</b> a obra não gerou lucro a dividir (' + fmtR(pool) + '). As diárias dos sócios continuam sendo remuneração devida, e o resultado negativo deve ser coberto pelo caixa ou renegociado.')) +
+          (v.obs ? sec('Observações', esc(v.obs)) : '');
+        return wrap('DIVISÃO DE LUCRO DA OBRA', e, Object.assign({}, v, { doc: '', tel: '', endereco: '' }), corpo, ba ? [['Adriano', 'Sócio'], ['Bruno', 'Sócio']] : [['Adriano', 'Responsável'], null], { rotA: 'Empresa', rotB: 'Obra' });
+      },
+      arq: (v, e) => 'divisao-lucro-' + slug(v.cliente) + '-' + (v.data || e.dataISO) }
   ];
 
+  window.DOCS_UI = { wrap, sec, p, lista, box, linha, esc, fmtR, fmtData, hoje, slug, parseL, ext, B, brand };
   EXTRA.forEach(d => api.DOCS.push(d));
   api.remontar();
 })();
