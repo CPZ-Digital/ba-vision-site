@@ -13,6 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
+  const DOCS_VERSION = '2026-10-06.3';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -391,7 +392,7 @@
     const usados = new Set(); GRUPOS.forEach(g => g.ids.forEach(i => usados.add(i)));
     const grupos = GRUPOS.map(g => ({ t: g.t, ids: g.ids.filter(i => todos[i]) }));
     const sobra = Object.keys(todos).filter(i => !usados.has(i)); if (sobra.length) grupos.push({ t: '📄 Outros', ids: sobra });
-    box.innerHTML = `<div class="docs-top"><input class="docs-q" id="docs-q" type="search" placeholder="Buscar documento… (ex: contrato, recibo, nota)" value="${esc(q0)}"><button class="docs-hist-btn" data-hist="1">📂 Documentos gerados <span id="docs-hist-sub" style="font-weight:400;font-size:11px"></span></button></div><div id="docs-grupos"></div>`;
+    box.innerHTML = `<div class="docs-top"><input class="docs-q" id="docs-q" type="search" placeholder="Buscar documento… (ex: contrato, recibo, nota)" value="${esc(q0)}"><button class="docs-hist-btn" data-hist="1">📂 Documentos gerados <span id="docs-hist-sub" style="font-weight:400;font-size:11px"></span></button></div><div id="docs-grupos"></div><div style="text-align:center;color:#aaa;font-size:11px;margin:28px 0 8px">Central de Documentos · versão ${DOCS_VERSION}</div>`;
     const draw = () => {
       const q = $('docs-q').value.trim().toLowerCase();
       const html = grupos.map(g => {
