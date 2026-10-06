@@ -235,8 +235,8 @@
   /* ───────── GERAÇÃO DO PDF ───────── */
   function gerarPDF(doc, entry) {
     if (typeof html2pdf === 'undefined') { alert('html2pdf.bundle.min.js não carregou (precisa estar na mesma pasta da página).'); return Promise.resolve(); }
-    const ph = doc.build(entry.v, entry);
-    let html = window.DOCS_TPL[doc.id];
+    const ph = doc.html ? {} : doc.build(entry.v, entry);
+    let html = doc.html ? doc.html(entry.v, entry) : window.DOCS_TPL[doc.id];
     Object.entries(ph).forEach(([k, val]) => { html = html.split(k).join(val); });
     const nomeArq = doc.arq(entry.v, entry) + '-' + hora() + '.pdf';
     return html2pdf().from(html).set({
@@ -366,6 +366,7 @@
     };
     renderHistCount();
   }
-  window.DOCS_API = { DOCS, gerarPDF, abrirForm, abrirHistorico };
+  window.DOCS_API = { DOCS, gerarPDF, abrirForm, abrirHistorico, remontar: montar };
+  window.DOCS_EXTENSO = valorExtenso;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
 })();
