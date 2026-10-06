@@ -297,7 +297,7 @@
     let inp;
     if (f.t === 'textarea') inp = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(val == null ? '' : val)}</textarea>`;
     else if (f.t === 'select') inp = `<select id="${id}">${f.opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`;
-    else inp = `<input id="${id}" type="${f.t || 'text'}"${f.t === 'number' ? ' step="any" min="0"' : ''} value="${v}" placeholder="${esc(f.ph || '')}">`;
+    else inp = `<input id="${id}" type="${f.t === 'number' ? 'text' : (f.t || 'text')}"${f.t === 'number' ? ' inputmode="decimal" autocomplete="off"' : ''} value="${v}" placeholder="${esc(f.ph || '')}">`;
     return `<div class="field">${lab}${inp}</div>`;
   }
 
@@ -318,9 +318,20 @@
     $('docs-ov').classList.add('open');
   }
 
+  // aceita formato brasileiro: "5.000" = 5000, "5.000,50" = 5000.50, "1,5" = 1.5
+  function normNum(str) {
+    let t = String(str).replace(/[R$\s]/g, '');
+    if (!t) return '';
+    if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+    return t;
+  }
+
   async function submeter(doc) {
     const v = {};
-    doc.campos.forEach(f => { v[f.k] = $('dc-' + f.k).value.trim(); });
+    doc.campos.forEach(f => { const raw = $('dc-' + f.k).value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
+    const ruim = doc.campos.find(f => f.t === 'number' && v[f.k] !== '' && !isFinite(Number(v[f.k])));
+    if (ruim) { alert('Valor inválido em: ' + ruim.l); return; }
     const falta = doc.campos.find(f => f.req && !v[f.k]);
     if (falta) { alert('Preencha: ' + falta.l); return; }
     const erro = doc.validar(v);
