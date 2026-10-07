@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.2';
+  const DOCS_VERSION = '2026-10-07.3';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -94,7 +94,9 @@
     else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — custo diário mínimo da equipe' + apos + ')'; }
     else { modo = 'nenhum'; usado = 0; texto = '(conforme orçamento a ser apresentado)'; }
     const minTotal = dias > 0 ? piso * dias : 0, abaixo = valor > 0 && minTotal > 0 && valor < minTotal;
-    return { modo, usado, div, piso, dias, toler, texto, valor, minTotal, abaixo };
+    const mg = parseFloat(v.margem), margem = isFinite(mg) && mg >= 0 ? mg : 25;
+    const alvo = minTotal * (1 + margem / 100), margemAtual = minTotal > 0 && valor > 0 ? (valor - minTotal) / minTotal * 100 : 0;
+    return { modo, usado, div, piso, dias, toler, texto, valor, minTotal, abaixo, margem, alvo, margemAtual };
   }
   function calcParadaHtml(v) {
     const c = calcParada(v), l = (a, b, forte) => `<div style="display:flex;justify-content:space-between;gap:10px;padding:2px 0;${forte ? 'font-weight:700;' : ''}"><span>${a}</span><span>${b}</span></div>`;
@@ -102,6 +104,7 @@
     let corpo = l('Valor do contrato ÷ dias previstos', c.div > 0 ? fmtR(n('valor')) + ' ÷ ' + c.dias + ' = <b>' + fmtR(c.div) + '</b>' : '<i>informe valor e dias previstos</i>');
     corpo += l('Piso: custo da equipe (' + n('eqSocios') + ' sócio(s) + ' + n('eqDiar') + ' diarista(s) + deslocamento)', '<b>' + fmtR(c.piso) + '</b>');
     if (c.minTotal > 0) corpo += l('Custo mínimo da obra: piso × dias previstos', fmtR(c.piso) + ' × ' + c.dias + ' = <b>' + fmtR(c.minTotal) + '</b>');
+    if (c.minTotal > 0) corpo += l('Valor-alvo: custo + ' + c.margem + '% de margem', '<b>' + fmtR(c.alvo) + '</b>');
     let veredito;
     if (c.modo === 'manual') veredito = ['#0b3d91', '#eaf1ff', 'Valor manual: ' + fmtR(c.usado) + ' por dia (o cálculo automático foi ignorado).'];
     else if (c.modo === 'div') veredito = ['#15803d', '#f0fdf4', '✔ Vale a divisão: ' + fmtR(c.usado) + ' por dia — ' + fmtR(c.usado - c.piso) + ' a mais que o piso. Cada semana parada (5 dias) = ' + fmtR(c.usado * 5) + '.'];
@@ -110,7 +113,8 @@
     else veredito = ['#6b7280', '#f3f4f6', 'Preencha a equipe para calcular a diária parada.'];
     let minBox = '';
     if (c.abaixo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fef2f2;color:#b91c1c;font-weight:700">❌ Valor do contrato ABAIXO do custo mínimo da obra: faltam ${fmtR(c.minTotal - c.valor)}. Valor mínimo para fechar: ${fmtR(c.minTotal)}.</div>`;
-    else if (c.minTotal > 0 && c.valor > 0) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#f0fdf4;color:#15803d;font-weight:600">✔ Valor do contrato cobre o custo mínimo da obra. Folga: ${fmtR(c.valor - c.minTotal)} (${Math.round((c.valor - c.minTotal) / c.minTotal * 100)}% acima do mínimo).</div>`;
+    else if (c.minTotal > 0 && c.valor > 0 && c.valor < c.alvo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fffbeb;color:#b45309;font-weight:700">⚠ Faixa de negociação: cobre o custo, mas a margem é ${c.margemAtual.toFixed(1).replace('.', ',')}% (alvo ${c.margem}%). Lucro previsto ${fmtR(c.valor - c.minTotal)}; faltam ${fmtR(c.alvo - c.valor)} para chegar ao alvo de ${fmtR(c.alvo)}.</div>`;
+    else if (c.minTotal > 0 && c.valor > 0) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#f0fdf4;color:#15803d;font-weight:600">✔ Atinge a margem desejada: ${c.margemAtual.toFixed(1).replace('.', ',')}% sobre o custo (alvo ${c.margem}%). Lucro previsto: ${fmtR(c.valor - c.minTotal)}.</div>`;
     return `<div style="margin:12px 0 4px;padding:10px 12px;border:1px solid #c9d6ee;border-radius:8px;background:#f8faff;font-size:12px;color:#334"><div style="font-weight:700;margin-bottom:4px;color:#0b3d91">📐 Diária de equipe parada — cálculo automático</div>${corpo}<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:${veredito[1]};color:${veredito[0]};font-weight:600">${veredito[2]}</div>${minBox}</div>`;
   }
 
@@ -131,6 +135,7 @@
         { k: 'eqSocios', l: 'Sócios na equipe', t: 'number', def: B.ba ? '2' : '1', half: 1 }, { k: 'valSocio', l: 'Diária de cada sócio R$', t: 'number', def: B.ba ? '350' : '300', half: 1 },
         { k: 'eqDiar', l: 'Diaristas na equipe', t: 'number', def: '1', half: 1 }, { k: 'valDiar', l: 'Diária do diarista R$', t: 'number', def: '150', half: 1 },
         { k: 'deslDia', l: 'Deslocamento por dia R$', t: 'number', def: '60', half: 1 }, { k: 'parada', l: 'Diária parada manual R$ (opcional, substitui o cálculo)', t: 'number', half: 1 },
+        { k: 'margem', l: 'Margem mínima desejada (%) sobre o custo', t: 'number', def: '25', half: 1 },
         { k: 'prazo', l: 'Prazo de execução', def: 'aprox. 30 dias', half: 1 }, { k: 'garantia', l: 'Garantia do serviço', def: '90 dias', half: 1 },
         { k: 'pagamento', l: 'Forma de pagamento', t: 'textarea', def: PAG_DEFAULT },
         { k: 'obs', l: 'Condições especiais (opcional)', t: 'textarea' },
