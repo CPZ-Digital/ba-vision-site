@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.1';
+  const DOCS_VERSION = '2026-10-07.2';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -93,20 +93,25 @@
     else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia' + apos + ')'; }
     else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — custo diário mínimo da equipe' + apos + ')'; }
     else { modo = 'nenhum'; usado = 0; texto = '(conforme orçamento a ser apresentado)'; }
-    return { modo, usado, div, piso, dias, toler, texto };
+    const minTotal = dias > 0 ? piso * dias : 0, abaixo = valor > 0 && minTotal > 0 && valor < minTotal;
+    return { modo, usado, div, piso, dias, toler, texto, valor, minTotal, abaixo };
   }
   function calcParadaHtml(v) {
     const c = calcParada(v), l = (a, b, forte) => `<div style="display:flex;justify-content:space-between;gap:10px;padding:2px 0;${forte ? 'font-weight:700;' : ''}"><span>${a}</span><span>${b}</span></div>`;
     const n = k => parseFloat(v[k]) || 0;
     let corpo = l('Valor do contrato ÷ dias previstos', c.div > 0 ? fmtR(n('valor')) + ' ÷ ' + c.dias + ' = <b>' + fmtR(c.div) + '</b>' : '<i>informe valor e dias previstos</i>');
     corpo += l('Piso: custo da equipe (' + n('eqSocios') + ' sócio(s) + ' + n('eqDiar') + ' diarista(s) + deslocamento)', '<b>' + fmtR(c.piso) + '</b>');
+    if (c.minTotal > 0) corpo += l('Custo mínimo da obra: piso × dias previstos', fmtR(c.piso) + ' × ' + c.dias + ' = <b>' + fmtR(c.minTotal) + '</b>');
     let veredito;
     if (c.modo === 'manual') veredito = ['#0b3d91', '#eaf1ff', 'Valor manual: ' + fmtR(c.usado) + ' por dia (o cálculo automático foi ignorado).'];
     else if (c.modo === 'div') veredito = ['#15803d', '#f0fdf4', '✔ Vale a divisão: ' + fmtR(c.usado) + ' por dia — ' + fmtR(c.usado - c.piso) + ' a mais que o piso. Cada semana parada (5 dias) = ' + fmtR(c.usado * 5) + '.'];
     else if (c.modo === 'piso' && c.div > 0) veredito = ['#b45309', '#fffbeb', '⚠ A divisão (' + fmtR(c.div) + ') ficou abaixo do piso. Vale o piso: ' + fmtR(c.usado) + ' por dia. Cada semana parada (5 dias) = ' + fmtR(c.usado * 5) + '.'];
     else if (c.modo === 'piso') veredito = ['#6b7280', '#f3f4f6', 'Sem os dias previstos, vale só o piso de ' + fmtR(c.usado) + ' por dia. Informe os dias previstos para comparar com a divisão.'];
     else veredito = ['#6b7280', '#f3f4f6', 'Preencha a equipe para calcular a diária parada.'];
-    return `<div style="margin:12px 0 4px;padding:10px 12px;border:1px solid #c9d6ee;border-radius:8px;background:#f8faff;font-size:12px;color:#334"><div style="font-weight:700;margin-bottom:4px;color:#0b3d91">📐 Diária de equipe parada — cálculo automático</div>${corpo}<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:${veredito[1]};color:${veredito[0]};font-weight:600">${veredito[2]}</div></div>`;
+    let minBox = '';
+    if (c.abaixo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fef2f2;color:#b91c1c;font-weight:700">❌ Valor do contrato ABAIXO do custo mínimo da obra: faltam ${fmtR(c.minTotal - c.valor)}. Valor mínimo para fechar: ${fmtR(c.minTotal)}.</div>`;
+    else if (c.minTotal > 0 && c.valor > 0) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#f0fdf4;color:#15803d;font-weight:600">✔ Valor do contrato cobre o custo mínimo da obra. Folga: ${fmtR(c.valor - c.minTotal)} (${Math.round((c.valor - c.minTotal) / c.minTotal * 100)}% acima do mínimo).</div>`;
+    return `<div style="margin:12px 0 4px;padding:10px 12px;border:1px solid #c9d6ee;border-radius:8px;background:#f8faff;font-size:12px;color:#334"><div style="font-weight:700;margin-bottom:4px;color:#0b3d91">📐 Diária de equipe parada — cálculo automático</div>${corpo}<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:${veredito[1]};color:${veredito[0]};font-weight:600">${veredito[2]}</div>${minBox}</div>`;
   }
 
   const PAG_DEFAULT = 'a) 30% (sinal) no ato da assinatura;\nb) 40% na metade da execução;\nc) 30% na conclusão e entrega dos serviços.';
@@ -132,6 +137,7 @@
         { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
       ],
       calc: v => calcParadaHtml(v),
+      aviso: v => { const c = calcParada(v); return c.abaixo ? '⚠️ ATENÇÃO — valor abaixo do custo mínimo da obra\n\nContrato: ' + fmtR(c.valor) + '\nCusto mínimo da equipe: ' + fmtR(c.piso) + ' × ' + c.dias + ' dias = ' + fmtR(c.minTotal) + '\nFaltam ' + fmtR(c.minTotal - c.valor) + ' — fechar assim dá prejuízo na mão de obra.' : ''; },
       titulo: v => v.cliente, valor: v => fmtR(v.valor),
       validar: v => !(parseFloat(v.valor) > 0) ? 'Informe o valor total' : '',
       build(v, e) {
@@ -406,6 +412,8 @@
     if (falta) { alert('Preencha: ' + falta.l); return; }
     const erro = doc.validar(v);
     if (erro) { alert(erro); return; }
+    const av = doc.aviso ? doc.aviso(v) : '';
+    if (av && !confirm(av + '\n\nGerar o documento mesmo assim?')) return;
     const rr = lookupRep(v.doc);
     if (rr && (rr.nivel === 'mal' || rr.nivel === 'atencao') &&
         !confirm('⚠️ ATENÇÃO — ' + NIVEIS[rr.nivel][0] + '\n\n' + rr.nome + ' (' + fmtDoc(rr.doc) + ')\n' + (rr.obs ? rr.obs + '\n' : '') + 'Cadastrado em ' + fmtData(rr.data) + '\n\nGerar o documento mesmo assim?')) return;
