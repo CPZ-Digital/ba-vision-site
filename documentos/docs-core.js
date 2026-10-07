@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-06.7';
+  const DOCS_VERSION = '2026-10-07.1';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -81,6 +81,34 @@
   });
 
   /* ───────── DEFINIÇÃO DOS DOCUMENTOS ───────── */
+  // Diária de equipe parada: o MAIOR entre (valor do contrato ÷ dias previstos) e o custo diário da equipe (piso).
+  function calcParada(v) {
+    const n = k => parseFloat(v[k]) || 0;
+    const valor = n('valor'), dias = n('diasPrev'), manual = n('parada'), toler = Math.max(0, Math.floor(n('toler')));
+    const piso = n('eqSocios') * n('valSocio') + n('eqDiar') * n('valDiar') + n('deslDia');
+    const div = valor > 0 && dias > 0 ? valor / dias : 0;
+    const apos = toler > 0 ? ', contados a partir do ' + (toler + 1) + 'º dia consecutivo de paralisação' : '';
+    let modo, usado, texto;
+    if (manual > 0) { modo = 'manual'; usado = manual; texto = '(' + fmtR(manual) + ' por dia' + apos + ')'; }
+    else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia' + apos + ')'; }
+    else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — custo diário mínimo da equipe' + apos + ')'; }
+    else { modo = 'nenhum'; usado = 0; texto = '(conforme orçamento a ser apresentado)'; }
+    return { modo, usado, div, piso, dias, toler, texto };
+  }
+  function calcParadaHtml(v) {
+    const c = calcParada(v), l = (a, b, forte) => `<div style="display:flex;justify-content:space-between;gap:10px;padding:2px 0;${forte ? 'font-weight:700;' : ''}"><span>${a}</span><span>${b}</span></div>`;
+    const n = k => parseFloat(v[k]) || 0;
+    let corpo = l('Valor do contrato ÷ dias previstos', c.div > 0 ? fmtR(n('valor')) + ' ÷ ' + c.dias + ' = <b>' + fmtR(c.div) + '</b>' : '<i>informe valor e dias previstos</i>');
+    corpo += l('Piso: custo da equipe (' + n('eqSocios') + ' sócio(s) + ' + n('eqDiar') + ' diarista(s) + deslocamento)', '<b>' + fmtR(c.piso) + '</b>');
+    let veredito;
+    if (c.modo === 'manual') veredito = ['#0b3d91', '#eaf1ff', 'Valor manual: ' + fmtR(c.usado) + ' por dia (o cálculo automático foi ignorado).'];
+    else if (c.modo === 'div') veredito = ['#15803d', '#f0fdf4', '✔ Vale a divisão: ' + fmtR(c.usado) + ' por dia — ' + fmtR(c.usado - c.piso) + ' a mais que o piso. Cada semana parada (5 dias) = ' + fmtR(c.usado * 5) + '.'];
+    else if (c.modo === 'piso' && c.div > 0) veredito = ['#b45309', '#fffbeb', '⚠ A divisão (' + fmtR(c.div) + ') ficou abaixo do piso. Vale o piso: ' + fmtR(c.usado) + ' por dia. Cada semana parada (5 dias) = ' + fmtR(c.usado * 5) + '.'];
+    else if (c.modo === 'piso') veredito = ['#6b7280', '#f3f4f6', 'Sem os dias previstos, vale só o piso de ' + fmtR(c.usado) + ' por dia. Informe os dias previstos para comparar com a divisão.'];
+    else veredito = ['#6b7280', '#f3f4f6', 'Preencha a equipe para calcular a diária parada.'];
+    return `<div style="margin:12px 0 4px;padding:10px 12px;border:1px solid #c9d6ee;border-radius:8px;background:#f8faff;font-size:12px;color:#334"><div style="font-weight:700;margin-bottom:4px;color:#0b3d91">📐 Diária de equipe parada — cálculo automático</div>${corpo}<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:${veredito[1]};color:${veredito[0]};font-weight:600">${veredito[2]}</div></div>`;
+  }
+
   const PAG_DEFAULT = 'a) 30% (sinal) no ato da assinatura;\nb) 40% na metade da execução;\nc) 30% na conclusão e entrega dos serviços.';
 
   const DOCS = [
@@ -94,18 +122,22 @@
         { k: 'escopo', l: 'Escopo do serviço', t: 'textarea', req: 1, ph: 'Ex: instalação de 16 câmeras IP, passagem de cabos, configuração do NVR…' },
         { k: 'valor', l: 'Valor total (R$)', t: 'number', req: 1, half: 1 }, { k: 'inicio', l: 'Início', t: 'date', def: hoje, half: 1 },
         { k: 'fim', l: 'Previsão de conclusão', t: 'date', half: 1 }, { k: 'multa', l: 'Multa de rescisão (%)', t: 'number', def: '20', half: 1 },
-        { k: 'parada', l: 'Diária de equipe parada R$ (opcional)', t: 'number', ph: 'Ex: 1000' },
+        { k: 'diasPrev', l: 'Dias previstos de obra (base do cálculo da diária parada)', t: 'number', half: 1 }, { k: 'toler', l: 'Dias de tolerância antes de cobrar', t: 'number', def: '1', half: 1 },
+        { k: 'eqSocios', l: 'Sócios na equipe', t: 'number', def: B.ba ? '2' : '1', half: 1 }, { k: 'valSocio', l: 'Diária de cada sócio R$', t: 'number', def: B.ba ? '350' : '300', half: 1 },
+        { k: 'eqDiar', l: 'Diaristas na equipe', t: 'number', def: '1', half: 1 }, { k: 'valDiar', l: 'Diária do diarista R$', t: 'number', def: '150', half: 1 },
+        { k: 'deslDia', l: 'Deslocamento por dia R$', t: 'number', def: '60', half: 1 }, { k: 'parada', l: 'Diária parada manual R$ (opcional, substitui o cálculo)', t: 'number', half: 1 },
         { k: 'prazo', l: 'Prazo de execução', def: 'aprox. 30 dias', half: 1 }, { k: 'garantia', l: 'Garantia do serviço', def: '90 dias', half: 1 },
         { k: 'pagamento', l: 'Forma de pagamento', t: 'textarea', def: PAG_DEFAULT },
         { k: 'obs', l: 'Condições especiais (opcional)', t: 'textarea' },
         { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
       ],
+      calc: v => calcParadaHtml(v),
       titulo: v => v.cliente, valor: v => fmtR(v.valor),
       validar: v => !(parseFloat(v.valor) > 0) ? 'Informe o valor total' : '',
       build(v, e) {
         const valor = parseFloat(v.valor);
         const multa = Math.min(100, Math.max(0, Number(v.multa) || 20));
-        const parada = parseFloat(v.parada) || 0;
+        const par = calcParada(v);
         return Object.assign(base(), {
           '{{numero}}': String(e.id).slice(-6), '{{dataFmt}}': fmtData(e.dataISO),
           '{{razao_social}}': B.razao.replace(/&/g, '&amp;'),
@@ -115,7 +147,7 @@
           '{{inicio}}': fmtData(v.inicio) || 'a definir', '{{fim}}': fmtData(v.fim) || 'a definir',
           '{{valor}}': fmtR(valor), '{{valor_extenso}}': valorExtenso(valor), '{{pagamento}}': esc(v.pagamento || 'A combinar.'),
           '{{garantia}}': esc(v.garantia || '90 dias'), '{{multa}}': String(multa),
-          '{{diaria_parada}}': parada > 0 ? '(' + fmtR(parada) + ' por dia)' : '(conforme orçamento a ser apresentado)',
+          '{{diaria_parada}}': par.texto,
           '{{test1_nome}}': esc(v.t1 || blank), '{{test1_cpf}}': blank, '{{test2_nome}}': esc(v.t2 || blank), '{{test2_cpf}}': blank,
           '{{obs_block}}': v.obs ? `<h3>Cláusula 24ª — Das Condições Especiais</h3><p style="white-space:pre-wrap;">${esc(v.obs)}</p>` : ''
         });
@@ -326,6 +358,11 @@
       el.style.display = on ? '' : 'none';
     });
     $('docs-b').onchange = refreshDeps; refreshDeps();
+    if (doc.calc) {
+      $('docs-b').insertAdjacentHTML('beforeend', '<div id="docs-calc"></div>');
+      const updCalc = () => { $('docs-calc').innerHTML = doc.calc(lerV(doc)); };
+      $('docs-b').oninput = updCalc; updCalc();
+    } else { $('docs-b').oninput = null; }
     const di = $('dc-doc'); if (di) { const upd = () => { const r = lookupRep(di.value); $('rep-hint').innerHTML = r ? repHintHtml(r) : ''; }; di.addEventListener('input', upd); upd(); }
     $('docs-f').innerHTML = `<span class="toast" id="docs-toast">Gerando PDF...</span><button class="btn btn-cancel" id="docs-c">Cancelar</button><button class="btn btn-pdf" id="docs-g">⬇ Gerar PDF</button>`;
     $('docs-c').onclick = fechar;
@@ -340,6 +377,13 @@
     if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
     else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
     return t;
+  }
+
+  // valores atuais do formulário (mesma normalização do envio), para o cálculo ao vivo
+  function lerV(doc) {
+    const v = {};
+    doc.campos.forEach(f => { if (f.t === 'foto') return; const el = $('dc-' + f.k); if (!el) return; if (f.t === 'check') { v[f.k] = [...el.querySelectorAll('input:checked')].map(i => i.value).join('|'); return; } const raw = el.value.trim(); v[f.k] = f.t === 'number' ? normNum(raw) : raw; });
+    return v;
   }
 
   // lê e reduz as fotos escolhidas (máx. 6, lado maior 900px, JPEG) para caberem no PDF
