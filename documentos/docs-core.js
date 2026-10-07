@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.4';
+  const DOCS_VERSION = '2026-10-07.5';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -87,11 +87,13 @@
     const valor = n('valor'), dias = n('diasPrev'), manual = n('parada'), toler = Math.max(0, Math.floor(n('toler')));
     const piso = n('eqSocios') * n('valSocio') + n('eqDiar') * n('valDiar') + n('deslDia');
     const div = valor > 0 && dias > 0 ? valor / dias : 0;
+    const pl = (q, um, vv) => q + ' ' + (q === 1 ? um : vv);
+    const eq = pl(n('eqSocios'), 'sócio', 'sócios') + (n('eqDiar') > 0 ? ' e ' + pl(n('eqDiar'), 'diarista', 'diaristas') : '');
     const apos = toler > 0 ? ', contados a partir do ' + (toler + 1) + 'º dia consecutivo de paralisação' : '';
     let modo, usado, texto;
     if (manual > 0) { modo = 'manual'; usado = manual; texto = '(' + fmtR(manual) + ' por dia' + apos + ')'; }
-    else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia' + apos + ')'; }
-    else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — custo diário mínimo da equipe' + apos + ')'; }
+    else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia, correspondente à equipe prevista de ' + eq + apos + ')'; }
+    else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — custo diário mínimo da equipe prevista de ' + eq + apos + ')'; }
     else { modo = 'nenhum'; usado = 0; texto = '(conforme orçamento a ser apresentado)'; }
     const minTotal = dias > 0 ? piso * dias : 0, abaixo = valor > 0 && minTotal > 0 && valor < minTotal;
     const mg = parseFloat(v.margem), margem = isFinite(mg) && mg >= 0 ? mg : 25;
@@ -103,6 +105,7 @@
     const n = k => parseFloat(v[k]) || 0;
     let corpo = l('Valor do contrato ÷ dias previstos', c.div > 0 ? fmtR(n('valor')) + ' ÷ ' + c.dias + ' = <b>' + fmtR(c.div) + '</b>' : '<i>informe valor e dias previstos</i>');
     corpo += l('Piso: custo da equipe (' + n('eqSocios') + ' sócio(s) + ' + n('eqDiar') + ' diarista(s) + deslocamento)', '<b>' + fmtR(c.piso) + '</b>');
+    if (c.minTotal > 0) corpo += `<div style="font-size:11px;color:#556;padding:2px 0 4px">Mínimo garantido na obra inteira (${c.dias} dias): sócios ${fmtR(n('eqSocios') * n('valSocio') * c.dias)} + diaristas ${fmtR(n('eqDiar') * n('valDiar') * c.dias)} + deslocamento ${fmtR(n('deslDia') * c.dias)}</div>`;
     if (c.minTotal > 0) corpo += l('Custo mínimo da obra: piso × dias previstos', fmtR(c.piso) + ' × ' + c.dias + ' = <b>' + fmtR(c.minTotal) + '</b>');
     if (c.minTotal > 0) corpo += l('Valor-alvo: custo + ' + c.margem + '% de margem', '<b>' + fmtR(c.alvo) + '</b>');
     let veredito;
