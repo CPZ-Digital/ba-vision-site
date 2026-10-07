@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.7';
+  const DOCS_VERSION = '2026-10-07.8';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -526,7 +526,7 @@
 
   const GRUPOS = [
     { t: '📱 Apps por assinatura', ids: ['L:barbearia', 'L:smart', 'licenca', 'lgpd'] },
-    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'visita', 'loc', 'recmat', 'aditivo', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
+    { t: '📹 Obras e CFTV', ids: ['inst', 'mo', 'manut', 'visita', 'loc', 'recmat', 'aditivo', 'instr', 'notif', 'aceite', 'garantia', 'os', 'nota'] },
     { t: '🤝 Vendedores e indicação', ids: ['L:referral', 'parceria', 'comissao'] },
     { t: '💰 Financeiro e sócios', ids: ['recibo', 'lucro'] },
     { t: '👥 Clientes', ids: ['rep'] }

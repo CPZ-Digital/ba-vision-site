@@ -14,6 +14,7 @@
   const hoje = () => new Date().toISOString().slice(0, 10);
   const slug = s => String(s).trim().replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'cliente';
   const ext = v => window.DOCS_EXTENSO(v);
+  const blankRef = '_______________';
   const parseL = t => String(t || '').split('\n').map(l => l.trim()).filter(Boolean);
 
   const sec = (t, c) => {
@@ -186,6 +187,36 @@
       },
       arq: (v, e) => 'garantia-' + slug(v.cliente) + '-' + (v.concl || e.dataISO) },
 
+    { id: 'instr', icon: '✍️', nome: 'Registro de Instrução do Cliente', sub: 'Quando ele insiste contra a sua recomendação', margin: [12, 0, 18, 0],
+      campos: [
+        { k: 'cliente', l: 'Contratante (empresa/cliente)', req: 1 }, { k: 'doc', l: 'CNPJ/CPF', half: 1 }, { k: 'tel', l: 'Telefone', half: 1 },
+        { k: 'endereco', l: 'Local da obra' }, { k: 'ref', l: 'Contrato (nº / data)', half: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 },
+        { k: 'quem', l: 'Quem deu a instrução (nome e cargo)', req: 1, half: 1 }, { k: 'forma', l: 'Como foi dada', t: 'select', opts: [['no local, verbalmente', 'No local, verbalmente'], ['por mensagem (WhatsApp)', 'Por mensagem (WhatsApp)'], ['por e-mail', 'Por e-mail'], ['em reunião', 'Em reunião']], half: 1 },
+        { k: 'instrucao', l: 'O que o cliente quer que seja feito', t: 'textarea', req: 1, ph: 'Ex: instalar a câmera 5 voltada para a janela, a 2,2 m do chão' },
+        { k: 'recomendacao', l: 'O que a contratada recomenda', t: 'textarea', req: 1, ph: 'Ex: recomendamos instalar a 3 m e voltada para o portão, para evitar contraluz e ângulo cego' },
+        { k: 'riscos', l: 'Riscos e consequências informados (opcional)', t: 'textarea', ph: 'Ex: imagem estourada pela luz da janela; risco de dano à câmera' },
+        { k: 'acao', l: 'Decisão', t: 'select', opts: [['executar', 'Cliente mantém — a contratada executa por conta e risco dele'], ['recusa', 'Contratada recusa executar (risco a pessoas ou norma técnica)']] },
+        { k: 'custo', l: 'Custo adicional R$ (se houver)', t: 'number', half: 1 }, { k: 'prazoAdd', l: 'Prazo adicional (dias)', t: 'number', half: 1 },
+        { k: 'tecnico', l: 'Técnico que registra' }
+      ],
+      titulo: v => v.cliente, valor: () => '', validar: () => '',
+      html(v, e) {
+        const custo = parseFloat(v.custo) || 0, add = Number(v.prazoAdd) || 0;
+        const decisao = v.acao === 'recusa'
+          ? p('A CONTRATADA <b>não executará</b> a instrução acima, por oferecer risco real a pessoas ou violar norma técnica (cláusula 13.1 do contrato). A recusa não configura descumprimento. Se houver paralisação por essa causa, aplica-se a Cláusula 5ª do contrato.')
+          : p('O CONTRATANTE, ciente da recomendação e dos riscos acima, <b>mantém a instrução</b> e autoriza a execução como determinou, <b>por sua conta e risco</b>. Declara que o resultado dessa decisão (inclusive cobertura de imagem, desempenho ou segurança) é de sua responsabilidade e <b>não constitui defeito de execução</b> nem é coberto pela garantia, nos termos das cláusulas 1.4 a 1.6, 10ª e 16.3 do contrato.');
+        const extra = (custo > 0 || add > 0)
+          ? p(`Esta instrução implica serviço adicional${custo > 0 ? ' no valor de <b>' + fmtR(custo) + '</b>' : ''}${add > 0 ? (custo > 0 ? ' e' : '') + ' prazo adicional de <b>' + add + ' dia(s)</b>' : ''}, a formalizar por aditivo antes da execução.`)
+          : '';
+        const corpo = p(`Registro vinculado ao contrato <b>${esc(v.ref) || blankRef}</b>${v.endereco ? ', obra em <b>' + esc(v.endereco) + '</b>' : ''}.`) +
+          sec('1. Instrução do contratante', esc(v.instrucao) + `\n\n<span style="font-size:11px;color:#666">Dada por <b>${esc(v.quem)}</b>, ${esc(v.forma || 'no local, verbalmente')}, em ${fmtData(v.data)}.</span>`) +
+          sec('2. Recomendação da contratada', esc(v.recomendacao)) +
+          (v.riscos ? sec('3. Riscos e consequências informados', esc(v.riscos)) : '') +
+          sec(v.riscos ? '4. Decisão' : '3. Decisão') + decisao + extra +
+          p('<span style="font-size:11px;color:#666;">Este registro integra o contrato. Pode ser assinado eletronicamente (por exemplo, gov.br); nesse caso as testemunhas são dispensadas.</span>');
+        return wrap('REGISTRO DE INSTRUÇÃO DO CLIENTE', e, v, corpo, [[esc(v.tecnico) || B.razao, 'CONTRATADA'], [esc(v.quem), 'CONTRATANTE — ' + esc(v.cliente)]], { rotA: 'Contratada', rotB: 'Contratante' });
+      },
+      arq: (v, e) => 'registro-instrucao-' + slug(v.cliente) + '-' + (v.data || e.dataISO) },
     { id: 'lucro', icon: '📊', nome: 'Divisão de Lucro da Obra', sub: 'Resumo interno entre sócios', margin: [12, 0, 18, 0],
       campos: [
         { k: 'cliente', l: 'Obra / cliente', req: 1 }, { k: 'data', l: 'Data', t: 'date', def: hoje, half: 1 }, { k: 'recebido', l: 'Valor total recebido (R$)', t: 'number', req: 1, half: 1 },
