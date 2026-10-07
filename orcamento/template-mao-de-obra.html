@@ -46,7 +46,7 @@
     <h3>Cláusula 4ª — Do Prazo de Execução</h3>
     <p><b>4.1.</b> Os serviços terão início em <b>{{inicio}}</b> e previsão de conclusão em <b>{{fim}}</b> ({{prazo}}), condicionados à liberação das áreas, ao fornecimento dos materiais e ao pagamento da parcela inicial.</p>
     <p><b>4.2.</b> O prazo é <b>estimativo</b> e será automaticamente prorrogado, sem penalidade à CONTRATADA, em razão de: alteração de escopo; atraso de materiais; falta de acesso ou de liberação de áreas; interferência de outras equipes ou da obra; chuvas e condições climáticas; condições ocultas do local; inadimplência; caso fortuito ou força maior.</p>
-    <p><b>4.3.</b> O início dos serviços depende do pagamento da parcela de sinal. Sem ele, a CONTRATADA não é obrigada a mobilizar equipe ou reservar agenda.</p>
+    <p><b>4.3.</b> O início dos serviços depende do pagamento da parcela de sinal. Se o sinal não for pago em até <b>5 (cinco) dias</b> da assinatura, o contrato se desfaz de pleno direito, <b>sem multa para nenhuma das partes</b>, e a CONTRATADA fica livre para dispor de sua agenda.</p>
     </div>
 
     <div class="cl" style="page-break-inside:avoid;">
@@ -83,7 +83,7 @@
     <p style="white-space:pre-wrap;"><b>9.2.</b> Forma de pagamento: {{pagamento}}</p>
     <p><b>9.3.</b> Os pagamentos serão feitos exclusivamente por PIX, chave CNPJ {{cnpj}}, de titularidade da CONTRATADA, ou outro meio expressamente informado por ela por escrito. Pagamentos feitos a terceiros ou por outros meios não serão considerados quitação.</p>
     <p><b>9.4.</b> O atraso em qualquer parcela sujeita a CONTRATANTE a <b>multa moratória de 2%</b> sobre o valor em atraso, <b>juros de 1% ao mês</b> pro rata die e <b>correção monetária pelo IPCA</b>, sem prejuízo do disposto nos itens seguintes.</p>
-    <p><b>9.5.</b> O atraso superior a <b>5 (cinco) dias</b> autoriza a CONTRATADA a <b>suspender imediatamente os serviços</b>, sem aviso adicional, ficando o prazo suspenso e aplicando-se a Cláusula 5ª ao período de suspensão. O atraso superior a <b>15 (quinze) dias</b> autoriza o vencimento antecipado de todas as parcelas vincendas e a rescisão por culpa da CONTRATANTE (Cláusula 15ª).</p>
+    <p><b>9.5.</b> O atraso superior a <b>5 (cinco) dias</b> autoriza a CONTRATADA a <b>suspender imediatamente os serviços</b>, sem aviso adicional, ficando o prazo suspenso e aplicando-se a Cláusula 5ª ao período de suspensão. O atraso superior a <b>15 (quinze) dias</b> autoriza a rescisão por culpa da CONTRATANTE (Cláusula 15ª).</p>
     <p><b>9.6.</b> A CONTRATANTE reconhece que o valor da última parcela é devido na conclusão dos serviços, independentemente de pendências menores (“punch list”), que não justificam retenção de pagamento. A entrega formal fica condicionada à quitação integral.</p>
     <p><b>9.7.</b> Não é admitida compensação, retenção ou abatimento de valores sem concordância escrita da CONTRATADA. Os custos de cobrança, inclusive honorários advocatícios de 10% e despesas de protesto, correrão por conta da CONTRATANTE.</p>
     </div>
@@ -120,10 +120,12 @@
     <div class="cl" style="page-break-inside:avoid;">
     <h3>Cláusula 15ª — Da Rescisão e da Multa</h3>
     <p><b>15.1.</b> A rescisão deve ser comunicada por escrito. Rescindido o contrato por qualquer motivo, são devidos à CONTRATADA todos os valores correspondentes aos serviços executados e em andamento, às horas e diárias mobilizadas e aos custos já assumidos até a data da rescisão.</p>
-    <p><b>15.2. Rescisão pela CONTRATANTE sem justa causa</b>, desistência ou cancelamento após a assinatura: a CONTRATANTE pagará, além do item 15.1, <b>multa compensatória de {{multa}}% sobre o valor total do contrato</b>, em razão da reserva de agenda, mobilização de equipe e lucros cessantes. Se o cancelamento ocorrer antes do início, a multa incidirá sobre o valor total e o sinal já pago será abatido dela, não restituído.</p>
-    <p><b>15.3. Rescisão por culpa da CONTRATANTE</b> (inadimplência superior a 15 dias, impedimento reiterado de acesso, falta reiterada de material, ou descumprimento de qualquer obrigação não sanado em 5 dias após notificação): aplica-se a multa do item 15.2, vencendo-se antecipadamente as parcelas vincendas, e a CONTRATADA poderá retirar sua equipe sem responsabilidade por qualquer dano decorrente da interrupção.</p>
-    <p><b>15.4. Rescisão pela CONTRATADA por culpa sua</b> (abandono injustificado dos serviços, não sanado em 10 dias após notificação): a CONTRATADA devolverá o valor recebido proporcional ao serviço não executado e pagará multa de <b>10% sobre o valor do serviço não executado</b>, limitada ao valor recebido, nada mais sendo devido a título de indenização.</p>
-    <p><b>15.5.</b> As multas desta cláusula têm natureza de cláusula penal compensatória, são devidas independentemente de comprovação de prejuízo e não excluem a cobrança dos demais valores devidos.</p>
+    <p><b>15.2. Cancelamento pela CONTRATANTE sem justa causa</b> (desistência após a assinatura e o pagamento do sinal):</p>
+    <p>a) <b>Antes do início da obra</b>: multa de <b>{{multa_antes}}% sobre o valor total do contrato</b>, em razão da reserva de agenda. O sinal pago é compensado com essa multa e o <b>saldo do sinal é devolvido</b> à CONTRATANTE.</p>
+    <p>b) <b>Depois do início da obra</b>: a CONTRATANTE paga o que foi executado, os custos já assumidos (item 15.1) e <b>multa de {{multa}}% sobre o valor dos serviços ainda não executados</b>. O sinal e os demais valores já pagos são descontados desse total e, havendo excedente a favor da CONTRATANTE, ele é devolvido.</p>
+    <p><b>15.3. Rescisão por culpa da CONTRATANTE</b> (inadimplência superior a 15 dias, impedimento reiterado de acesso, falta reiterada de material, ou descumprimento de qualquer obrigação não sanado em 5 dias após notificação): aplica-se a multa do item 15.2, letra “a” ou “b”, conforme a obra tenha ou não começado, sem que se vençam antecipadamente parcelas relativas a serviços não executados. A CONTRATADA poderá retirar sua equipe sem responsabilidade por qualquer dano decorrente da interrupção.</p>
+    <p><b>15.4. Rescisão pela CONTRATADA</b>: se a CONTRATADA não iniciar a obra, devolverá o sinal recebido. Se abandonar os serviços sem justo motivo, não sanado em 10 dias após notificação, devolverá o valor recebido que exceder o serviço já executado. Nada mais será devido por ela a título de multa ou indenização, salvo dolo.</p>
+    <p><b>15.5.</b> A multa desta cláusula é cláusula penal compensatória, devida independentemente de comprovação de prejuízo, e não se soma à multa moratória do item 9.4 sobre os mesmos valores. Em nenhuma hipótese a soma de serviços executados e multa devida pela CONTRATANTE excederá o valor total do contrato.</p>
     </div>
 
     <div class="cl" style="page-break-inside:avoid;">
