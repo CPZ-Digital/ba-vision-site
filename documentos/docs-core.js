@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.6';
+  const DOCS_VERSION = '2026-10-07.7';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -89,7 +89,7 @@
     const div = valor > 0 && dias > 0 ? valor / dias : 0;
     const pl = (q, um, vv) => q + ' ' + (q === 1 ? um : vv);
     const eq = pl(n('eqSocios') + n('eqDiar'), 'profissional', 'profissionais'); // sem revelar a composição (sócios/diaristas) ao cliente
-    const apos = toler > 0 ? ', contados a partir do ' + (toler + 1) + 'º dia consecutivo de paralisação' : '';
+    const apos = toler > 0 ? ', contados a partir do ' + (toler + 1) + 'º dia consecutivo de paralisação' : ', contados desde o 1º dia de paralisação';
     let modo, usado, texto;
     if (manual > 0) { modo = 'manual'; usado = manual; texto = '(' + fmtR(manual) + ' por dia' + apos + ')'; }
     else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia, correspondente à equipe prevista de ' + eq + apos + ')'; }
@@ -134,12 +134,12 @@
         { k: 'escopo', l: 'Escopo do serviço', t: 'textarea', req: 1, ph: 'Ex: instalação de 16 câmeras IP, passagem de cabos, configuração do NVR…' },
         { k: 'valor', l: 'Valor total (R$)', t: 'number', req: 1, half: 1 }, { k: 'inicio', l: 'Início', t: 'date', def: hoje, half: 1 },
         { k: 'fim', l: 'Previsão de conclusão', t: 'date', half: 1 }, { k: 'multa', l: 'Multa: cancelar DEPOIS de começar (% do que falta fazer)', t: 'number', def: '20', half: 1 }, { k: 'multaAntes', l: 'Multa: cancelar ANTES de começar (% do total)', t: 'number', def: '10', half: 1 },
-        { k: 'diasPrev', l: 'Dias previstos de obra (base do cálculo da diária parada)', t: 'number', half: 1 }, { k: 'toler', l: 'Dias de tolerância antes de cobrar', t: 'number', def: '1', half: 1 },
+        { k: 'diasPrev', l: 'Dias previstos de obra (base do cálculo da diária parada)', t: 'number', half: 1 }, { k: 'toler', l: 'Dias de tolerância antes de cobrar (0 = cobra desde o 1º dia)', t: 'number', def: '0', half: 1 },
         { k: 'eqSocios', l: 'Sócios na equipe', t: 'number', def: B.ba ? '2' : '1', half: 1 }, { k: 'valSocio', l: 'Diária de cada sócio R$', t: 'number', def: B.ba ? '350' : '300', half: 1 },
         { k: 'eqDiar', l: 'Diaristas na equipe', t: 'number', def: '1', half: 1 }, { k: 'valDiar', l: 'Diária do diarista R$', t: 'number', def: '150', half: 1 },
         { k: 'deslDia', l: 'Deslocamento por dia R$', t: 'number', def: '60', half: 1 }, { k: 'parada', l: 'Diária parada manual R$ (opcional, substitui o cálculo)', t: 'number', half: 1 },
         { k: 'margem', l: 'Margem mínima desejada (%) sobre o custo', t: 'number', def: '25', half: 1 },
-        { k: 'prazo', l: 'Prazo de execução', def: 'aprox. 30 dias', half: 1 }, { k: 'garantia', l: 'Garantia do serviço', def: '90 dias', half: 1 },
+        { k: 'prazo', l: 'Prazo de execução', def: 'aprox. 30 dias', half: 1 }, { k: 'garantia', l: 'Garantia do serviço', def: '90 dias', half: 1 }, { k: 'diasAceite', l: 'Prazo de aceite (dias)', t: 'select', opts: [['3', '3 dias'], ['4', '4 dias'], ['5', '5 dias']], def: '5', half: 1 },
         { k: 'pagamento', l: 'Forma de pagamento', t: 'textarea', def: PAG_DEFAULT },
         { k: 'obs', l: 'Condições especiais (opcional)', t: 'textarea' },
         { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
@@ -160,7 +160,7 @@
           '{{local_obra}}': esc(v.endereco), '{{escopo}}': esc(v.escopo), '{{prazo}}': esc(v.prazo || 'a combinar'),
           '{{inicio}}': fmtData(v.inicio) || 'a definir', '{{fim}}': fmtData(v.fim) || 'a definir',
           '{{valor}}': fmtR(valor), '{{valor_extenso}}': valorExtenso(valor), '{{pagamento}}': esc(v.pagamento || 'A combinar.'),
-          '{{garantia}}': esc(v.garantia || '90 dias'), '{{multa}}': String(multa), '{{multa_antes}}': String(Math.min(100, Math.max(0, Number(v.multaAntes) >= 0 && v.multaAntes !== '' && v.multaAntes != null ? Number(v.multaAntes) : 10))),
+          '{{garantia}}': esc(v.garantia || '90 dias'), '{{multa}}': String(multa), '{{dias_aceite}}': ({ 3: '3 (três)', 4: '4 (quatro)', 5: '5 (cinco)' }[Number(v.diasAceite)] || '5 (cinco)'), '{{multa_antes}}': String(Math.min(100, Math.max(0, Number(v.multaAntes) >= 0 && v.multaAntes !== '' && v.multaAntes != null ? Number(v.multaAntes) : 10))),
           '{{diaria_parada}}': par.texto,
           '{{test1_nome}}': esc(v.t1 || blank), '{{test1_cpf}}': blank, '{{test2_nome}}': esc(v.t2 || blank), '{{test2_cpf}}': blank,
           '{{obs_block}}': v.obs ? `<h3>Cláusula 24ª — Das Condições Especiais</h3><p style="white-space:pre-wrap;">${esc(v.obs)}</p>` : ''

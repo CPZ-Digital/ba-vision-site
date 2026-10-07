@@ -4798,7 +4798,7 @@ function _gerarMOPDF(entry, reimpressao) {
         '{{valor_extenso}}': _valorExtenso(valor),
         '{{pagamento}}':     esc(pagamento),
         '{{garantia}}':      esc(garantia),
-        '{{multa}}':         String(entry.multa ?? 20), '{{multa_antes}}': String(entry.multaAntes ?? 10),
+        '{{multa}}':         String(entry.multa ?? 20), '{{multa_antes}}': String(entry.multaAntes ?? 10), '{{dias_aceite}}': '5 (cinco)',
         '{{diaria_parada}}': entry.parada > 0 ? '(' + fmtR(entry.parada) + ' por dia)' : '(conforme orçamento a ser apresentado)',
         '{{test1_nome}}':    esc(entry.t1 || blank), '{{test1_cpf}}': blank,
         '{{test2_nome}}':    esc(entry.t2 || blank), '{{test2_cpf}}': blank,
@@ -4982,7 +4982,7 @@ if (sessionStorage.getItem('cpz_pin_ok') === '1') {
 init();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=57');
+  navigator.serviceWorker.register('./sw.js?v=58');
 }
 
 </script>
