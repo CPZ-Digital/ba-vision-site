@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-08.1';
+  const DOCS_VERSION = '2026-10-08.2';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -115,7 +115,7 @@
     else if (c.modo === 'piso') veredito = ['#6b7280', '#f3f4f6', 'Sem os dias previstos, vale só o piso de ' + fmtR(c.usado) + ' por dia. Informe os dias previstos para comparar com a divisão.'];
     else veredito = ['#6b7280', '#f3f4f6', 'Preencha a equipe para calcular a diária parada.'];
     let minBox = '';
-    if (c.abaixo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fef2f2;color:#b91c1c;font-weight:700">❌ Valor do contrato ABAIXO do custo mínimo da obra: faltam ${fmtR(c.minTotal - c.valor)}. Valor mínimo para fechar: ${fmtR(c.minTotal)}.</div>`;
+    if (c.abaixo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fef2f2;color:#b91c1c;font-weight:700">⛔ Não dá para fechar: o valor está ABAIXO do custo mínimo da obra. Faltam ${fmtR(c.minTotal - c.valor)}. Valor mínimo para fechar: ${fmtR(c.minTotal)}.</div>`;
     else if (c.minTotal > 0 && c.valor > 0 && c.valor < c.alvo) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#fffbeb;color:#b45309;font-weight:700">⚠ Faixa de negociação: cobre o custo, mas a margem é ${c.margemAtual.toFixed(1).replace('.', ',')}% (alvo ${c.margem}%). Lucro previsto ${fmtR(c.valor - c.minTotal)}; faltam ${fmtR(c.alvo - c.valor)} para chegar ao alvo de ${fmtR(c.alvo)}.</div>`;
     else if (c.minTotal > 0 && c.valor > 0) minBox = `<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:#f0fdf4;color:#15803d;font-weight:600">✔ Atinge a margem desejada: ${c.margemAtual.toFixed(1).replace('.', ',')}% sobre o custo (alvo ${c.margem}%). Lucro previsto: ${fmtR(c.valor - c.minTotal)}.</div>`;
     return `<div style="margin:12px 0 4px;padding:10px 12px;border:1px solid #c9d6ee;border-radius:8px;background:#f8faff;font-size:12px;color:#334"><div style="font-weight:700;margin-bottom:4px;color:#0b3d91">📐 Diária de equipe parada — cálculo automático</div>${corpo}<div style="margin-top:6px;padding:6px 8px;border-radius:6px;background:${veredito[1]};color:${veredito[0]};font-weight:600">${veredito[2]}</div>${minBox}</div>`;
@@ -134,7 +134,7 @@
         { k: 'escopo', l: 'Escopo do serviço', t: 'textarea', req: 1, ph: 'Ex: instalação de 16 câmeras IP, passagem de cabos, configuração do NVR…' },
         { k: 'valor', l: 'Valor total (R$)', t: 'number', req: 1, half: 1 }, { k: 'inicio', l: 'Início', t: 'date', def: hoje, half: 1 },
         { k: 'fim', l: 'Previsão de conclusão', t: 'date', half: 1 }, { k: 'multa', l: 'Multa: cancelar DEPOIS de começar (% do que falta fazer)', t: 'number', def: '20', half: 1 }, { k: 'multaAntes', l: 'Multa: cancelar ANTES de começar (% do total)', t: 'number', def: '10', half: 1 },
-        { k: 'diasPrev', l: 'Dias previstos de obra (base do cálculo da diária parada)', t: 'number', half: 1 }, { k: 'toler', l: 'Dias de tolerância antes de cobrar (0 = cobra desde o 1º dia)', t: 'number', def: '0', half: 1 },
+        { k: 'diasPrev', l: 'Dias previstos de obra (base da diária parada e do valor mínimo)', t: 'number', req: 1, half: 1 }, { k: 'toler', l: 'Dias de tolerância antes de cobrar (0 = cobra desde o 1º dia)', t: 'number', def: '0', half: 1 },
         { k: 'eqSocios', l: 'Sócios na equipe', t: 'number', def: B.ba ? '2' : '1', half: 1 }, { k: 'valSocio', l: 'Diária de cada sócio R$', t: 'number', def: B.ba ? '350' : '300', half: 1 },
         { k: 'eqDiar', l: 'Diaristas na equipe', t: 'number', def: '1', half: 1 }, { k: 'valDiar', l: 'Diária do diarista R$', t: 'number', def: '150', half: 1 },
         { k: 'deslDia', l: 'Deslocamento por dia R$', t: 'number', def: '60', half: 1 }, { k: 'parada', l: 'Diária parada manual R$ (opcional, substitui o cálculo)', t: 'number', half: 1 },
@@ -145,7 +145,7 @@
         { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
       ],
       calc: v => calcParadaHtml(v),
-      aviso: v => { const c = calcParada(v); return c.abaixo ? '⚠️ ATENÇÃO — valor abaixo do custo mínimo da obra\n\nContrato: ' + fmtR(c.valor) + '\nCusto mínimo da equipe: ' + fmtR(c.piso) + ' × ' + c.dias + ' dias = ' + fmtR(c.minTotal) + '\nFaltam ' + fmtR(c.minTotal - c.valor) + ' — fechar assim dá prejuízo na mão de obra.' : ''; },
+      bloqueio: v => { const c = calcParada(v); return c.abaixo ? '⛔ NÃO É POSSÍVEL FECHAR POR ESSE VALOR\n\nContrato: ' + fmtR(c.valor) + '\nCusto mínimo da obra: ' + fmtR(c.piso) + ' por dia × ' + c.dias + ' dias = ' + fmtR(c.minTotal) + '\nFaltam ' + fmtR(c.minTotal - c.valor) + '.\n\nAumente o valor do contrato para pelo menos ' + fmtR(c.minTotal) + ', ou revise a equipe e os dias previstos se não forem reais.' : ''; },
       titulo: v => v.cliente, valor: v => fmtR(v.valor),
       validar: v => !(parseFloat(v.valor) > 0) ? 'Informe o valor total' : '',
       build(v, e) {
@@ -420,6 +420,8 @@
     if (falta) { alert('Preencha: ' + falta.l); return; }
     const erro = doc.validar(v);
     if (erro) { alert(erro); return; }
+    const bl = doc.bloqueio ? doc.bloqueio(v) : '';
+    if (bl) { alert(bl); return; }
     const av = doc.aviso ? doc.aviso(v) : '';
     if (av && !confirm(av + '\n\nGerar o documento mesmo assim?')) return;
     const rr = lookupRep(v.doc);
