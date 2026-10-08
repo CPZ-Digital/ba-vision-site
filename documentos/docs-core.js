@@ -13,7 +13,7 @@
            sede: 'com sede na Rua Carlina 61, casa 1 fundos, Olaria, Rio de Janeiro/RJ, CEP 21.021-360',
            logoH: '48', rgb: [5, 150, 105] }
   };
-  const DOCS_VERSION = '2026-10-07.8';
+  const DOCS_VERSION = '2026-10-08.1';
   const brand = window.DOCS_BRAND || 'cpz';
   const B = BRANDS[brand];
   const HKEY = 'docs_hist_' + brand;
@@ -92,8 +92,8 @@
     const apos = toler > 0 ? ', contados a partir do ' + (toler + 1) + 'º dia consecutivo de paralisação' : ', contados desde o 1º dia de paralisação';
     let modo, usado, texto;
     if (manual > 0) { modo = 'manual'; usado = manual; texto = '(' + fmtR(manual) + ' por dia' + apos + ')'; }
-    else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia — valor do contrato dividido pelos ' + dias + ' dias previstos de execução, observado o mínimo de ' + fmtR(piso) + ' por dia, correspondente à equipe prevista de ' + eq + apos + ')'; }
-    else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia — valor mínimo diário da equipe prevista de ' + eq + apos + ')'; }
+    else if (div > 0 && div >= piso) { modo = 'div'; usado = div; texto = '(' + fmtR(div) + ' por dia, resultado de ' + fmtR(valor) + ' dividido pelos ' + dias + ' dias previstos de execução' + apos + ')'; }
+    else if (piso > 0) { modo = 'piso'; usado = piso; texto = '(' + fmtR(piso) + ' por dia, valor diário da equipe prevista de ' + eq + apos + ')'; }
     else { modo = 'nenhum'; usado = 0; texto = '(conforme orçamento a ser apresentado)'; }
     const minTotal = dias > 0 ? piso * dias : 0, abaixo = valor > 0 && minTotal > 0 && valor < minTotal;
     const mg = parseFloat(v.margem), margem = isFinite(mg) && mg >= 0 ? mg : 25;
