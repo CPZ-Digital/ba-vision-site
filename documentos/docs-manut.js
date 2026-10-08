@@ -7,7 +7,7 @@
   const cl = (n, t) => sec('Cláusula ' + n + 'ª — ' + t);
   const it = (n, t) => p('<b>' + n + '</b> ' + t);
   const blank = '_______________________';
-  const mensal = v => parseFloat(v.valor) > 0 ? parseFloat(v.valor) : (Number(v.qtdCam) || 0) * (parseFloat(v.valCam) || 0);
+  const mensal = v => parseFloat(v.valor) || 0;
   const ag = h => h.split(/(?=<p style="font-size:13px;font-weight:700;color:)/).map(x => x.startsWith('<p style="font-size:13px') ? '<div style="page-break-inside:avoid;">' + x + '</div>' : x).join('');
 
   const SIS = [['cftv', 'CFTV (câmeras)'], ['acesso', 'Controle de acesso'], ['interfone', 'Interfone'], ['portao', 'Portão eletrônico']];
@@ -29,8 +29,7 @@
       { k: 'endereco', l: 'Local atendido (se diferente)', ph: 'Endereço onde ficam os sistemas' },
       { k: 'sistemas', l: 'Sistemas atendidos', t: 'check', opts: SIS, def: 'cftv', req: 1 },
       { k: 'qtdCam', l: 'Nº de câmeras', t: 'number', half: 1 }, { k: 'qtdGrav', l: 'Nº de gravadores (DVR/NVR)', t: 'number', half: 1 },
-      { k: 'valCam', l: 'Valor por câmera R$/mês', t: 'number', def: '20', half: 1 },
-      { k: 'qtdAcesso', l: 'Pontos de controle de acesso', t: 'number', half: 1 }, { k: 'qtdInterfone', l: 'Pontos de interfone', t: 'number', half: 1 },
+            { k: 'qtdAcesso', l: 'Pontos de controle de acesso', t: 'number', half: 1 }, { k: 'qtdInterfone', l: 'Pontos de interfone', t: 'number', half: 1 },
       { k: 'qtdPortao', l: 'Nº de portões eletrônicos', t: 'number' },
       { k: 'inventario', l: 'Detalhamento dos equipamentos (opcional)', t: 'textarea', ph: 'Ex: Câmeras Intelbras bullet 2MP; NVR 16 canais; leitor facial na portaria…' },
       { k: 'visObrig', l: 'Visitas preventivas obrigatórias/mês (mín. 1)', t: 'number', def: '1', half: 1 }, { k: 'visGratis', l: 'Visitas gratuitas a chamado/mês', t: 'number', def: '1', half: 1 },
@@ -39,7 +38,7 @@
       { k: 'slaNormal', l: 'Prazo de atendimento (chamado comum)', def: 'até 48 horas úteis', half: 1 },
       { k: 'slaEmerg', l: 'Prazo de atendimento (emergência)', def: 'até 6 horas', half: 1 },
       { k: 'canal', l: 'Canal de chamados (WhatsApp/telefone)', half: 1 },
-      { k: 'valor', l: 'Valor mensal R$ (vazio = nº câmeras × valor por câmera)', t: 'number', half: 1 }, { k: 'dia', l: 'Dia de vencimento', t: 'number', def: '10', half: 1 },
+      { k: 'valor', l: 'Valor mensal total R$ (você define; veja a sugestão abaixo)', t: 'number', req: 1, half: 1 }, { k: 'dia', l: 'Dia de vencimento', t: 'number', def: '10', half: 1 },
       { k: 'inicio', l: 'Início do contrato', t: 'date', def: hoje, half: 1 }, { k: 'meses', l: 'Prazo do contrato (12 a 36 meses)', t: 'number', def: '36', half: 1 },
       { k: 'indice', l: 'Reajuste anual', t: 'select', opts: [['IPCA', 'IPCA'], ['IGP-M', 'IGP-M']], half: 1 }, { k: 'multa', l: 'Multa de rescisão no 1º ano, % das mensalidades restantes (2º ano 2/3, 3º ano 1/3)', t: 'number', def: '30', half: 1 },
       { k: 'pecas', l: 'Peças e equipamentos', t: 'select', opts: [['aparte', 'Cobrados à parte, mediante orçamento aprovado'], ['limite', 'Pequenas peças até um limite incluídas']] },
@@ -48,13 +47,18 @@
       { k: 'obs', l: 'Condições especiais (opcional)', t: 'textarea' },
       { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
     ],
+    calc: v => {
+      const q = Number(v.qtdCam) || 0; if (!q) return '';
+      const l = (a, x) => '<div style="display:flex;justify-content:space-between;padding:2px 0;"><span>' + a + '</span><b>' + fmtR(q * x) + '</b></div>';
+      return '<div style="margin-top:10px;padding:10px 12px;background:#f0fbf7;border:1px solid #d5eee4;border-radius:8px;font-size:12px;color:#333;"><b>Sugestão de valor mensal (' + q + ' câmeras)</b>' + l('Instalação simples (R$ 20/câmera)', 20) + l('Dificuldade média (R$ 25/câmera)', 25) + l('Dificuldade alta (R$ 30/câmera)', 30) + '<div style="color:#777;margin-top:4px;">É só referência: digite no campo acima o valor que quiser.</div></div>';
+    },
     titulo: v => v.cliente, valor: v => fmtR(mensal(v)) + '/mês',
-    validar: v => !(mensal(v) > 0) ? 'Informe o valor mensal ou o nº de câmeras e o valor por câmera' : !(Number(v.meses) >= 12 && Number(v.meses) <= 36) ? 'O prazo deve ficar entre 12 e 36 meses' : !v.sistemas ? 'Marque ao menos um sistema atendido' : '',
+    validar: v => !(mensal(v) > 0) ? 'Informe o valor mensal' : !(Number(v.meses) >= 12 && Number(v.meses) <= 36) ? 'O prazo deve ficar entre 12 e 36 meses' : !v.sistemas ? 'Marque ao menos um sistema atendido' : '',
     html(v, e) {
       const sis = String(v.sistemas || '').split('|').filter(Boolean), tem = k => sis.includes(k);
       const n = k => Number(v[k]) || 0;
       const valor = mensal(v), obrig = Math.max(1, n('visObrig')), gratis = Math.max(0, n('visGratis')), total = obrig + gratis;
-      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), valCam = parseFloat(v.valCam) || 0, cam13 = tem('cftv') && n('qtdCam') > 0 && valCam > 0;
+      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), cam13 = tem('cftv') && n('qtdCam') > 0;
       const dia = n('dia') || 10, local = v.endereco || v.endC || blank;
       const preco = x => x > 0 ? '<b>' + fmtR(x) + '</b>' : '<b>valor conforme tabela vigente da CONTRATADA</b>';
       const inv = [];
@@ -80,7 +84,7 @@
         cl(1, 'Do Objeto') +
         it('1.1.', `A CONTRATADA prestará serviços de <b>manutenção preventiva e corretiva</b> nos seguintes sistemas: <b>${nomes.join('; ')}</b>, instalados em <b>${esc(local)}</b>, conforme o <b>Anexo I</b> (inventário coberto).`) +
         it('1.2.', 'Somente os sistemas e equipamentos listados no Anexo I são cobertos. Equipamentos incluídos depois dependem de aditivo ou inclusão no inventário, com possível reajuste da mensalidade.') +
-        (cam13 ? it('1.3.', `A mensalidade considera <b>${fmtR(valCam)} por câmera</b>, para até <b>${Math.round(valor / valCam)} câmeras</b> (inventário atual: ${n('qtdCam')}). A inclusão ou retirada de câmera altera a mensalidade em ${fmtR(valCam)} por câmera, a partir do mês seguinte, por aditivo ou confirmação por escrito.`) : '') +
+        (cam13 ? it('1.3.', `A mensalidade foi fixada considerando <b>${n('qtdCam')} câmeras</b> e as condições do local. A inclusão ou retirada de câmeras ajusta o valor da mensalidade, a partir do mês seguinte, por aditivo ou confirmação por escrito.`) : '') +
         it(cam13 ? '1.4.' : '1.3.', 'Antes do início da vigência a CONTRATADA fará <b>vistoria inicial</b> e registrará no Anexo I o estado de cada item. Defeitos, falhas e obsolescência <b>já existentes</b> na vistoria não são cobertos pela mensalidade e serão orçados à parte; a CONTRATADA não responde pelos que a CONTRATANTE decidir não corrigir.') +
         cl(2, 'Da Manutenção Preventiva e Corretiva') +
         it('2.1.', '<b>Preventiva:</b> visita programada para inspeção, limpeza, testes e ajustes, seguindo a rotina do <b>Anexo II</b>. Ao fim de cada visita, a CONTRATADA registrará o que foi feito e as recomendações (relatório ou ordem de serviço assinada).') +
