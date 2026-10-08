@@ -7,6 +7,7 @@
   const cl = (n, t) => sec('Cláusula ' + n + 'ª — ' + t);
   const it = (n, t) => p('<b>' + n + '</b> ' + t);
   const blank = '_______________________';
+  const mensal = v => parseFloat(v.valor) > 0 ? parseFloat(v.valor) : (Number(v.qtdCam) || 0) * (parseFloat(v.valCam) || 0);
   const ag = h => h.split(/(?=<p style="font-size:13px;font-weight:700;color:)/).map(x => x.startsWith('<p style="font-size:13px') ? '<div style="page-break-inside:avoid;">' + x + '</div>' : x).join('');
 
   const SIS = [['cftv', 'CFTV (câmeras)'], ['acesso', 'Controle de acesso'], ['interfone', 'Interfone'], ['portao', 'Portão eletrônico']];
@@ -28,18 +29,17 @@
       { k: 'endereco', l: 'Local atendido (se diferente)', ph: 'Endereço onde ficam os sistemas' },
       { k: 'sistemas', l: 'Sistemas atendidos', t: 'check', opts: SIS, def: 'cftv', req: 1 },
       { k: 'qtdCam', l: 'Nº de câmeras', t: 'number', half: 1 }, { k: 'qtdGrav', l: 'Nº de gravadores (DVR/NVR)', t: 'number', half: 1 },
-      { k: 'camBase', l: 'Câmeras cobertas pela mensalidade', t: 'number', def: '50', half: 1 }, { k: 'valCamExtra', l: 'Câmera acima disso R$/mês', t: 'number', def: '20', half: 1 },
+      { k: 'valCam', l: 'Valor por câmera R$/mês', t: 'number', def: '20', half: 1 },
       { k: 'qtdAcesso', l: 'Pontos de controle de acesso', t: 'number', half: 1 }, { k: 'qtdInterfone', l: 'Pontos de interfone', t: 'number', half: 1 },
       { k: 'qtdPortao', l: 'Nº de portões eletrônicos', t: 'number' },
       { k: 'inventario', l: 'Detalhamento dos equipamentos (opcional)', t: 'textarea', ph: 'Ex: Câmeras Intelbras bullet 2MP; NVR 16 canais; leitor facial na portaria…' },
       { k: 'visObrig', l: 'Visitas preventivas obrigatórias/mês (mín. 1)', t: 'number', def: '1', half: 1 }, { k: 'visGratis', l: 'Visitas gratuitas a chamado/mês', t: 'number', def: '1', half: 1 },
       { k: 'valVisita', l: 'Visita extra em horário comercial R$', t: 'number', def: '150', half: 1 }, { k: 'valEmerg', l: 'Visita extra fora do horário/fim de semana R$', t: 'number', def: '225', half: 1 },
-      { k: 'foraHorario', l: 'Emergência fora do horário comercial', t: 'select', opts: [['segue', 'Usa as visitas incluídas; excedente é cobrado'], ['sempre', 'Sempre cobrada (plantão)']] },
       { k: 'horario', l: 'Horário comercial', def: 'segunda a sexta, das 9h às 18h, exceto feriados', half: 1 },
       { k: 'slaNormal', l: 'Prazo de atendimento (chamado comum)', def: 'até 48 horas úteis', half: 1 },
       { k: 'slaEmerg', l: 'Prazo de atendimento (emergência)', def: 'até 6 horas', half: 1 },
       { k: 'canal', l: 'Canal de chamados (WhatsApp/telefone)', half: 1 },
-      { k: 'valor', l: 'Valor mensal (R$)', t: 'number', req: 1, half: 1 }, { k: 'dia', l: 'Dia de vencimento', t: 'number', def: '10', half: 1 },
+      { k: 'valor', l: 'Valor mensal R$ (vazio = nº câmeras × valor por câmera)', t: 'number', half: 1 }, { k: 'dia', l: 'Dia de vencimento', t: 'number', def: '10', half: 1 },
       { k: 'inicio', l: 'Início do contrato', t: 'date', def: hoje, half: 1 }, { k: 'meses', l: 'Prazo do contrato (12 a 36 meses)', t: 'number', def: '36', half: 1 },
       { k: 'indice', l: 'Reajuste anual', t: 'select', opts: [['IPCA', 'IPCA'], ['IGP-M', 'IGP-M']], half: 1 }, { k: 'multa', l: 'Multa de rescisão no 1º ano, % das mensalidades restantes (2º ano 2/3, 3º ano 1/3)', t: 'number', def: '30', half: 1 },
       { k: 'pecas', l: 'Peças e equipamentos', t: 'select', opts: [['aparte', 'Cobrados à parte, mediante orçamento aprovado'], ['limite', 'Pequenas peças até um limite incluídas']] },
@@ -48,13 +48,13 @@
       { k: 'obs', l: 'Condições especiais (opcional)', t: 'textarea' },
       { k: 't1', l: 'Testemunha 1 (opc.)', half: 1 }, { k: 't2', l: 'Testemunha 2 (opc.)', half: 1 }
     ],
-    titulo: v => v.cliente, valor: v => fmtR(v.valor) + '/mês',
-    validar: v => !(parseFloat(v.valor) > 0) ? 'Informe o valor mensal' : !(Number(v.meses) >= 12 && Number(v.meses) <= 36) ? 'O prazo deve ficar entre 12 e 36 meses' : !v.sistemas ? 'Marque ao menos um sistema atendido' : '',
+    titulo: v => v.cliente, valor: v => fmtR(mensal(v)) + '/mês',
+    validar: v => !(mensal(v) > 0) ? 'Informe o valor mensal ou o nº de câmeras e o valor por câmera' : !(Number(v.meses) >= 12 && Number(v.meses) <= 36) ? 'O prazo deve ficar entre 12 e 36 meses' : !v.sistemas ? 'Marque ao menos um sistema atendido' : '',
     html(v, e) {
       const sis = String(v.sistemas || '').split('|').filter(Boolean), tem = k => sis.includes(k);
       const n = k => Number(v[k]) || 0;
-      const valor = parseFloat(v.valor), obrig = Math.max(1, n('visObrig')), gratis = Math.max(0, n('visGratis')), total = obrig + gratis;
-      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), camBase = n('camBase'), valCamExtra = parseFloat(v.valCamExtra) || 0;
+      const valor = mensal(v), obrig = Math.max(1, n('visObrig')), gratis = Math.max(0, n('visGratis')), total = obrig + gratis;
+      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), valCam = parseFloat(v.valCam) || 0, cam13 = tem('cftv') && n('qtdCam') > 0 && valCam > 0;
       const dia = n('dia') || 10, local = v.endereco || v.endC || blank;
       const preco = x => x > 0 ? '<b>' + fmtR(x) + '</b>' : '<b>valor conforme tabela vigente da CONTRATADA</b>';
       const inv = [];
@@ -63,9 +63,7 @@
       if (tem('interfone')) inv.push((n('qtdInterfone') || 'Conforme detalhamento:') + (n('qtdInterfone') ? ' ponto(s) de interfone' : ' interfone'));
       if (tem('portao')) inv.push((n('qtdPortao') || 'Conforme detalhamento:') + (n('qtdPortao') ? ' portão(ões) eletrônico(s)' : ' portão eletrônico'));
       const nomes = sis.map(k => NOME[k]);
-      const foraTxt = v.foraHorario === 'sempre'
-        ? 'A visita emergencial realizada <b>fora do horário comercial</b> (noites, fins de semana e feriados) será <b>sempre cobrada</b>, por exigir plantão, independentemente das visitas incluídas.'
-        : 'A visita emergencial, inclusive fora do horário comercial, utiliza as visitas incluídas no mês, se houver saldo; esgotado o saldo, é cobrada conforme a cláusula 4.2.';
+      const foraTxt = 'Todas as visitas (preventiva e corretiva) são feitas em <b>horário comercial</b>. O atendimento <b>fora do horário</b> existe só para emergência e consome a <b>visita corretiva (bônus)</b> do mês; se ela já tiver sido usada, é cobrado como visita extra, conforme a cláusula 4.2.';
       const pecasTxt = v.pecas === 'limite' && parseFloat(v.limitePecas) > 0
         ? `Peças de pequeno valor (conectores, cabos curtos, fusíveis e similares) estão incluídas até o limite de <b>${fmtR(parseFloat(v.limitePecas))} por mês</b>; acima disso, e para qualquer equipamento, aplica-se o orçamento prévio.`
         : 'Peças, componentes e equipamentos <b>não estão incluídos</b> na mensalidade e serão fornecidos mediante orçamento prévio aprovado pela CONTRATANTE.';
@@ -82,8 +80,8 @@
         cl(1, 'Do Objeto') +
         it('1.1.', `A CONTRATADA prestará serviços de <b>manutenção preventiva e corretiva</b> nos seguintes sistemas: <b>${nomes.join('; ')}</b>, instalados em <b>${esc(local)}</b>, conforme o <b>Anexo I</b> (inventário coberto).`) +
         it('1.2.', 'Somente os sistemas e equipamentos listados no Anexo I são cobertos. Equipamentos incluídos depois dependem de aditivo ou inclusão no inventário, com possível reajuste da mensalidade.') +
-        (tem('cftv') && camBase > 0 ? it('1.3.', `A mensalidade cobre até <b>${camBase} câmeras</b>. Cada câmera acima desse número, incluída no inventário, acrescenta ${valCamExtra > 0 ? '<b>' + fmtR(valCamExtra) + '</b>' : 'o valor combinado'} por mês. A redução de câmeras do inventário não reduz a mensalidade, salvo aditivo.`) : '') +
-        it(tem('cftv') && camBase > 0 ? '1.4.' : '1.3.', 'Antes do início da vigência a CONTRATADA fará <b>vistoria inicial</b> e registrará no Anexo I o estado de cada item. Defeitos, falhas e obsolescência <b>já existentes</b> na vistoria não são cobertos pela mensalidade e serão orçados à parte; a CONTRATADA não responde pelos que a CONTRATANTE decidir não corrigir.') +
+        (cam13 ? it('1.3.', `A mensalidade considera <b>${fmtR(valCam)} por câmera</b>, para até <b>${Math.round(valor / valCam)} câmeras</b> (inventário atual: ${n('qtdCam')}). A inclusão ou retirada de câmera altera a mensalidade em ${fmtR(valCam)} por câmera, a partir do mês seguinte, por aditivo ou confirmação por escrito.`) : '') +
+        it(cam13 ? '1.4.' : '1.3.', 'Antes do início da vigência a CONTRATADA fará <b>vistoria inicial</b> e registrará no Anexo I o estado de cada item. Defeitos, falhas e obsolescência <b>já existentes</b> na vistoria não são cobertos pela mensalidade e serão orçados à parte; a CONTRATADA não responde pelos que a CONTRATANTE decidir não corrigir.') +
         cl(2, 'Da Manutenção Preventiva e Corretiva') +
         it('2.1.', '<b>Preventiva:</b> visita programada para inspeção, limpeza, testes e ajustes, seguindo a rotina do <b>Anexo II</b>. Ao fim de cada visita, a CONTRATADA registrará o que foi feito e as recomendações (relatório ou ordem de serviço assinada).') +
         it('2.2.', '<b>Corretiva:</b> atendimento a chamados para reparo de falhas de funcionamento dos sistemas cobertos, limitada à <b>mão de obra</b> técnica, aplicando-se a cláusula de peças.') +
@@ -93,7 +91,7 @@
         it('3.3.', 'As visitas incluídas <b>não são cumulativas</b>: as não utilizadas no mês expiram e não geram crédito, abatimento ou compensação.') +
         cl(4, 'Das Visitas Adicionais e Emergenciais') +
         it('4.1.', `Esgotadas as visitas incluídas, cada <b>visita extra</b> em horário comercial (${esc(v.horario)}) será cobrada em ${preco(valV)} por visita, mais peças, se houver.`) +
-        it('4.2.', `A <b>visita fora do horário comercial</b> (noites, sábados, domingos e feriados) ou emergencial, solicitada para ocorrer em <b>${esc(v.slaEmerg)}</b>, depende da disponibilidade da equipe e, esgotado o saldo de visitas incluídas, será cobrada em ${preco(valE)} por visita, mais peças, se houver.`) +
+        it('4.2.', `A <b>visita fora do horário comercial</b> (noites, sábados, domingos e feriados) ou emergencial, solicitada para ocorrer em <b>${esc(v.slaEmerg)}</b>, depende da disponibilidade da equipe, consome a visita corretiva (bônus) do mês e, se esta já tiver sido usada, será cobrada em ${preco(valE)} por visita, mais peças, se houver.`) +
         it('4.3.', foraTxt) +
         it('4.4.', 'É considerado <b>chamado improcedente</b> aquele cuja causa não esteja nos sistemas cobertos (falta de energia ou de internet, mau uso, intervenção de terceiros, equipamento não listado). Ele consome uma visita incluída ou é cobrado como visita adicional, conforme o caso.') +
         it('4.5.', 'Locais fora do município do Rio de Janeiro, ou de difícil acesso, poderão ter taxa de deslocamento, a combinar previamente.') +
@@ -110,6 +108,7 @@
         it('7.1.', 'Não estão cobertos: danos por vandalismo, furto, roubo, incêndio, inundação, descargas elétricas e oscilações de energia; falhas da rede elétrica, de internet ou de equipamentos de terceiros; mau uso; alterações por terceiros; equipamentos obsoletos sem suporte do fabricante; obras civis; instalações novas e ampliações; programação de equipamentos não listados; e eventos de força maior. Se terceiros alterarem ou repararem o sistema, a CONTRATADA poderá refazer a vistoria (cobrada) e reenquadrar o inventário, sem responder pelas falhas decorrentes.') +
         cl(8, 'Das Obrigações da Contratada') +
         it('8.1.', 'Executar as visitas e os atendimentos com técnica e zelo, por profissional capacitado; registrar os serviços realizados; recomendar por escrito as correções e substituições necessárias; manter sigilo das informações e acessos; e adotar as medidas de segurança do trabalho aplicáveis.') +
+        it('8.2.', 'A CONTRATADA <b>sempre executa o que a CONTRATANTE decidir</b> (quantidade, posicionamento, ângulo, configuração, período de gravação e demais escolhas), apresentando suas sugestões e riscos por escrito, e <b>nunca age por conta própria</b>. Se a CONTRATANTE mantiver a escolha contra a recomendação, a decisão e suas consequências são dela.') +
         cl(9, 'Das Obrigações da Contratante') +
         it('9.1.', 'Garantir acesso livre e seguro aos equipamentos nas visitas; designar responsável para acompanhar e assinar os registros; manter energia elétrica e internet em condições adequadas; abrir os chamados pelo canal indicado; comunicar de imediato falhas e ocorrências; não permitir que terceiros intervenham nos sistemas sem aviso; usar os sistemas de forma adequada; e efetuar os pagamentos em dia.') +
         it('9.2.', 'Quando houver sistema que dependa de internet (acesso remoto, nuvem), é responsabilidade da CONTRATANTE manter o serviço contratado e funcionando.') +
@@ -124,7 +123,7 @@
         it('11.3.', 'A rescisão por culpa da CONTRATANTE (inadimplência superior a 30 dias, impedimento reiterado de acesso ou descumprimento não sanado em 10 dias após notificação) sujeita-a à mesma multa. A rescisão por culpa comprovada da CONTRATADA, mantida após notificação e 10 dias para sanar, não gera multa.') +
         it('11.4.', 'A CONTRATADA poderá rescindir por falta de pagamento ou de condições de segurança para trabalhar, ou, sem justa causa, mediante aviso de 30 dias, sem multa.') +
         cl(12, 'Da Segurança e da Limitação de Responsabilidade') +
-        it('12.1.', 'A manutenção reduz o risco de falhas, mas <b>não garante</b> o funcionamento ininterrupto dos sistemas nem a prevenção de crimes, furtos, acidentes ou sinistros. Sistemas de segurança complementam, e não substituem, outras medidas de proteção. A CONTRATADA não é seguradora nem presta serviço de vigilância. A obrigação é de meio. <b>HD, cartão e nuvem não têm garantia de gravação ou de dados</b>; compete à CONTRATANTE conferir periodicamente se o sistema grava, avisar de falhas e manter backup do que for importante.') +
+        it('12.1.', 'A manutenção reduz o risco de falhas, mas <b>não garante</b> o funcionamento ininterrupto dos sistemas nem a prevenção de crimes, furtos, acidentes ou sinistros. Sistemas de segurança complementam, e não substituem, outras medidas de proteção. A CONTRATADA não é seguradora nem presta serviço de vigilância. A obrigação é de meio. A CONTRATADA <b>não responde por bens furtados, roubados, danificados ou perdidos</b>, estejam ou não registrados nas imagens, nem pela escolha de posicionamento, ângulo, quantidade ou configuração das câmeras, que é sempre decisão da CONTRATANTE. <b>HD, cartão e nuvem não têm garantia de gravação ou de dados</b>; compete à CONTRATANTE conferir periodicamente se o sistema grava, avisar de falhas e manter backup do que for importante.') +
         (tem('portao') ? it('12.2.', '<b>Portão eletrônico:</b> a CONTRATANTE deve manter sinalização e os dispositivos de segurança (sensores, fotocélulas, parada de emergência) em funcionamento, não os desativar, e impedir o uso por crianças e animais sem supervisão. A CONTRATADA não responde por acidentes decorrentes de mau uso, da desativação dos dispositivos ou de intervenção de terceiros.') : '') +
         it(tem('portao') ? '12.3.' : '12.2.', 'A responsabilidade total da CONTRATADA, a qualquer título, fica limitada ao valor das mensalidades pagas nos <b>12 meses</b> anteriores ao fato, e não alcança lucros cessantes, danos indiretos, perda de imagens, dados ou receita.') +
         cl(13, 'Dos Dados Pessoais, Imagens e Biometria') +
