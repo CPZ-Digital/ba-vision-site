@@ -41,33 +41,33 @@
     html(v, e) {
       const sis = String(v.sistemas || '').split('|').filter(Boolean);
       const st = STATUS[v.status] || STATUS.ok, cobr = parseFloat(v.valorCobr) || 0;
-      const kv = (a, b) => `<td style="padding:6px 10px;font-size:11px;color:#555;border-bottom:1px solid #eee;"><b style="color:#333;">${a}</b><br>${b || '—'}</td>`;
-      const resumo = `<table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;page-break-inside:avoid;table-layout:fixed;">
-        <tr>${kv('Data', fmtData(v.data))}${kv('Tipo', esc(v.tipo))}${kv('Visita nº', esc(v.visitaNum))}</tr>
-        <tr>${kv('Chegada', esc(v.chegada))}${kv('Saída', esc(v.saida))}${kv('Técnico', esc(v.tecnico))}</tr>
-        <tr>${kv('Cobrança', esc(v.cobranca) + (cobr > 0 ? ' — ' + fmtR(cobr) : ''))}${kv('Contrato', esc(v.ref))}${kv('Responsável no local', esc(v.resp))}</tr></table>`;
-      const statusBox = `<table width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 10px;page-break-inside:avoid;"><tr><td style="padding:10px 14px;background:${st[2]};border-left:5px solid ${st[1]};font-size:13px;font-weight:700;color:${st[1]};">SITUAÇÃO AO FINAL DA VISITA: ${st[0].toUpperCase()}</td></tr></table>`;
+      const kv = (a, b) => `<td style="padding:4px 8px;font-size:10.5px;color:#555;border-bottom:1px solid #eee;"><b style="color:#333;">${a}</b><br>${b || '—'}</td>`;
+      const resumo = `<table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 6px;page-break-inside:avoid;table-layout:fixed;">
+        <tr>${kv('Data', fmtData(v.data))}${kv('Tipo', esc(v.tipo))}${kv('Visita nº', esc(v.visitaNum))}${kv('Cobrança', esc(v.cobranca) + (cobr > 0 ? ' — ' + fmtR(cobr) : ''))}</tr>
+        <tr>${kv('Técnico', esc(v.tecnico))}${kv('Chegada / saída', esc(v.chegada) + ' às ' + esc(v.saida))}${kv('Responsável no local', esc(v.resp))}${kv('Contrato', esc(v.ref))}</tr></table>`;
+      const statusBox = `<table width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 6px;page-break-inside:avoid;"><tr><td style="padding:7px 12px;background:${st[2]};border-left:5px solid ${st[1]};font-size:12px;font-weight:700;color:${st[1]};">SITUAÇÃO AO FINAL: ${st[0].toUpperCase()}</td></tr></table>`;
+      const pc = t => `<p style="font-size:11px;color:#444;line-height:1.5;margin:0 0 3px;white-space:pre-wrap;text-align:justify;">${t}</p>`;
+      const sc = (t, c) => sec(t) + pc(c);
       const check = sis.map(k => {
         const marcados = String(v['chk_' + k] || '').split('|');
-        const itens = ROTINA[k].map((txt, i) => marcados.includes(String(i))
-          ? `<p style="font-size:11.5px;color:#333;line-height:1.6;margin:0 0 2px;"><b style="color:#16a34a;">✔</b> ${esc(txt)}</p>`
-          : `<p style="font-size:11.5px;color:#b91c1c;line-height:1.6;margin:0 0 2px;"><b>✖</b> ${esc(txt)} <i>(não OK / não verificado)</i></p>`).join('');
-        return `<div style="page-break-inside:avoid;margin:0 0 8px;"><p style="font-size:12px;font-weight:700;color:#222;margin:8px 0 3px;">${NOME[k]}</p>${itens}</div>`;
+        const falhas = ROTINA[k].filter((_, i) => !marcados.includes(String(i)));
+        const ok = falhas.length ? `<b style="color:#16a34a;">✔</b> ${ROTINA[k].length - falhas.length} de ${ROTINA[k].length} itens da rotina OK` : `<b style="color:#16a34a;">✔</b> Rotina completa verificada e OK`;
+        const nok = falhas.map(t => `<br><b style="color:#b91c1c;">✖</b> <span style="color:#b91c1c;">${esc(t)} <i>(não OK / não verificado)</i></span>`).join('');
+        return `<div style="page-break-inside:avoid;">${pc('<b>' + NOME[k] + ':</b> ' + ok + nok)}</div>`;
       }).join('');
       const fotos = (v.fotos || []).length
         ? sec('Fotos da visita') + '<table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;">' +
           (v.fotos || []).reduce((rows, f, i) => { if (i % 2 === 0) rows.push([]); rows[rows.length - 1].push(f); return rows; }, [])
             .map(r => '<tr>' + r.map(f => `<td style="width:50%;padding:4px;vertical-align:top;page-break-inside:avoid;"><img src="${f.s}" width="320" height="${Math.round(320 * f.h / f.w)}" style="display:block;width:320px;height:${Math.round(320 * f.h / f.w)}px;border:1px solid #ddd;"></td>`).join('') + (r.length === 1 ? '<td></td>' : '') + '</tr>').join('') + '</table>'
         : '';
-      const corpo = sec('Resumo da visita') + resumo + statusBox +
-        sec('Verificações realizadas') + p('<span style="font-size:11px;color:#666;"><b style="color:#16a34a;">✔</b> verificado e OK &nbsp;&nbsp; <b style="color:#b91c1c;">✖</b> não OK ou não verificado</span>') + check +
-        (v.ocorr ? sec('Problemas e ocorrências encontradas', esc(v.ocorr)) : '') +
-        sec('Serviços executados', esc(v.servicos)) +
-        (v.pecas ? sec('Peças e materiais trocados', esc(v.pecas)) : '') +
-        (v.recom ? sec('Recomendações', esc(v.recom)) : '') +
-        (v.prox ? sec('Pendências e próximos passos', esc(v.prox)) : '') +
+      const corpo = resumo + statusBox +
+        sec('Verificações') + check +
+        (v.ocorr ? sc('Ocorrências encontradas', esc(v.ocorr)) : '') +
+        sc('Serviços executados', esc(v.servicos) + (v.pecas ? '\n<b>Peças/materiais:</b> ' + esc(v.pecas) : '')) +
+        (v.recom ? sc('Recomendações ao cliente', esc(v.recom)) : '') +
+        (v.prox ? sc('Pendências e próximos passos', esc(v.prox)) : '') +
         fotos +
-        p('<span style="font-size:11px;color:#666;">O responsável no local declara ter acompanhado esta visita e recebido as informações acima. Este relatório não substitui o contrato de manutenção.</span>');
+        pc('<span style="font-size:10px;color:#666;">O responsável no local acompanhou a visita e recebeu as informações acima. Este relatório não substitui o contrato.</span>');
       const vv = Object.assign({}, v, { doc: '', tel: '' });
       return wrap('RELATÓRIO DE VISITA TÉCNICA', e, vv, corpo, [[esc(v.tecnico) || B.razao, 'Técnico responsável'], [esc(v.resp) || esc(v.cliente), 'Responsável no local']], { rotA: 'Prestadora', rotB: 'Cliente' });
     },
