@@ -58,7 +58,7 @@
       const sis = String(v.sistemas || '').split('|').filter(Boolean), tem = k => sis.includes(k);
       const n = k => Number(v[k]) || 0;
       const valor = mensal(v), obrig = Math.max(1, n('visObrig')), gratis = Math.max(0, n('visGratis')), total = obrig + gratis;
-      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), cam13 = tem('cftv') && n('qtdCam') > 0;
+      const valV = parseFloat(v.valVisita) || 0, valE = parseFloat(v.valEmerg) || 0, meses = n('meses') || 12, multa = Math.min(100, Math.max(0, n('multa') || 30)), m2 = Math.round(multa * 2 / 3), m3 = Math.round(multa / 3), cam13 = n('qtdCam') + n('qtdAcesso') + n('qtdInterfone') + n('qtdPortao') > 0;
       const dia = n('dia') || 10, local = v.endereco || v.endC || blank;
       const preco = x => x > 0 ? '<b>' + fmtR(x) + '</b>' : '<b>valor conforme tabela vigente da CONTRATADA</b>';
       const inv = [];
@@ -84,7 +84,7 @@
         cl(1, 'Do Objeto') +
         it('1.1.', `A CONTRATADA prestará serviços de <b>manutenção preventiva e corretiva</b> nos seguintes sistemas: <b>${nomes.join('; ')}</b>, instalados em <b>${esc(local)}</b>, conforme o <b>Anexo I</b> (inventário coberto).`) +
         it('1.2.', 'Somente os sistemas e equipamentos listados no Anexo I são cobertos. Equipamentos incluídos depois dependem de aditivo ou inclusão no inventário, com possível reajuste da mensalidade.') +
-        (cam13 ? it('1.3.', `A mensalidade foi fixada considerando <b>${n('qtdCam')} câmeras</b> e as condições do local. A inclusão ou retirada de câmeras ajusta o valor da mensalidade, a partir do mês seguinte, por aditivo ou confirmação por escrito.`) : '') +
+        (cam13 ? it('1.3.', `A mensalidade foi fixada considerando <b>${esc(inv.join('; '))}</b> e as condições do local. A inclusão ou retirada de equipamentos ajusta o valor da mensalidade, a partir do mês seguinte, por aditivo ou confirmação por escrito.`) : '') +
         it(cam13 ? '1.4.' : '1.3.', 'Antes do início da vigência a CONTRATADA fará <b>vistoria inicial</b> e registrará no Anexo I o estado de cada item. Defeitos, falhas e obsolescência <b>já existentes</b> na vistoria não são cobertos pela mensalidade e serão orçados à parte; a CONTRATADA não responde pelos que a CONTRATANTE decidir não corrigir.') +
         cl(2, 'Da Manutenção Preventiva e Corretiva') +
         it('2.1.', '<b>Preventiva:</b> visita programada para inspeção, limpeza, testes e ajustes, seguindo a rotina do <b>Anexo II</b>. Ao fim de cada visita, a CONTRATADA registrará o que foi feito e as recomendações (relatório ou ordem de serviço assinada).') +
