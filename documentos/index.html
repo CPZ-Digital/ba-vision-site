@@ -159,13 +159,12 @@
   #lock input:focus { border-color: #34d399; }
   #lock button { width: min(360px, 100%); margin-top: 10px; padding: 13px; border-radius: 10px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; }
   #btn-pw { background: #059669; color: #fff; }
-  #btn-bio { background: #fff; color: #065f46; display: none; }
+  #btn-salva { background: #fff; color: #065f46; display: none; }
   #lock button:disabled { opacity: .55; cursor: default; }
   #msg { min-height: 20px; margin-top: 12px; font-size: 13px; color: #fca5a5; max-width: 360px; }
   #ver { margin-top: 26px; font-size: 10px; color: #4f7f6b; }
   #app { display: none; }
   .hdr-btn { border: 1px solid #c5dfd5; background: #fff; color: #065f46; border-radius: 8px; padding: 7px 11px; font-size: 12px; font-weight: 700; cursor: pointer; }
-  #bio-on { display: none; }
 </style>
 </head>
 <body>
@@ -174,11 +173,14 @@
   <img src="icons/icon-192.png" alt="B&amp;A Vision" />
   <h1>Central de Documentos</h1>
   <p>Acesso restrito aos sócios.</p>
-  <input id="pw" type="password" autocomplete="current-password" placeholder="Frase-senha" autocapitalize="none" spellcheck="false" />
-  <button id="btn-pw">Desbloquear</button>
-  <button id="btn-bio">👆 Desbloquear com biometria</button>
+  <form id="loginf" autocomplete="on" style="width:min(360px,100%)">
+    <input id="user" name="username" type="text" value="ba-documentos" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;opacity:0;height:1px;width:1px;pointer-events:none" />
+    <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="Frase-senha" autocapitalize="none" spellcheck="false" />
+    <button id="btn-pw" type="submit">Desbloquear</button>
+    <button id="btn-salva" type="button">🔑 Usar a senha salva (com digital)</button>
+  </form>
   <div id="msg"></div>
-  <div id="ver">protegido · cbf8a26448</div>
+  <div id="ver">protegido · 78ea90726d</div>
 </div>
 
 <div id="app">
@@ -186,7 +188,6 @@
     <img id="hdr-logo" alt="B&amp;A Vision" />
     <span class="header-title">Central de Documentos</span>
     <span style="flex:1"></span>
-    <button class="hdr-btn" id="bio-on">👆 Ativar biometria</button>
     <button class="hdr-btn" id="lock-now" style="margin-left:8px">🔒 Bloquear</button>
   </div>
   <div class="dashboard"><div id="docs-orc"></div></div>
@@ -197,13 +198,12 @@
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
-  const ENC_URL = 'app.enc?v=cbf8a26448';
-  const BIO_KEY = 'ba_docs_bio_v1';
+  const ENC_URL = 'app.enc?v=78ea90726d';
   const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
   const rnd = n => crypto.getRandomValues(new Uint8Array(n));
   const msg = (t, ok) => { $('msg').style.color = ok ? '#86efac' : '#fca5a5'; $('msg').textContent = t || ''; };
-  let rawKey = null, enc = null, falhas = 0;
+  let enc = null, falhas = 0;
 
   async function carregarEnc() {
     if (enc) return enc;
@@ -224,7 +224,6 @@
     $('lock').style.display = 'none'; $('app').style.display = 'block'; $('pw').value = '';
     const s = document.createElement('script'); s.textContent = codigo; document.body.appendChild(s);
     if (window.DOCS_LOGO) $('hdr-logo').src = window.DOCS_LOGO.ba;
-    if (bioSuportada() && !localStorage.getItem(BIO_KEY)) $('bio-on').style.display = 'inline-block';
     armarBloqueioAutomatico();
   }
 
@@ -236,41 +235,11 @@
       const e = await carregarEnc(); const raw = await derivar(pass, e); let codigo;
       try { codigo = await decifrar(raw, e); }
       catch (_) { falhas++; msg('Frase-senha incorreta.'); await new Promise(r => setTimeout(r, Math.min(8000, 800 * 2 ** (falhas - 1)))); $('btn-pw').disabled = false; return; }
-      rawKey = raw; abrir(codigo);
+      const dado = pass;
+      abrir(codigo);
+      // oferece guardar a frase no gerenciador de senhas do celular (Chrome/Google/Bitwarden), sem chave de acesso
+      try { if (window.PasswordCredential && navigator.credentials && navigator.credentials.store) navigator.credentials.store(new PasswordCredential({ id: 'ba-documentos', password: dado, name: 'B&A Documentos' })); } catch (_) {}
     } catch (err) { msg(err.message); $('btn-pw').disabled = false; }
-  }
-
-  /* ---------- biometria (WebAuthn + PRF: a chave só sai do aparelho com a digital/rosto) ---------- */
-  function bioSuportada() { return !!(window.PublicKeyCredential && navigator.credentials && crypto.subtle); }
-  async function chaveDoPrf(prfBytes) { return crypto.subtle.importKey('raw', await crypto.subtle.digest('SHA-256', prfBytes), 'AES-GCM', false, ['encrypt', 'decrypt']); }
-  async function pedirPrf(credId, salt) {
-    const a = await navigator.credentials.get({ publicKey: { challenge: rnd(32), rpId: location.hostname, allowCredentials: [{ type: 'public-key', id: credId }], userVerification: 'required', timeout: 60000, extensions: { prf: { eval: { first: salt } } } } });
-    const r = a.getClientExtensionResults().prf; return r && r.results && r.results.first;
-  }
-  async function ativarBiometria() {
-    if (!rawKey) return;
-    try {
-      const cred = await navigator.credentials.create({ publicKey: { challenge: rnd(32), rp: { name: 'B&A Documentos', id: location.hostname }, user: { id: rnd(16), name: 'ba-documentos', displayName: 'B&A Documentos' }, pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }], authenticatorSelection: { authenticatorAttachment: 'platform', residentKey: 'preferred', userVerification: 'required' }, timeout: 60000, extensions: { prf: {} } } });
-      const ext = cred.getClientExtensionResults();
-      if (!ext.prf || !ext.prf.enabled) throw new Error('Este aparelho não suporta biometria com chave protegida.');
-      const salt = rnd(32), prf = await pedirPrf(cred.rawId, salt);
-      if (!prf) throw new Error('Não foi possível obter a chave da biometria.');
-      const iv = rnd(12), wrapped = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await chaveDoPrf(prf), rawKey);
-      localStorage.setItem(BIO_KEY, JSON.stringify({ id: b64e(cred.rawId), salt: b64e(salt), iv: b64e(iv), w: b64e(wrapped), stamp: 'cbf8a26448' }));
-      $('bio-on').style.display = 'none'; alert('Biometria ativada neste aparelho.');
-    } catch (err) { alert('Não foi possível ativar a biometria: ' + (err && err.message ? err.message : err)); }
-  }
-  async function entrarComBiometria() {
-    const reg = JSON.parse(localStorage.getItem(BIO_KEY) || 'null'); if (!reg) return;
-    $('btn-bio').disabled = true; msg('Confirme com a biometria…', true);
-    try {
-      const prf = await pedirPrf(b64d(reg.id), b64d(reg.salt)); if (!prf) throw new Error('sem chave');
-      const raw = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(reg.iv) }, await chaveDoPrf(prf), b64d(reg.w)));
-      const e = await carregarEnc(); let codigo;
-      try { codigo = await decifrar(raw, e); }
-      catch (_) { localStorage.removeItem(BIO_KEY); $('btn-bio').style.display = 'none'; msg('A senha mudou. Entre com a frase-senha e ative a biometria de novo.'); $('btn-bio').disabled = false; return; }
-      rawKey = raw; abrir(codigo);
-    } catch (err) { msg('Biometria não confirmada. Use a frase-senha.'); $('btn-bio').disabled = false; }
   }
 
   /* ---------- bloqueio automático ---------- */
@@ -282,12 +251,19 @@
     ['click', 'keydown', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, zerar, { passive: true })); zerar();
   }
 
-  $('btn-pw').addEventListener('click', entrarComSenha);
-  $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') entrarComSenha(); });
-  $('btn-bio').addEventListener('click', entrarComBiometria);
-  $('bio-on').addEventListener('click', ativarBiometria);
+  $('loginf').addEventListener('submit', e => { e.preventDefault(); entrarComSenha(); });
+  // "Usar a senha salva": o celular pede a digital e devolve a frase guardada no gerenciador de senhas
+  async function usarSenhaSalva() {
+    try {
+      const c = await navigator.credentials.get({ password: true, mediation: 'optional' });
+      if (c && c.password) { $('pw').value = c.password; entrarComSenha(); }
+      else msg('Nenhuma senha salva. Digite a frase-senha uma vez e aceite salvar.');
+    } catch (_) { msg('Não consegui abrir a senha salva. Toque no campo de senha e escolha a sugestão.'); }
+  }
+  $('btn-salva').addEventListener('click', usarSenhaSalva);
+  if (window.PasswordCredential && navigator.credentials && navigator.credentials.get) $('btn-salva').style.display = 'block';
   $('lock-now').addEventListener('click', () => location.reload());
-  if (bioSuportada() && localStorage.getItem(BIO_KEY)) $('btn-bio').style.display = 'block'; else $('pw').focus();
+  $('pw').focus();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
