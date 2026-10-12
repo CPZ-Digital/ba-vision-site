@@ -160,6 +160,8 @@
   #lock button { width: min(360px, 100%); margin-top: 10px; padding: 13px; border-radius: 10px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; }
   #btn-pw { background: #059669; color: #fff; }
   #btn-salva { background: #fff; color: #065f46; display: none; }
+  #btn-dig { background: #fff; color: #065f46; display: none; }
+  #esq-dig { display: none; background: none; border: none; color: #6ee7b7; font-size: 12px; margin-top: 14px; text-decoration: underline; cursor: pointer; }
   #lock button:disabled { opacity: .55; cursor: default; }
   #msg { min-height: 20px; margin-top: 12px; font-size: 13px; color: #fca5a5; max-width: 360px; }
   #ver { margin-top: 26px; font-size: 10px; color: #4f7f6b; }
@@ -177,10 +179,12 @@
     <input id="user" name="username" type="text" value="ba-documentos" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;opacity:0;height:1px;width:1px;pointer-events:none" />
     <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="Frase-senha" autocapitalize="none" spellcheck="false" />
     <button id="btn-pw" type="submit">Desbloquear</button>
+    <button id="btn-dig" type="button">👆 Entrar com a digital</button>
     <button id="btn-salva" type="button">🔑 Usar a senha salva (com digital)</button>
   </form>
+  <button id="esq-dig" type="button">Esquecer a digital deste aparelho</button>
   <div id="msg"></div>
-  <div id="ver">protegido · 78ea90726d</div>
+  <div id="ver">protegido · b6d276d0cc</div>
 </div>
 
 <div id="app">
@@ -198,7 +202,7 @@
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
-  const ENC_URL = 'app.enc?v=78ea90726d';
+  const ENC_URL = 'app.enc?v=b6d276d0cc';
   const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
   const rnd = n => crypto.getRandomValues(new Uint8Array(n));
@@ -228,15 +232,19 @@
   }
 
   /* ---------- senha ---------- */
-  async function entrarComSenha() {
+  async function entrarComSenha(veioDaDigital) {
     const pass = $('pw').value; if (!pass) { msg('Digite a frase-senha.'); return; }
     $('btn-pw').disabled = true; msg('Verificando…', true);
     try {
       const e = await carregarEnc(); const raw = await derivar(pass, e); let codigo;
       try { codigo = await decifrar(raw, e); }
-      catch (_) { falhas++; msg('Frase-senha incorreta.'); await new Promise(r => setTimeout(r, Math.min(8000, 800 * 2 ** (falhas - 1)))); $('btn-pw').disabled = false; return; }
+      catch (_) { if (veioDaDigital && AND) { AND.clear(); $('btn-dig').style.display = 'none'; $('esq-dig').style.display = 'none'; msg('A frase-senha mudou. Digite a nova e associe a digital de novo.'); $('btn-pw').disabled = false; return; } falhas++; msg('Frase-senha incorreta.'); await new Promise(r => setTimeout(r, Math.min(8000, 800 * 2 ** (falhas - 1)))); $('btn-pw').disabled = false; return; }
       const dado = pass;
       abrir(codigo);
+      // dentro do app Android: oferece associar a digital à frase-senha
+      if (AND && !veioDaDigital && AND.hasBiometric() && !AND.hasSaved()) {
+        setTimeout(() => { if (confirm('Associar a sua digital a este acesso?' + String.fromCharCode(10,10) + 'Da próxima vez você entra só com a digital.')) AND.save(dado); }, 600);
+      }
       // oferece guardar a frase no gerenciador de senhas do celular (Chrome/Google/Bitwarden), sem chave de acesso
       try { if (window.PasswordCredential && navigator.credentials && navigator.credentials.store) navigator.credentials.store(new PasswordCredential({ id: 'ba-documentos', password: dado, name: 'B&A Documentos' })); } catch (_) {}
     } catch (err) { msg(err.message); $('btn-pw').disabled = false; }
@@ -251,6 +259,31 @@
     ['click', 'keydown', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, zerar, { passive: true })); zerar();
   }
 
+  /* ---------- app Android (B&A Documentos): digital e salvar PDF ---------- */
+  const AND = window.BADocs || null;
+  if (AND) {
+    window.__baSaved = (ok, m) => { alert(ok ? 'Digital associada. Da próxima vez é só encostar o dedo.' : 'Não foi possível associar a digital: ' + m); if (ok) { $('btn-dig').style.display = 'block'; } };
+    window.__baUnlocked = senha => { $('pw').value = senha; entrarComSenha(true); };
+    window.__baUnlockFail = m => {
+      if (m === 'invalidated') { AND.clear(); $('btn-dig').style.display = 'none'; $('esq-dig').style.display = 'none'; msg('As digitais do aparelho mudaram. Entre com a frase-senha e associe de novo.'); }
+      else { msg('Digital não confirmada. Toque no botão para tentar de novo ou use a frase-senha.'); }
+      $('btn-dig').disabled = false;
+    };
+    const chamar = () => { $('btn-dig').disabled = true; msg('Confirme com a digital…', true); AND.unlock(); };
+    $('btn-dig').addEventListener('click', chamar);
+    $('esq-dig').addEventListener('click', () => { if (confirm('Esquecer a digital neste aparelho? Você voltará a entrar com a frase-senha.')) { AND.clear(); $('btn-dig').style.display = 'none'; $('esq-dig').style.display = 'none'; msg('Digital esquecida.', true); } });
+    if (AND.hasBiometric() && AND.hasSaved()) { $('btn-dig').style.display = 'block'; $('esq-dig').style.display = 'inline-block'; setTimeout(chamar, 500); }
+    // PDFs: dentro do app o navegador não baixa arquivo, então a ponte salva em Downloads e abre
+    const pega = (a) => {
+      if (!a || !a.download || !String(a.href).startsWith('blob:')) return false;
+      fetch(a.href).then(r => r.blob()).then(b => { const fr = new FileReader(); fr.onloadend = () => AND.saveFile(String(fr.result).split(',')[1], a.download, b.type || 'application/pdf'); fr.readAsDataURL(b); });
+      return true;
+    };
+    const dispatchOrig = HTMLAnchorElement.prototype.dispatchEvent, clickOrig = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.dispatchEvent = function (ev) { if (ev && ev.type === 'click' && pega(this)) return true; return dispatchOrig.call(this, ev); };
+    HTMLAnchorElement.prototype.click = function () { if (pega(this)) return; return clickOrig.call(this); };
+  }
+
   $('loginf').addEventListener('submit', e => { e.preventDefault(); entrarComSenha(); });
   // "Usar a senha salva": o celular pede a digital e devolve a frase guardada no gerenciador de senhas
   async function usarSenhaSalva() {
@@ -263,7 +296,7 @@
   $('btn-salva').addEventListener('click', usarSenhaSalva);
   if (window.PasswordCredential && navigator.credentials && navigator.credentials.get) $('btn-salva').style.display = 'block';
   $('lock-now').addEventListener('click', () => location.reload());
-  $('pw').focus();
+  if (!(AND && AND.hasBiometric && AND.hasBiometric() && AND.hasSaved())) $('pw').focus();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
