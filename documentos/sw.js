@@ -1,6 +1,6 @@
 // Service worker da Central de Documentos (guarda a página e o pacote criptografado para funcionar offline)
-const CACHE = 'ba-docs-1df47e59a1';
-const ASSETS = ['./', 'index.html', 'app.enc?v=1df47e59a1', 'html2pdf.bundle.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
+const CACHE = 'ba-docs-30e55e2acc';
+const ASSETS = ['./', 'index.html', 'app.enc?v=30e55e2acc', 'html2pdf.bundle.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))));
