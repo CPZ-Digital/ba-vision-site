@@ -197,7 +197,7 @@
   </form>
   <button id="esq-dig" type="button">Esquecer a digital deste aparelho</button>
   <div id="msg"></div>
-  <div id="ver">protegido · b6d276d0cc</div>
+  <div id="ver">protegido · d98836b510</div>
 </div>
 
 <div id="app">
@@ -215,7 +215,7 @@
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
-  const ENC_URL = 'app.enc?v=b6d276d0cc';
+  const ENC_URL = 'app.enc?v=d98836b510';
   const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
   const rnd = n => crypto.getRandomValues(new Uint8Array(n));
